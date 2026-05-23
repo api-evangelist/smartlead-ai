@@ -1,0 +1,171 @@
+aid: smartlead-ai
+url: https://raw.githubusercontent.com/api-evangelist/smartlead-ai/refs/heads/main/apis.yml
+name: Smartlead
+kind: company
+description: >-
+  Smartlead is cold email infrastructure for outbound sales and lead
+  generation, focused on inbox deliverability through unlimited mailbox
+  rotation, automated warmup, and a unified master inbox. Smartlead exposes a
+  REST API at server.smartlead.ai/api/v1 covering campaigns, leads, email
+  accounts, email warmup, webhooks, analytics, and client management, with API
+  key authentication via query parameter.
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - Cold Email
+  - Outbound
+  - Sales
+  - Deliverability
+  - Email Warmup
+  - Automation
+  - Sequences
+created: '2026-05-23'
+modified: '2026-05-23'
+specificationVersion: '0.19'
+apis:
+  - aid: smartlead-ai:campaigns-api
+    name: Smartlead Campaigns API
+    description: >-
+      REST endpoints to create, list, fetch, update, schedule, pause, resume,
+      and delete email campaigns, plus manage sequences, A/B variants, and
+      sender account assignments inside a campaign.
+    humanURL: https://api.smartlead.ai/reference/campaigns
+    baseURL: https://server.smartlead.ai/api/v1/campaigns
+    tags:
+      - Campaigns
+      - Sequences
+      - Scheduling
+    properties:
+      - type: Documentation
+        url: https://api.smartlead.ai/reference
+  - aid: smartlead-ai:leads-api
+    name: Smartlead Leads API
+    description: >-
+      Endpoints to add leads to a campaign in bulk, fetch leads, update lead
+      status (interested, replied, unsubscribed), search leads globally, and
+      manage lead categories.
+    humanURL: https://api.smartlead.ai/reference/leads
+    baseURL: https://server.smartlead.ai/api/v1
+    tags:
+      - Leads
+      - Contacts
+      - Prospects
+    properties:
+      - type: Documentation
+        url: https://api.smartlead.ai/reference
+  - aid: smartlead-ai:email-accounts-api
+    name: Smartlead Email Accounts API
+    description: >-
+      Endpoints to add, list, update, and remove sender mailboxes (SMTP, Gmail,
+      Outlook), assign them to campaigns, and track per-account sending limits
+      and warmup state.
+    humanURL: https://api.smartlead.ai/reference/email-accounts
+    baseURL: https://server.smartlead.ai/api/v1/email-accounts
+    tags:
+      - Email Accounts
+      - SMTP
+      - Mailboxes
+    properties:
+      - type: Documentation
+        url: https://api.smartlead.ai/reference
+  - aid: smartlead-ai:email-warmup-api
+    name: Smartlead Email Warmup API
+    description: >-
+      Endpoints for managing Smartlead's deliverability warmup engine —
+      enabling warmup per mailbox, configuring ramp settings, and reading
+      warmup reputation and stats.
+    humanURL: https://api.smartlead.ai/reference/email-warmup
+    baseURL: https://server.smartlead.ai/api/v1/email-accounts
+    tags:
+      - Warmup
+      - Deliverability
+      - Reputation
+    properties:
+      - type: Documentation
+        url: https://api.smartlead.ai/reference
+  - aid: smartlead-ai:webhooks-api
+    name: Smartlead Webhooks API
+    description: >-
+      CRUD endpoints for campaign-scoped webhook subscriptions covering lead
+      events (sent, opened, clicked, replied, bounced, unsubscribed) used to
+      stream Smartlead activity to external systems.
+    humanURL: https://api.smartlead.ai/reference/webhooks
+    baseURL: https://server.smartlead.ai/api/v1/webhooks
+    tags:
+      - Webhooks
+      - Events
+      - Subscriptions
+    properties:
+      - type: Documentation
+        url: https://api.smartlead.ai/reference
+  - aid: smartlead-ai:analytics-api
+    name: Smartlead Analytics API
+    description: >-
+      Endpoints for campaign and account-level analytics — sent, open, click,
+      reply, bounce, and unsubscribe metrics aggregated over time ranges.
+    humanURL: https://api.smartlead.ai/reference/analytics
+    baseURL: https://server.smartlead.ai/api/v1
+    tags:
+      - Analytics
+      - Reporting
+      - Metrics
+    properties:
+      - type: Documentation
+        url: https://api.smartlead.ai/reference
+  - aid: smartlead-ai:client-management-api
+    name: Smartlead Client Management API
+    description: >-
+      Endpoints for agency users to provision and manage white-labeled client
+      accounts, assign permissions, and meter usage across multiple end
+      customers.
+    humanURL: https://api.smartlead.ai/reference/client-management
+    baseURL: https://server.smartlead.ai/api/v1
+    tags:
+      - Clients
+      - Agency
+      - Multi-Tenant
+    properties:
+      - type: Documentation
+        url: https://api.smartlead.ai/reference
+common:
+  - type: Website
+    url: https://www.smartlead.ai
+  - type: App
+    url: https://app.smartlead.ai
+  - type: Documentation
+    url: https://api.smartlead.ai/reference
+  - type: APIReference
+    url: https://api.smartlead.ai/reference
+  - type: GettingStarted
+    url: https://api.smartlead.ai
+  - type: Pricing
+    url: https://www.smartlead.ai/pricing
+  - type: Blog
+    url: https://www.smartlead.ai/blog
+  - type: SignUp
+    url: https://app.smartlead.ai/signup
+  - type: SignIn
+    url: https://app.smartlead.ai/login
+  - type: Help
+    url: https://help.smartlead.ai
+  - type: PrivacyPolicy
+    url: https://www.smartlead.ai/privacy-policy
+  - type: TermsOfService
+    url: https://www.smartlead.ai/terms-of-service
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/smartleadhq
+  - type: Twitter
+    url: https://x.com/smartlead_ai
+  - type: YouTube
+    url: https://www.youtube.com/@smartlead
+integrations:
+  - name: Clay
+  - name: HubSpot
+  - name: Salesforce
+  - name: Pipedrive
+  - name: Zapier
+  - name: Make
+  - name: n8n
+  - name: Slack
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
