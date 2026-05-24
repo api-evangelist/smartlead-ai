@@ -1,0 +1,160 @@
+openapi: 3.1.0
+info:
+  title: Smartlead API
+  description: >-
+    Smartlead is cold email infrastructure for outbound sales and lead
+    generation. The Smartlead REST API exposes campaigns, leads, email
+    accounts, warmup, webhooks, analytics, and client management.
+    Authentication uses an API key passed as the `api_key` query parameter
+    on every request.
+  version: "1.0"
+  contact:
+    name: Smartlead API
+    url: https://api.smartlead.ai/reference
+servers:
+  - url: https://server.smartlead.ai/api/v1
+    description: Smartlead REST API v1
+security:
+  - ApiKeyQuery: []
+paths:
+  /campaigns/:
+    get:
+      summary: List campaigns
+      description: >-
+        Retrieves all email campaigns for the authenticated user with
+        comprehensive campaign data.
+      operationId: listCampaigns
+      tags:
+        - Campaigns
+      parameters:
+        - in: query
+          name: client_id
+          schema:
+            type: string
+          description: Optional client identifier for agency accounts.
+        - in: query
+          name: include_tags
+          schema:
+            type: boolean
+          description: Include campaign tag IDs, names, and colors.
+      responses:
+        '200':
+          description: A list of campaigns.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '401':
+          description: Invalid API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid API Key
+    post:
+      summary: Create campaign
+      description: Create a new email campaign.
+      operationId: createCampaign
+      tags:
+        - Campaigns
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Campaign created.
+          content:
+            application/json:
+              schema:
+                type: object
+  /campaigns/{id}:
+    get:
+      summary: Get campaign
+      description: Get specific campaign details by ID.
+      operationId: getCampaign
+      tags:
+        - Campaigns
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Campaign details.
+          content:
+            application/json:
+              schema:
+                type: object
+  /campaigns/{id}/status:
+    patch:
+      summary: Update campaign status
+      description: Update the status of an existing campaign.
+      operationId: updateCampaignStatus
+      tags:
+        - Campaigns
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+      responses:
+        '200':
+          description: Status updated.
+          content:
+            application/json:
+              schema:
+                type: object
+  /campaigns/{id}/statistics:
+    get:
+      summary: Get campaign statistics
+      description: Retrieve campaign performance metrics.
+      operationId: getCampaignStatistics
+      tags:
+        - Campaign Statistics
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Campaign statistics.
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  securitySchemes:
+    ApiKeyQuery:
+      type: apiKey
+      in: query
+      name: api_key
+      description: >-
+        Smartlead API key passed as the `api_key` query parameter on
+        every request.
+tags:
+  - name: Campaigns
+    description: Manage Smartlead email campaigns.
+  - name: Campaign Statistics
+    description: Retrieve campaign performance metrics.
