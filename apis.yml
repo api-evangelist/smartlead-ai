@@ -157,6 +157,8 @@ common:
     url: https://x.com/smartlead_ai
   - type: YouTube
     url: https://www.youtube.com/@smartlead
+  - type: LLMsTxt
+    url: https://api.smartlead.ai/llms.txt
 integrations:
   - name: Clay
   - name: HubSpot
