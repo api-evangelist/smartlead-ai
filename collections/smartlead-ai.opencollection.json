@@ -1,0 +1,132 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Smartlead API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Campaigns",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List campaigns",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://server.smartlead.ai/api/v1/campaigns/",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query",
+                "description": "Optional client identifier for agency accounts."
+              },
+              {
+                "name": "include_tags",
+                "value": "",
+                "type": "query",
+                "description": "Include campaign tag IDs, names, and colors."
+              }
+            ]
+          },
+          "docs": "Retrieves all email campaigns for the authenticated user with comprehensive campaign data."
+        },
+        {
+          "info": {
+            "name": "Create campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://server.smartlead.ai/api/v1/campaigns/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new email campaign."
+        },
+        {
+          "info": {
+            "name": "Get campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://server.smartlead.ai/api/v1/campaigns/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get specific campaign details by ID."
+        },
+        {
+          "info": {
+            "name": "Update campaign status",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://server.smartlead.ai/api/v1/campaigns/:id/status",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update the status of an existing campaign."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Campaign Statistics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get campaign statistics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://server.smartlead.ai/api/v1/campaigns/:id/statistics",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve campaign performance metrics."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
