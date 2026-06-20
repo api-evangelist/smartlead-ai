@@ -9,7 +9,7 @@ description: >-
   REST API at server.smartlead.ai/api/v1 covering campaigns, leads, email
   accounts, email warmup, webhooks, analytics, and client management, with API
   key authentication via query parameter.
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
   - Cold Email
   - Outbound
