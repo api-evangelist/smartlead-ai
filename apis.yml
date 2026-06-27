@@ -141,9 +141,9 @@ common:
     url: https://www.smartlead.ai/pricing
   - type: Blog
     url: https://www.smartlead.ai/blog
-  - type: SignUp
+  - type: Signup
     url: https://app.smartlead.ai/signup
-  - type: SignIn
+  - type: Login
     url: https://app.smartlead.ai/login
   - type: Help
     url: https://help.smartlead.ai
@@ -157,7 +157,7 @@ common:
     url: https://x.com/smartlead_ai
   - type: YouTube
     url: https://www.youtube.com/@smartlead
-  - type: LLMsTxt
+  - type: LlmsText
     url: https://api.smartlead.ai/llms.txt
 integrations:
   - name: Clay
