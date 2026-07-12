@@ -127,6 +127,10 @@ apis:
       - type: Documentation
         url: https://api.smartlead.ai/reference
 common:
+  - type: DomainSecurity
+    url: security/smartlead-ai-domain-security.yml
+  - type: Authentication
+    url: authentication/smartlead-ai-authentication.yml
   - type: Website
     url: https://www.smartlead.ai
   - type: App

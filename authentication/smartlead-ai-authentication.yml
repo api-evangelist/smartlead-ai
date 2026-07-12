@@ -1,0 +1,16 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/smartlead-ai-openapi.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - query
+schemes:
+- name: ApiKeyQuery
+  type: apiKey
+  in: query
+  parameter: api_key
+  description: Smartlead API key passed as the `api_key` query parameter on every request.
+  sources:
+  - openapi/smartlead-ai-openapi.yml
