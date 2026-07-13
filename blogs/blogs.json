@@ -2,13 +2,14 @@
   "repo": "smartlead-ai",
   "feeds": [
     {
-      "source": "https://www.smartlead.ai/blog",
-      "feed_url": "",
-      "saved": 5,
-      "method": "agent-scrape"
+      "source": "https://www.smartlead.ai/pricing",
+      "feed_url": "https://www.smartlead.ai/pricing",
+      "title": "",
+      "saved": 0,
+      "method": "none"
     }
   ],
-  "post_count": 9,
-  "fetched": "2026-06-27T13:10:29Z",
+  "post_count": 15,
+  "fetched": "2026-07-11T11:50:51Z",
   "agent_pulled": "2026-06-27"
 }
