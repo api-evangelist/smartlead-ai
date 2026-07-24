@@ -1,42 +1,38 @@
 openapi: 3.1.0
 info:
-  title: Smartlead API
-  description: >-
-    Smartlead is cold email infrastructure for outbound sales and lead
-    generation. The Smartlead REST API exposes campaigns, leads, email
-    accounts, warmup, webhooks, analytics, and client management.
-    Authentication uses an API key passed as the `api_key` query parameter
-    on every request.
-  version: "1.0"
+  title: Smartlead Campaign Statistics Campaigns API
+  description: Smartlead is cold email infrastructure for outbound sales and lead generation. The Smartlead REST API exposes campaigns, leads, email accounts, warmup, webhooks, analytics, and client management. Authentication uses an API key passed as the `api_key` query parameter on every request.
+  version: '1.0'
   contact:
     name: Smartlead API
     url: https://api.smartlead.ai/reference
 servers:
-  - url: https://server.smartlead.ai/api/v1
-    description: Smartlead REST API v1
+- url: https://server.smartlead.ai/api/v1
+  description: Smartlead REST API v1
 security:
-  - ApiKeyQuery: []
+- ApiKeyQuery: []
+tags:
+- name: Campaigns
+  description: Manage Smartlead email campaigns.
 paths:
   /campaigns/:
     get:
       summary: List campaigns
-      description: >-
-        Retrieves all email campaigns for the authenticated user with
-        comprehensive campaign data.
+      description: Retrieves all email campaigns for the authenticated user with comprehensive campaign data.
       operationId: listCampaigns
       tags:
-        - Campaigns
+      - Campaigns
       parameters:
-        - in: query
-          name: client_id
-          schema:
-            type: string
-          description: Optional client identifier for agency accounts.
-        - in: query
-          name: include_tags
-          schema:
-            type: boolean
-          description: Include campaign tag IDs, names, and colors.
+      - in: query
+        name: client_id
+        schema:
+          type: string
+        description: Optional client identifier for agency accounts.
+      - in: query
+        name: include_tags
+        schema:
+          type: boolean
+        description: Include campaign tag IDs, names, and colors.
       responses:
         '200':
           description: A list of campaigns.
@@ -61,7 +57,7 @@ paths:
       description: Create a new email campaign.
       operationId: createCampaign
       tags:
-        - Campaigns
+      - Campaigns
       requestBody:
         required: true
         content:
@@ -81,13 +77,13 @@ paths:
       description: Get specific campaign details by ID.
       operationId: getCampaign
       tags:
-        - Campaigns
+      - Campaigns
       parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Campaign details.
@@ -101,13 +97,13 @@ paths:
       description: Update the status of an existing campaign.
       operationId: updateCampaignStatus
       tags:
-        - Campaigns
+      - Campaigns
       parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
       requestBody:
         required: true
         content:
@@ -124,37 +120,10 @@ paths:
             application/json:
               schema:
                 type: object
-  /campaigns/{id}/statistics:
-    get:
-      summary: Get campaign statistics
-      description: Retrieve campaign performance metrics.
-      operationId: getCampaignStatistics
-      tags:
-        - Campaign Statistics
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Campaign statistics.
-          content:
-            application/json:
-              schema:
-                type: object
 components:
   securitySchemes:
     ApiKeyQuery:
       type: apiKey
       in: query
       name: api_key
-      description: >-
-        Smartlead API key passed as the `api_key` query parameter on
-        every request.
-tags:
-  - name: Campaigns
-    description: Manage Smartlead email campaigns.
-  - name: Campaign Statistics
-    description: Retrieve campaign performance metrics.
+      description: Smartlead API key passed as the `api_key` query parameter on every request.

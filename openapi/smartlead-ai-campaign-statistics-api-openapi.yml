@@ -1,0 +1,44 @@
+openapi: 3.1.0
+info:
+  title: Smartlead Campaign Statistics API
+  description: Smartlead is cold email infrastructure for outbound sales and lead generation. The Smartlead REST API exposes campaigns, leads, email accounts, warmup, webhooks, analytics, and client management. Authentication uses an API key passed as the `api_key` query parameter on every request.
+  version: '1.0'
+  contact:
+    name: Smartlead API
+    url: https://api.smartlead.ai/reference
+servers:
+- url: https://server.smartlead.ai/api/v1
+  description: Smartlead REST API v1
+security:
+- ApiKeyQuery: []
+tags:
+- name: Campaign Statistics
+  description: Retrieve campaign performance metrics.
+paths:
+  /campaigns/{id}/statistics:
+    get:
+      summary: Get campaign statistics
+      description: Retrieve campaign performance metrics.
+      operationId: getCampaignStatistics
+      tags:
+      - Campaign Statistics
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Campaign statistics.
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  securitySchemes:
+    ApiKeyQuery:
+      type: apiKey
+      in: query
+      name: api_key
+      description: Smartlead API key passed as the `api_key` query parameter on every request.
