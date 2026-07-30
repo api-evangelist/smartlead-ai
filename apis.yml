@@ -9,7 +9,20 @@ description: >-
   REST API at server.smartlead.ai/api/v1 covering campaigns, leads, email
   accounts, email warmup, webhooks, analytics, and client management, with API
   key authentication via query parameter.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: free
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Free · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/smartlead-ai.png
 tags:
   - Cold Email
   - Outbound
@@ -22,110 +35,124 @@ created: '2026-05-23'
 modified: '2026-05-23'
 specificationVersion: '0.19'
 apis:
-  - aid: smartlead-ai:campaigns-api
-    name: Smartlead Campaigns API
-    description: >-
-      REST endpoints to create, list, fetch, update, schedule, pause, resume,
-      and delete email campaigns, plus manage sequences, A/B variants, and
-      sender account assignments inside a campaign.
-    humanURL: https://api.smartlead.ai/reference/campaigns
-    baseURL: https://server.smartlead.ai/api/v1/campaigns
-    tags:
-      - Campaigns
-      - Sequences
-      - Scheduling
-    properties:
-      - type: Documentation
-        url: https://api.smartlead.ai/reference
-  - aid: smartlead-ai:leads-api
-    name: Smartlead Leads API
-    description: >-
-      Endpoints to add leads to a campaign in bulk, fetch leads, update lead
-      status (interested, replied, unsubscribed), search leads globally, and
-      manage lead categories.
-    humanURL: https://api.smartlead.ai/reference/leads
-    baseURL: https://server.smartlead.ai/api/v1
-    tags:
-      - Leads
-      - Contacts
-      - Prospects
-    properties:
-      - type: Documentation
-        url: https://api.smartlead.ai/reference
-  - aid: smartlead-ai:email-accounts-api
-    name: Smartlead Email Accounts API
-    description: >-
-      Endpoints to add, list, update, and remove sender mailboxes (SMTP, Gmail,
-      Outlook), assign them to campaigns, and track per-account sending limits
-      and warmup state.
-    humanURL: https://api.smartlead.ai/reference/email-accounts
-    baseURL: https://server.smartlead.ai/api/v1/email-accounts
-    tags:
-      - Email Accounts
-      - SMTP
-      - Mailboxes
-    properties:
-      - type: Documentation
-        url: https://api.smartlead.ai/reference
-  - aid: smartlead-ai:email-warmup-api
-    name: Smartlead Email Warmup API
-    description: >-
-      Endpoints for managing Smartlead's deliverability warmup engine —
-      enabling warmup per mailbox, configuring ramp settings, and reading
-      warmup reputation and stats.
-    humanURL: https://api.smartlead.ai/reference/email-warmup
-    baseURL: https://server.smartlead.ai/api/v1/email-accounts
-    tags:
-      - Warmup
-      - Deliverability
-      - Reputation
-    properties:
-      - type: Documentation
-        url: https://api.smartlead.ai/reference
-  - aid: smartlead-ai:webhooks-api
-    name: Smartlead Webhooks API
-    description: >-
-      CRUD endpoints for campaign-scoped webhook subscriptions covering lead
-      events (sent, opened, clicked, replied, bounced, unsubscribed) used to
-      stream Smartlead activity to external systems.
-    humanURL: https://api.smartlead.ai/reference/webhooks
-    baseURL: https://server.smartlead.ai/api/v1/webhooks
-    tags:
-      - Webhooks
-      - Events
-      - Subscriptions
-    properties:
-      - type: Documentation
-        url: https://api.smartlead.ai/reference
-  - aid: smartlead-ai:analytics-api
-    name: Smartlead Analytics API
-    description: >-
-      Endpoints for campaign and account-level analytics — sent, open, click,
-      reply, bounce, and unsubscribe metrics aggregated over time ranges.
-    humanURL: https://api.smartlead.ai/reference/analytics
-    baseURL: https://server.smartlead.ai/api/v1
-    tags:
-      - Analytics
-      - Reporting
-      - Metrics
-    properties:
-      - type: Documentation
-        url: https://api.smartlead.ai/reference
-  - aid: smartlead-ai:client-management-api
-    name: Smartlead Client Management API
-    description: >-
-      Endpoints for agency users to provision and manage white-labeled client
-      accounts, assign permissions, and meter usage across multiple end
-      customers.
-    humanURL: https://api.smartlead.ai/reference/client-management
-    baseURL: https://server.smartlead.ai/api/v1
-    tags:
-      - Clients
-      - Agency
-      - Multi-Tenant
-    properties:
-      - type: Documentation
-        url: https://api.smartlead.ai/reference
+- aid: smartlead-ai:campaigns-api
+  name: Smartlead Campaigns API
+  description: >-
+    REST endpoints to create, list, fetch, update, schedule, pause, resume, and delete email campaigns,
+    plus manage sequences, A/B variants, and sender account assignments inside a campaign.
+  humanURL: https://api.smartlead.ai/reference/campaigns
+  baseURL: https://server.smartlead.ai/api/v1/campaigns
+  tags:
+  - Campaigns
+  - Sequences
+  - Scheduling
+  properties:
+  - type: Documentation
+    url: https://api.smartlead.ai/reference
+- aid: smartlead-ai:leads-api
+  name: Smartlead Leads API
+  description: >-
+    Endpoints to add leads to a campaign in bulk, fetch leads, update lead status (interested, replied,
+    unsubscribed), search leads globally, and manage lead categories.
+  humanURL: https://api.smartlead.ai/reference/leads
+  baseURL: https://server.smartlead.ai/api/v1
+  tags:
+  - Leads
+  - Contacts
+  - Prospects
+  properties:
+  - type: Documentation
+    url: https://api.smartlead.ai/reference
+- aid: smartlead-ai:email-accounts-api
+  name: Smartlead Email Accounts API
+  description: >-
+    Endpoints to add, list, update, and remove sender mailboxes (SMTP, Gmail, Outlook), assign them to
+    campaigns, and track per-account sending limits and warmup state.
+  humanURL: https://api.smartlead.ai/reference/email-accounts
+  baseURL: https://server.smartlead.ai/api/v1/email-accounts
+  tags:
+  - Email Accounts
+  - SMTP
+  - Mailboxes
+  properties:
+  - type: Documentation
+    url: https://api.smartlead.ai/reference
+- aid: smartlead-ai:email-warmup-api
+  name: Smartlead Email Warmup API
+  description: >-
+    Endpoints for managing Smartlead's deliverability warmup engine — enabling warmup per mailbox, configuring
+    ramp settings, and reading warmup reputation and stats.
+  humanURL: https://api.smartlead.ai/reference/email-warmup
+  baseURL: https://server.smartlead.ai/api/v1/email-accounts
+  tags:
+  - Warmup
+  - Deliverability
+  - Reputation
+  properties:
+  - type: Documentation
+    url: https://api.smartlead.ai/reference
+- aid: smartlead-ai:webhooks-api
+  name: Smartlead Webhooks API
+  description: >-
+    CRUD endpoints for campaign-scoped webhook subscriptions covering lead events (sent, opened, clicked,
+    replied, bounced, unsubscribed) used to stream Smartlead activity to external systems.
+  humanURL: https://api.smartlead.ai/reference/webhooks
+  baseURL: https://server.smartlead.ai/api/v1/webhooks
+  tags:
+  - Webhooks
+  - Events
+  - Subscriptions
+  properties:
+  - type: Documentation
+    url: https://api.smartlead.ai/reference
+- aid: smartlead-ai:analytics-api
+  name: Smartlead Analytics API
+  description: >-
+    Endpoints for campaign and account-level analytics — sent, open, click, reply, bounce, and unsubscribe
+    metrics aggregated over time ranges.
+  humanURL: https://api.smartlead.ai/reference/analytics
+  baseURL: https://server.smartlead.ai/api/v1
+  tags:
+  - Analytics
+  - Reporting
+  - Metrics
+  properties:
+  - type: Documentation
+    url: https://api.smartlead.ai/reference
+- aid: smartlead-ai:client-management-api
+  name: Smartlead Client Management API
+  description: >-
+    Endpoints for agency users to provision and manage white-labeled client accounts, assign permissions,
+    and meter usage across multiple end customers.
+  humanURL: https://api.smartlead.ai/reference/client-management
+  baseURL: https://server.smartlead.ai/api/v1
+  tags:
+  - Clients
+  - Agency
+  - Multi-Tenant
+  properties:
+  - type: Documentation
+    url: https://api.smartlead.ai/reference
+- aid: smartlead-ai:smartlead-ai-campaign-statistics-api
+  name: Smartlead Campaign Statistics API
+  description: Retrieve campaign performance metrics.
+  humanURL: https://api.smartlead.ai/reference/campaigns
+  baseURL: https://server.smartlead.ai/api/v1/campaigns
+  tags:
+  - Campaign Statistics
+  properties:
+  - type: OpenAPI
+    url: openapi/smartlead-ai-campaign-statistics-api-openapi.yml
+- aid: smartlead-ai:smartlead-ai-campaigns-api
+  name: Smartlead Campaigns API
+  description: Manage Smartlead email campaigns.
+  humanURL: https://api.smartlead.ai/reference/campaigns
+  baseURL: https://server.smartlead.ai/api/v1/campaigns
+  tags:
+  - Campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/smartlead-ai-campaigns-api-openapi.yml
 common:
   - type: AgenticAccess
     url: agentic-access/smartlead-ai-agentic-access.yml
