@@ -1,0 +1,16 @@
+{
+  "provider": "smartlead-ai",
+  "sources": [
+    "smartlead-ai-campaign-statistics-api-openapi.yml",
+    "smartlead-ai-campaigns-api-openapi.yml"
+  ],
+  "outputs": [
+    "smartlead-ai-campaign-statistics-api-openapi.yml",
+    "smartlead-ai-campaigns-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
