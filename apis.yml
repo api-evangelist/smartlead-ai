@@ -5,23 +5,28 @@ kind: company
 description: >-
   Smartlead is cold email infrastructure for outbound sales and lead
   generation, focused on inbox deliverability through unlimited mailbox
-  rotation, automated warmup, and a unified master inbox. Smartlead exposes a
-  REST API at server.smartlead.ai/api/v1 covering campaigns, leads, email
-  accounts, email warmup, webhooks, analytics, and client management, with API
-  key authentication via query parameter.
+  rotation, automated warmup, and a unified master inbox. Smartlead publishes an
+  OpenAPI 3.1.1 contract with 98 operations at server.smartlead.ai/api/v1
+  covering campaigns, sequences, leads and lead lists, sender mailboxes and
+  warmup, the master inbox, webhooks, analytics, Smart Delivery placement
+  testing, Smart Senders and agency client management, authenticated with an API
+  key passed as a query parameter. It also ships an unusually forward agent
+  surface for its size — an A2A agent card, a published Agent Skill, a remote
+  documentation MCP server, llms.txt, and a first-party CLI — alongside a
+  13-event signed webhook catalog.
 accessModel:
-  pricing: free
+  pricing: paid
   onboarding: self-serve
-  trial: false
+  trial: true
   try_now: true
-  public: false
-  label: Free · Self-serve signup
+  public: true
+  label: Paid · Free trial · Self-serve signup
   confidence: high
   source:
   - plans
   - authentication
-  generated: '2026-07-22'
-  method: derived
+  generated: '2026-08-13'
+  method: searched
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/smartlead-ai.png
 tags:
   - Cold Email
@@ -32,15 +37,40 @@ tags:
   - Automation
   - Sequences
 created: '2026-05-23'
-modified: '2026-05-23'
+modified: '2026-08-13'
 specificationVersion: '0.19'
 apis:
+- aid: smartlead-ai:smartlead-api
+  name: SmartLead API
+  description: >-
+    The complete SmartLead REST API as published by SmartLead — OpenAPI 3.1.1, 85 paths and 98
+    operations across campaigns, sequences, leads and lead lists, email accounts and warmup, the
+    master inbox, webhooks, analytics, campaign statistics, Smart Delivery, Smart Senders and
+    utilities. Harvested verbatim from the SmartLead documentation host.
+  humanURL: https://api.smartlead.ai/api-reference
+  baseURL: https://server.smartlead.ai/api/v1
+  tags:
+  - Campaigns
+  - Leads
+  - Email Accounts
+  - Webhooks
+  - Analytics
+  - Deliverability
+  properties:
+  - type: OpenAPI
+    url: openapi/smartlead-ai-openapi.yml
+  - type: Documentation
+    url: https://api.smartlead.ai/introduction
+  - type: APIReference
+    url: https://api.smartlead.ai/api-reference
+  - type: Overlay
+    url: overlays/smartlead-ai-openapi-overlay.yaml
 - aid: smartlead-ai:campaigns-api
   name: Smartlead Campaigns API
   description: >-
     REST endpoints to create, list, fetch, update, schedule, pause, resume, and delete email campaigns,
     plus manage sequences, A/B variants, and sender account assignments inside a campaign.
-  humanURL: https://api.smartlead.ai/reference/campaigns
+  humanURL: https://api.smartlead.ai/api-reference/campaigns
   baseURL: https://server.smartlead.ai/api/v1/campaigns
   tags:
   - Campaigns
@@ -48,13 +78,13 @@ apis:
   - Scheduling
   properties:
   - type: Documentation
-    url: https://api.smartlead.ai/reference
+    url: https://api.smartlead.ai/core/campaigns
 - aid: smartlead-ai:leads-api
   name: Smartlead Leads API
   description: >-
     Endpoints to add leads to a campaign in bulk, fetch leads, update lead status (interested, replied,
-    unsubscribed), search leads globally, and manage lead categories.
-  humanURL: https://api.smartlead.ai/reference/leads
+    unsubscribed), search leads globally, and manage lead categories and lead lists.
+  humanURL: https://api.smartlead.ai/api-reference/leads
   baseURL: https://server.smartlead.ai/api/v1
   tags:
   - Leads
@@ -62,13 +92,13 @@ apis:
   - Prospects
   properties:
   - type: Documentation
-    url: https://api.smartlead.ai/reference
+    url: https://api.smartlead.ai/core/leads
 - aid: smartlead-ai:email-accounts-api
   name: Smartlead Email Accounts API
   description: >-
     Endpoints to add, list, update, and remove sender mailboxes (SMTP, Gmail, Outlook), assign them to
     campaigns, and track per-account sending limits and warmup state.
-  humanURL: https://api.smartlead.ai/reference/email-accounts
+  humanURL: https://api.smartlead.ai/api-reference/email-accounts
   baseURL: https://server.smartlead.ai/api/v1/email-accounts
   tags:
   - Email Accounts
@@ -76,13 +106,13 @@ apis:
   - Mailboxes
   properties:
   - type: Documentation
-    url: https://api.smartlead.ai/reference
+    url: https://api.smartlead.ai/core/email-accounts
 - aid: smartlead-ai:email-warmup-api
   name: Smartlead Email Warmup API
   description: >-
     Endpoints for managing Smartlead's deliverability warmup engine — enabling warmup per mailbox, configuring
     ramp settings, and reading warmup reputation and stats.
-  humanURL: https://api.smartlead.ai/reference/email-warmup
+  humanURL: https://api.smartlead.ai/guides/email-warmup
   baseURL: https://server.smartlead.ai/api/v1/email-accounts
   tags:
   - Warmup
@@ -90,13 +120,13 @@ apis:
   - Reputation
   properties:
   - type: Documentation
-    url: https://api.smartlead.ai/reference
+    url: https://api.smartlead.ai/guides/email-warmup
 - aid: smartlead-ai:webhooks-api
   name: Smartlead Webhooks API
   description: >-
-    CRUD endpoints for campaign-scoped webhook subscriptions covering lead events (sent, opened, clicked,
-    replied, bounced, unsubscribed) used to stream Smartlead activity to external systems.
-  humanURL: https://api.smartlead.ai/reference/webhooks
+    CRUD endpoints for user, client and campaign-scoped webhook subscriptions covering lead events (sent,
+    opened, clicked, replied, bounced, unsubscribed) used to stream Smartlead activity to external systems.
+  humanURL: https://api.smartlead.ai/api-reference/webhooks/events
   baseURL: https://server.smartlead.ai/api/v1/webhooks
   tags:
   - Webhooks
@@ -104,13 +134,15 @@ apis:
   - Subscriptions
   properties:
   - type: Documentation
-    url: https://api.smartlead.ai/reference
+    url: https://api.smartlead.ai/core/webhooks
+  - type: Webhooks
+    url: asyncapi/smartlead-ai-webhooks.yml
 - aid: smartlead-ai:analytics-api
   name: Smartlead Analytics API
   description: >-
     Endpoints for campaign and account-level analytics — sent, open, click, reply, bounce, and unsubscribe
     metrics aggregated over time ranges.
-  humanURL: https://api.smartlead.ai/reference/analytics
+  humanURL: https://api.smartlead.ai/api-reference/analytics
   baseURL: https://server.smartlead.ai/api/v1
   tags:
   - Analytics
@@ -118,13 +150,13 @@ apis:
   - Metrics
   properties:
   - type: Documentation
-    url: https://api.smartlead.ai/reference
+    url: https://api.smartlead.ai/api-reference
 - aid: smartlead-ai:client-management-api
   name: Smartlead Client Management API
   description: >-
-    Endpoints for agency users to provision and manage white-labeled client accounts, assign permissions,
-    and meter usage across multiple end customers.
-  humanURL: https://api.smartlead.ai/reference/client-management
+    Endpoints for agency users to provision and manage white-labeled client accounts, mint and revoke
+    per-client API keys, and meter usage across multiple end customers.
+  humanURL: https://api.smartlead.ai/api-reference/clients
   baseURL: https://server.smartlead.ai/api/v1
   tags:
   - Clients
@@ -132,11 +164,11 @@ apis:
   - Multi-Tenant
   properties:
   - type: Documentation
-    url: https://api.smartlead.ai/reference
+    url: https://api.smartlead.ai/api-reference
 - aid: smartlead-ai:smartlead-ai-campaign-statistics-api
   name: Smartlead Campaign Statistics API
   description: Retrieve campaign performance metrics.
-  humanURL: https://api.smartlead.ai/reference/campaigns
+  humanURL: https://api.smartlead.ai/api-reference/campaign-statistics
   baseURL: https://server.smartlead.ai/api/v1/campaigns
   tags:
   - Campaign Statistics
@@ -146,44 +178,105 @@ apis:
 - aid: smartlead-ai:smartlead-ai-campaigns-api
   name: Smartlead Campaigns API
   description: Manage Smartlead email campaigns.
-  humanURL: https://api.smartlead.ai/reference/campaigns
+  humanURL: https://api.smartlead.ai/api-reference/campaigns
   baseURL: https://server.smartlead.ai/api/v1/campaigns
   tags:
   - Campaigns
   properties:
   - type: OpenAPI
     url: openapi/smartlead-ai-campaigns-api-openapi.yml
+- aid: smartlead-ai:mcp-server
+  name: SmartLead Documentation MCP Server
+  description: >-
+    SmartLead's remote Model Context Protocol server. tools/list answers anonymously with three
+    documentation tools (search, a read-only docs filesystem, feedback). It exposes the SmartLead
+    documentation and OpenAPI to agents; it does not execute SmartLead REST operations.
+  humanURL: https://api.smartlead.ai/introduction
+  baseURL: https://api.smartlead.ai/mcp
+  tags:
+  - MCP
+  - Agents
+  - Documentation
+  properties:
+  - type: MCPServer
+    url: mcp/smartlead-ai-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/smartlead-ai-tool-crosswalk.yml
 common:
   - type: AgenticAccess
     url: agentic-access/smartlead-ai-agentic-access.yml
-  - type: DomainSecurity
-    url: security/smartlead-ai-domain-security.yml
+  - type: AgentCard
+    url: a2a/smartlead-ai-a2a.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: MCPServer
+    url: mcp/smartlead-ai-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/smartlead-ai-tool-crosswalk.yml
+  - type: LLMsTxt
+    url: llms/smartlead-ai-llms.txt
   - type: Authentication
     url: authentication/smartlead-ai-authentication.yml
+  - type: Conventions
+    url: conventions/smartlead-ai-conventions.yml
+  - type: ErrorCatalog
+    url: errors/smartlead-ai-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/smartlead-ai-rate-limits.yml
+  - type: Plans
+    url: plans/smartlead-ai-plans-pricing.yml
+  - type: Lifecycle
+    url: lifecycle/smartlead-ai-lifecycle.yml
+  - type: Webhooks
+    url: asyncapi/smartlead-ai-webhooks.yml
+  - type: DataModel
+    url: data-model/smartlead-ai-data-model.yml
+  - type: Conformance
+    url: conformance/smartlead-ai-conformance.yml
+  - type: Compliance
+    url: https://www.smartlead.ai/dpa
+  - type: Packages
+    url: packages/smartlead-ai-packages.yml
+  - type: CLI
+    url: cli/smartlead-ai-cli.yml
+  - type: Overlay
+    url: overlays/smartlead-ai-openapi-overlay.yaml
+  - type: WellKnown
+    url: well-known/smartlead-ai-well-known.yml
+  - type: DomainSecurity
+    url: security/smartlead-ai-domain-security.yml
   - type: Website
     url: https://www.smartlead.ai
   - type: App
     url: https://app.smartlead.ai
+  - type: DeveloperPortal
+    url: https://api.smartlead.ai/introduction
   - type: Documentation
-    url: https://api.smartlead.ai/reference
+    url: https://api.smartlead.ai/introduction
   - type: APIReference
-    url: https://api.smartlead.ai/reference
+    url: https://api.smartlead.ai/api-reference
   - type: GettingStarted
-    url: https://api.smartlead.ai
+    url: https://api.smartlead.ai/quickstart
+  - type: GitHubOrganization
+    url: https://github.com/Smartlead-Public
+  - type: Roadmap
+    url: https://roadmap.smartlead.ai
   - type: Pricing
     url: https://www.smartlead.ai/pricing
   - type: Blog
     url: https://www.smartlead.ai/blog
-  - type: Signup
+  - type: SignUp
     url: https://app.smartlead.ai/signup
   - type: Login
     url: https://app.smartlead.ai/login
+  - type: Support
+    url: https://help.smartlead.ai
   - type: Help
     url: https://help.smartlead.ai
   - type: PrivacyPolicy
     url: https://www.smartlead.ai/privacy-policy
   - type: TermsOfService
-    url: https://www.smartlead.ai/terms-of-service
+    url: https://www.smartlead.ai/new-terms-and-conditions
   - type: LinkedIn
     url: https://www.linkedin.com/company/smartleadhq
   - type: Twitter
@@ -204,3 +297,8 @@ integrations:
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 20
+  pass: local-v1
