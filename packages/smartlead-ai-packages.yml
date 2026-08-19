@@ -1,0 +1,108 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  registry.npmjs.org (search + package metadata), pypi.org, rubygems.org, crates.io,
+  repo.packagist.org, api.github.com/orgs/Smartlead-Public
+description: >-
+  SmartLead publishes one first-party package: a TypeScript CLI on npm under its own @smartlead
+  scope, source in its own GitHub org. It publishes NO first-party client library for any
+  language — every SmartLead SDK and MCP server on npm is community-built.
+packages:
+- language: javascript
+  registry: npm
+  name: "@smartlead/cli"
+  kind: cli
+  url: https://www.npmjs.com/package/@smartlead/cli
+  repository: https://github.com/Smartlead-Public/smartlead-cli
+  install: npm install -g @smartlead/cli
+  official: true
+  version: 0.1.0
+  published: '2026-03-17'
+  first_published: '2026-03-17'
+  release_count: 1
+  publisher: veebuv_smartlead
+  license: MIT
+  runtime: Node.js 20+
+  note: >-
+    Sole published version. Scope (@smartlead) and publisher account are SmartLead's; source lives
+    in the Smartlead-Public GitHub org alongside the docs repo that serves api.smartlead.ai.
+    Standalone binaries for macOS arm64/x64, Linux x64 and Windows x64 are attached to GitHub
+    Releases rather than a registry. Command surface: cli/smartlead-ai-cli.yml.
+absent:
+- registry: pypi
+  probed: [smartlead, smartlead-api, smartlead-python, pysmartlead]
+  status: 404
+  version: null
+  note: No first-party Python client library published.
+- registry: rubygems
+  probed: [smartlead]
+  status: 404
+  version: null
+- registry: packagist
+  probed: [smartlead/smartlead]
+  status: 404
+  version: null
+- registry: crates.io
+  probed: [smartlead]
+  status: 403
+  version: null
+  note: crates.io refused the unauthenticated probe; no SmartLead crate is referenced by the docs.
+- registry: maven-central
+  probed: []
+  version: null
+  note: Not checked against a named coordinate — SmartLead's docs name no JVM client.
+third_party:
+  note: >-
+    Recorded for accuracy, NOT credited to SmartLead. None of these is published by SmartLead and
+    none is referenced from SmartLead's own documentation.
+  packages:
+  - name: smartlead-mcp-by-leadmagic
+    registry: npm
+    version: 1.6.2
+    published: '2025-07-01'
+    publisher: jesseoue
+    official: false
+  - name: "@iflow-mcp/smartlead-mcp-server"
+    registry: npm
+    version: 1.2.2
+    published: '2025-12-05'
+    publisher: chatflowdev
+    official: false
+  - name: smartlead-mcp-server
+    registry: npm
+    version: 1.2.1
+    published: '2025-04-24'
+    publisher: jonathan-politzki
+    official: false
+  - name: smartlead-mcp
+    registry: npm
+    version: 0.2.2
+    published: '2026-01-03'
+    publisher: griffinwork40
+    official: false
+  - name: "@bcharleson/smartlead-cli"
+    registry: npm
+    version: 0.1.13
+    published: '2026-04-29'
+    publisher: bcharleson
+    official: false
+  - name: n8n-nodes-smartlead
+    registry: npm
+    version: 1.2.0
+    published: '2025-06-07'
+    publisher: brandonlipman
+    official: false
+  - name: "@pipedream/smartlead"
+    registry: npm
+    version: 0.0.1
+    published: '2025-04-10'
+    publisher: casret
+    official: false
+x-evidence:
+- url: https://registry.npmjs.org/@smartlead/cli
+  http_status: 200
+  fetched: '2026-08-13'
+- url: https://api.github.com/orgs/Smartlead-Public/repos
+  http_status: 200
+  repos: [docs, smartlead-cli]
+  fetched: '2026-08-13'

@@ -1,0 +1,108 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.smartlead.ai/guides/error-handling
+derived_from: openapi/smartlead-ai-openapi.yml
+format: vendor-json
+rfc9457: false
+description: >-
+  SmartLead's error contract. Errors are a vendor JSON envelope, not RFC 9457 problem+json — no
+  operation in the published OpenAPI declares application/problem+json. The status table below is
+  SmartLead's own; the per-status response counts are counted from the 98-operation spec.
+envelope:
+  shape: |
+    {
+      "error": {
+        "code": "VALIDATION_ERROR",
+        "message": "email field is required for all leads in lead_list",
+        "details": {
+          "field": "lead_list[2].email",
+          "constraint": "required"
+        }
+      }
+    }
+  fields:
+  - name: error.code
+    description: Machine-readable error code (e.g. VALIDATION_ERROR, RATE_LIMIT_EXCEEDED)
+  - name: error.message
+    description: Human-readable description
+  - name: error.details
+    description: Object with field-level context (field path, violated constraint)
+  schema: openapi/smartlead-ai-openapi.yml#/components/schemas/ErrorResponse
+  schema_note: >-
+    The spec's ErrorResponse schema is flatter than the documented envelope — it declares `error`
+    (string), `code` (string) and `details` (object) at the top level, where the docs show a
+    nested `error` object. Consumers should tolerate both shapes.
+problems:
+- status: 400
+  title: Bad Request
+  action: Fix the request payload — check required fields and data types.
+  in_spec: 5
+- status: 401
+  title: Unauthorized
+  action: Check your API key. The api_key query parameter is missing, expired or incorrect.
+  in_spec: 97
+  note: Declared on all but one operation; the most consistently documented failure in the spec.
+- status: 403
+  title: Forbidden
+  action: You do not have access to this resource.
+  in_spec: 0
+  note: Documented in the error guide but declared on no operation in the OpenAPI.
+- status: 404
+  title: Not Found
+  action: The resource (campaign, lead, mailbox) does not exist or belongs to another account.
+  in_spec: 35
+- status: 409
+  title: Conflict
+  action: >-
+    Duplicate resource — the lead or campaign already exists. On lead import this is expected
+    behaviour, not a failure; inspect the skipped_leads array in the import response.
+  in_spec: 0
+- status: 422
+  title: Unprocessable Entity
+  action: Validation failed — check field values.
+  in_spec: 36
+- status: 429
+  title: Too Many Requests
+  action: >-
+    Rate limited. Honor Retry-After, then exponential backoff with jitter. See
+    rate-limits/smartlead-ai-rate-limits.yml.
+  code: RATE_LIMIT_EXCEEDED
+  in_spec: 1
+- status: 500
+  title: Internal Server Error
+  action: >-
+    Retry with exponential backoff. If it persists, SmartLead's guide directs users to its status
+    page and support.
+  in_spec: 97
+- status: 503
+  title: Service Unavailable
+  action: Temporary outage — retry after a short delay.
+  in_spec: 0
+retry_policy:
+  retryable_statuses: [429, 500, 502, 503]
+  non_retryable: [400, 401, 403, 404, 409, 422]
+  strategy: exponential backoff with jitter, Retry-After honored when present
+  documented_default_retries: 3
+common_errors:
+- status: 401
+  cause: api_key parameter missing, expired or incorrect.
+  remediation: Verify or regenerate the key in SmartLead Settings -> API Keys; pass as ?api_key=.
+- status: 400
+  cause: A lead object in lead_list has no email field.
+  remediation: Validate every lead has a well-formed email before import.
+- status: 400
+  cause: Lead list exceeds the maximum size.
+  remediation: Batch imports into groups of 400 leads or fewer.
+- status: 404
+  cause: Campaign ID does not exist or belongs to a different account.
+  remediation: List campaigns first and confirm the ID.
+- status: 409
+  cause: A lead with the same email is already in the campaign.
+  remediation: Expected duplicate suppression — read skipped_leads in the import response.
+related:
+  conventions: conventions/smartlead-ai-conventions.yml
+  rate_limits: rate-limits/smartlead-ai-rate-limits.yml
+x-evidence:
+- url: https://api.smartlead.ai/guides/error-handling
+  http_status: 200
+  fetched: '2026-08-13'

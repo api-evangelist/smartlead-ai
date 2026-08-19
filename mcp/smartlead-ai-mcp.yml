@@ -1,0 +1,70 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.smartlead.ai/mcp
+status: published
+description: >-
+  SmartLead operates a remote MCP server on its documentation/API host. `tools/list` answered
+  anonymously over Streamable HTTP (SSE), so the tool set below is the server's real, live
+  manifest with its real inputSchemas — captured verbatim in smartlead-ai-tools-list.json.
+  It is a DOCUMENTATION server (Mintlify-style): the tools search and read the SmartLead API
+  docs and OpenAPI, they do not call the SmartLead REST API. An agent can use it to learn the
+  API; it cannot use it to create a campaign or import a lead.
+deployment:
+  mode: remote
+  endpoint: https://api.smartlead.ai/mcp
+  auth: none
+  verified: probed
+server:
+  name: smart_lead_api
+  transport: http
+  protocol: streamable-http
+  url: https://api.smartlead.ai/mcp
+  authentication: none observed — tools/list returned 200 without credentials
+  tools_list_file: smartlead-ai-tools-list.json
+tools:
+- name: search_smart_lead_api
+  title: Search documentation
+  description: >-
+    Search across the SmartLead API knowledge base for documentation, code examples, API
+    references and guides; returns contextual content with titles and direct doc links.
+  input_schema:
+    query: string (required)
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: query_docs_filesystem_smart_lead_api
+  description: >-
+    Run a read-only shell-like query (rg, grep, find, tree, ls, cat, head, tail, jq, …) against a
+    virtualized in-memory filesystem containing only the SmartLead documentation pages and the
+    OpenAPI spec. This is how a page is read — pass its .mdx path to head/cat.
+  input_schema:
+    command: string (required)
+  annotations:
+    read_only: true
+- name: submit_feedback
+  title: Submit documentation feedback
+  description: Submit feedback about a SmartLead documentation page.
+  input_schema:
+    path: string (required)
+    feedback: string (required)
+notes:
+- >-
+  The docs filesystem exposed by query_docs_filesystem_smart_lead_api is what led us to the real
+  machine-readable contract: /openapi/api-reference/openapi.yaml in that virtual tree resolves to
+  https://api.smartlead.ai/api-reference/openapi.yaml, an OpenAPI 3.1.1 with 98 operations.
+- >-
+  Third-party MCP servers wrapping the SmartLead REST API exist on npm (smartlead-mcp,
+  smartlead-mcp-by-leadmagic, smartlead-mcp-server and others). None are published by SmartLead
+  and none are recorded here as first-party — see packages/smartlead-ai-packages.yml.
+x-evidence:
+- url: https://api.smartlead.ai/mcp
+  method: POST tools/list
+  http_status: 200
+  content_type: text/event-stream
+  tools_returned: 3
+  fetched: '2026-08-13'
+- url: https://mcp.smartlead.ai/mcp
+  http_status: 404
+- url: https://server.smartlead.ai/mcp
+  http_status: 401

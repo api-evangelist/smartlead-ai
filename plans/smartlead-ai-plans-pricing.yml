@@ -3,8 +3,11 @@ specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
 provider: Smartlead
 providerId: smartlead-ai
+generated: '2026-08-13'
+method: searched
+source: https://www.smartlead.ai/pricing
 created: '2026-05-22'
-modified: '2026-05-22'
+modified: '2026-08-13'
 tags:
 - Cold Email
 - Outbound
@@ -13,40 +16,208 @@ tags:
 - Email Warmup
 - Automation
 - Sequences
-description: Machine-readable plans scaffold for the Smartlead API surface. Conforms to the API Commons Plans schema. Tier
-  limits and prices are scaffold defaults; replace with provider-published values.
+description: >-
+  SmartLead's published subscription tiers, read from its pricing page. Pricing is per workspace
+  per month and is metered on contacts stored, emails sent and verified prospect emails — NOT on
+  API calls. "API & Webhooks" appears as a plan feature row; API rate limits are tiered separately
+  (see rate-limits/smartlead-ai-rate-limits.yml). This file replaces an earlier scaffold whose
+  tiers and quotas were placeholder defaults.
+currency: USD
+billing_periods: [monthly, annual]
+annual_discount: 17%
+free_trial: true
+credit_card_required: false
+contract: no lock-in; monthly and annual, cancel anytime
+plan_count: 4
 plans:
-- id: smartlead-ai-free
-  name: Free
-  type: freemium
-  description: Free entry tier for the Smartlead API surface. Intended for evaluation, prototyping, and low-volume integrations.
-    Real limits and pricing must be reconciled with the provider's published plan documentation.
+- id: smartlead-ai-base
+  name: Base
+  type: paid
+  description: Foundation tier for early-stage outreach.
+  price: '39.00'
+  price_annual_monthly: '32.50'
+  currency: USD
+  billing_period: month
   entries:
-  - label: API Requests
-    description: Monthly API request quota across all included endpoints
-    name: api_requests
+  - label: Contacts
+    name: contacts
     type: quota
-    metric: requests
-    limit: 1000
+    metric: contacts
+    limit: 2000
     timeFrame: month
-    geo: global
-    domains:
-    - https://server.smartlead.ai/api/v1/campaigns
-    unit: 1
+  - label: Emails Sent
+    name: emails_sent
+    type: quota
+    metric: emails
+    limit: 6000
+    timeFrame: month
+  - label: Verified Prospect Emails
+    name: verified_emails
+    type: quota
+    metric: verified_emails
+    limit: 2000
+    timeFrame: month
+  - label: Email Accounts
+    name: email_accounts
+    type: quota
+    limit: unlimited
+  - label: Warmup Pool
+    name: warmup
+    type: addon
+    price: '59.00'
+    timeFrame: month
+- id: smartlead-ai-pro
+  name: Pro
+  type: paid
+  description: Growth tier for scaling sales teams; client workspaces available from this tier.
+  price: '94.00'
+  price_annual_monthly: '78.30'
+  currency: USD
+  billing_period: month
+  entries:
+  - label: Contacts
+    name: contacts
+    type: quota
+    metric: contacts
+    limit: 30000
+    timeFrame: month
+  - label: Emails Sent
+    name: emails_sent
+    type: quota
+    metric: emails
+    limit: 90000
+    timeFrame: month
+  - label: Verified Prospect Emails
+    name: verified_emails
+    type: quota
+    metric: verified_emails
+    limit: 30000
+    timeFrame: month
+  - label: Email Accounts
+    name: email_accounts
+    type: quota
+    limit: unlimited
+  - label: Warmup Pool
+    name: warmup
+    type: addon
+    price: '59.00'
+    timeFrame: month
+- id: smartlead-ai-unlimited-smart
+  name: Unlimited Smart
+  type: paid
+  description: Most popular tier — unlimited contacts, premium warmup included.
+  price: '174.00'
+  price_annual_monthly: '144.50'
+  currency: USD
+  billing_period: month
+  entries:
+  - label: Contacts
+    name: contacts
+    type: quota
+    limit: unlimited
+  - label: Emails Sent
+    name: emails_sent
+    type: quota
+    metric: emails
+    limit: 150000
+    timeFrame: month
+  - label: Verified Prospect Emails
+    name: verified_emails
+    type: quota
+    metric: verified_emails
+    limit: 50000
+    timeFrame: month
+  - label: Warmup Pool
+    name: warmup
+    type: included
     price: '0.00'
-    userMultiplied: false
-  - label: Rate Limit
-    description: Maximum requests per minute on the free tier
-    name: rate_limit
-    type: rate
-    metric: requests_per_minute
-    limit: 10
-    timeFrame: minute
-    geo: global
-    domains:
-    - https://server.smartlead.ai/api/v1/campaigns
-    unit: 1
+    note: Premium, eligible for Ultrapremium
+- id: smartlead-ai-unlimited-prime
+  name: Unlimited Prime
+  type: paid
+  description: Highest published tier — agency and high-volume enterprise outreach.
+  price: '379.00'
+  price_annual_monthly: '314.60'
+  currency: USD
+  billing_period: month
+  entries:
+  - label: Contacts
+    name: contacts
+    type: quota
+    limit: unlimited
+  - label: Emails Sent
+    name: emails_sent
+    type: quota
+    metric: emails
+    limit: 500000
+    timeFrame: month
+  - label: Verified Prospect Emails
+    name: verified_emails
+    type: quota
+    metric: verified_emails
+    limit: 170000
+    timeFrame: month
+  - label: Warmup Pool
+    name: warmup
+    type: included
     price: '0.00'
+  - label: Client Workspaces
+    name: client_workspaces
+    type: included
+    limit: 3
+  - label: SmartServers + OAuth
+    name: smartservers
+    type: included
+    limit: 3
+add_ons:
+- name: Whitelabel / client workspace
+  price: '29.00'
+  billing_period: month
+  unit: per client workspace
+  available_from: Pro
+- name: Warmup Pool
+  price: '59.00'
+  billing_period: month
+  note: Included free on Unlimited Smart and Unlimited Prime.
+- name: SmartServers (dedicated IP)
+  price: '39.00'
+  billing_period: month
+  unit: per server
+- name: SmartDelivery Growth
+  price: '49.00'
+  billing_period: month
+  note: 120 campaign sequence tests, up to 50 sender accounts per test.
+- name: SmartDelivery Pro
+  price: '174.00'
+  billing_period: month
+  note: Unlimited tests, up to 200 senders per test, full API access, full whitelabel access.
+- name: SmartDelivery Export
+  price: '599.00'
+  billing_period: month
+  note: Unlimited tests, up to 500 senders per test, full API access, full whitelabel access.
+- name: SmartDialer voice credits
+  price: '9.00'
+  billing_period: month
+  unit: credit pack
+- name: Email verification credits
+  price: '32.00'
+  note: One-time or monthly (17% saving); credit packs from 6k to 960k checks.
+notes:
+- >-
+  API access is not sold as a separate product or metered per call. "API & Webhooks" is a listed
+  feature row on the plan comparison; the served pricing HTML does not resolve which tiers carry a
+  check mark, so per-tier API entitlement is not recorded here rather than guessed.
+- >-
+  API rate limits are published against Standard / Pro / Enterprise tiers in the rate-limits guide,
+  a different tier vocabulary from these four subscription plans. SmartLead does not publish a
+  mapping between the two.
+- Enterprise pricing is a "Book a Demo" motion with no published price.
 references:
-- name: Smartlead API Documentation
-  url: https://raw.githubusercontent.com/api-evangelist/smartlead-ai/refs/heads/main/apis.yml
+- name: Smartlead Pricing
+  url: https://www.smartlead.ai/pricing
+- name: Smartlead API Rate Limits
+  url: https://api.smartlead.ai/guides/rate-limits
+x-evidence:
+- url: https://www.smartlead.ai/pricing
+  http_status: 200
+  fetched: '2026-08-13'

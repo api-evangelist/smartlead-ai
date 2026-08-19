@@ -1,0 +1,103 @@
+generated: '2026-08-13'
+method: derived
+source: mcp/smartlead-ai-mcp.yml + openapi/smartlead-ai-openapi.yml
+description: >-
+  Binding between SmartLead's live MCP tool set and its published OpenAPI operations. The finding
+  is a clean surface divergence: SmartLead's MCP server is a DOCUMENTATION server, so none of its
+  three tools is backed by a SmartLead REST operation, and all 98 REST operations are reachable
+  only over HTTP. An agent connected to https://api.smartlead.ai/mcp can read the API but cannot
+  call it.
+surfaces:
+  openapi:
+    file: openapi/smartlead-ai-openapi.yml
+    source: https://api.smartlead.ai/api-reference/openapi.yaml
+    operations: 98
+    gated: false
+  mcp:
+    url: https://api.smartlead.ai/mcp
+    tools: 3
+    gated: false
+    note: tools/list answered anonymously; inputSchemas below are the server's own, not inferred
+  graphql:
+    present: false
+crosswalk: []
+mcp_only:
+- tool: search_smart_lead_api
+  reason: >-
+    Documentation search over SmartLead's own docs corpus. Not a SmartLead REST capability — no
+    operationId in the OpenAPI exposes documentation search.
+  confidence: high
+- tool: query_docs_filesystem_smart_lead_api
+  reason: >-
+    Read-only shell over a virtualized documentation filesystem (rg/ls/cat over the .mdx pages and
+    the OpenAPI). Server-side docs tooling with no REST equivalent.
+  confidence: high
+- tool: submit_feedback
+  reason: >-
+    Documentation feedback submission. Writes to the docs platform, not to a SmartLead tenant; no
+    matching REST operation.
+  confidence: high
+rest_only:
+- capability: Smart Delivery
+  count: 28
+  operations: [getProviderIds, createAutomatedTest, createManualTest, listTests, getTestDetails,
+    getTestEmailContent, stopAutomatedTest, bulkDeleteTests, getFolders, createFolder, getFolderById,
+    deleteFolder, getMailboxSummary, getMailboxCount, getSenderList, getSenderReport, getProviderReport,
+    getGeoReport, getSpamFilterReport, getScheduleHistory, getBlacklists, getDomainBlacklist,
+    getIpBlacklistCount, getSpfDetails, getDkimDetails, getRdnsReport, getIpDetails, getReplyHeaders]
+- capability: Leads
+  count: 19
+  operations: [getCampaignLeads, addLeadsToCampaign, deleteLeadFromCampaign, updateLead, pauseLead,
+    resumeLead, unsubscribeLeadFromCampaign, updateLeadCategory, getLeadByEmail, getLeadCampaigns,
+    getLeadCategories, unsubscribeLeadGlobally, createLeadList, getAllLeadLists, getLeadListById,
+    updateLeadList, deleteLeadList, importLeadsToList, assignTagsToLeadLists]
+- capability: Campaigns
+  count: 12
+  operations: [getAllCampaigns, getCampaignById, deleteCampaign, createCampaign, updateCampaignStatus,
+    updateCampaignSettings, updateCampaignSchedule, getCampaignSequences, updateCampaignSequences,
+    getCampaignEmailAccounts, addEmailAccountsToCampaign, removeEmailAccountsFromCampaign]
+- capability: Email Accounts
+  count: 10
+  operations: [getAllEmailAccounts, getEmailAccountById, updateEmailAccount, deleteEmailAccount,
+    addSmtpEmailAccount, addOauthEmailAccount, updateWarmupSettings, getWarmupStats,
+    suspendEmailAccount, unsuspendEmailAccount]
+- capability: Analytics
+  count: 8
+  operations: [getOverallStats, getDayWiseStats, getCampaignWisePerformance, getCampaignListAnalytics,
+    getDayWisePositiveReplyStats, getMailboxStats, getLeadStats, getCategoryWiseResponses]
+- capability: Master Inbox
+  count: 6
+  operations: [replyToEmailThread, forwardEmail, getSentEmails, getInboxReplies, getUnreadReplies,
+    getImportantEmails]
+- capability: Smart Senders
+  count: 5
+  operations: [getVendors, searchDomain, getDomainList, placeOrder, autoGenerateMailboxes]
+- capability: Webhooks
+  count: 4
+  operations: [createWebhook, getWebhookDetails, updateWebhook, deleteWebhook]
+- capability: Utilities
+  count: 3
+  operations: [sendSingleEmail, trackEmailOpen, getCreditsStats]
+- capability: Campaign Statistics
+  count: 2
+  operations: [getCampaignStatistics, getCampaignAnalytics]
+- capability: Authentication
+  count: 1
+  operations: [getUserByApiKey]
+coverage:
+  tools_named: 3
+  tools_bound_to_rest: 0
+  mcp_only: 3
+  rest_operations_total: 98
+  rest_operations_with_a_tool: 0
+  rest_operations_without_a_tool: 98
+notes:
+- >-
+  The gap is the finding, not a defect in this crosswalk. SmartLead ships an agent-readable
+  contract (OpenAPI 3.1.1, an agent card, a published Agent Skill) and a docs MCP server, but no
+  first-party MCP server that executes campaign, lead, mailbox or webhook operations. Agents that
+  need to act call the REST API directly, or run one of the third-party community MCP servers.
+- >-
+  A candidate execution-tool set for a first-party server is exactly the rest_only[] list above;
+  each entry already carries a real operationId whose parameters and requestBody in
+  openapi/smartlead-ai-openapi.yml are the tool's real inputSchema.

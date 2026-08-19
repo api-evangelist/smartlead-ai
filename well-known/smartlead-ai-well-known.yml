@@ -1,0 +1,106 @@
+generated: '2026-08-13'
+method: probed
+source: live GET probes, 2026-08-13
+description: >-
+  /.well-known/ discovery surface across every SmartLead host in apis.yml and every OpenAPI
+  servers[] host. One real document was served: the A2A agent card on the documentation/API host.
+  Everything else 404s (marketing host), 401s behind the API gateway, or — on app.smartlead.ai —
+  answers 200 with the single-page-app HTML shell for every path, which is not a document.
+hosts:
+- host: api.smartlead.ai
+  documents:
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: application/json
+    file: ../a2a/smartlead-ai-agent-card.json
+    real_document: true
+  - path: /.well-known/agent-skills/smartlead/skill.md
+    status: 200
+    content_type: text/markdown
+    file: ../skills/smartlead-ai-smartlead.md
+    real_document: true
+    note: Referenced by the agent card's skills[0].url; not an RFC 8615 registered path.
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+- host: www.smartlead.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: server.smartlead.ai
+  note: >-
+    API gateway answers 401 (application/json, 38 bytes) for every path including /.well-known/*.
+    Not a document; the gateway requires api_key on everything.
+  documents:
+  - path: /.well-known/security.txt
+    status: 401
+  - path: /.well-known/openid-configuration
+    status: 401
+  - path: /.well-known/oauth-authorization-server
+    status: 401
+  - path: /.well-known/api-catalog
+    status: 401
+  - path: /.well-known/ai-plugin.json
+    status: 401
+  - path: /.well-known/agent-card.json
+    status: 401
+  - path: /.well-known/agent.json
+    status: 401
+- host: prospect-api.smartlead.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: app.smartlead.ai
+  note: >-
+    SPA catch-all — returns HTTP 200 with the application HTML shell for every /.well-known/*
+    path. Recorded as a MISS, not a hit.
+  documents:
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: text/html
+    real_document: false
+- host: staging.smartlead.ai
+  note: >-
+    Advertised as the "Staging server (for testing)" in the published OpenAPI servers[] block, but
+    the hostname does not resolve — every probe returned curl exit/000. Recorded in
+    lifecycle/smartlead-ai-lifecycle.yml.
+  documents:
+  - path: /.well-known/security.txt
+    status: 000
+  - path: /.well-known/agent-card.json
+    status: 000
+summary:
+  hosts_probed: 6
+  paths_probed: 33
+  real_documents: 2
+  security_txt: false
+  openid_configuration: false
+  oauth_authorization_server: false
+  api_catalog: false
+  ai_plugin: false
+  agent_card: true

@@ -1,0 +1,86 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  openapi/smartlead-ai-openapi.yml, https://api.smartlead.ai/introduction,
+  https://api.smartlead.ai/guides/error-handling, live host probes 2026-08-13
+description: >-
+  Versioning, change and availability posture for the SmartLead API. The headline finding is
+  absence: SmartLead ships a well-documented v1 API with no published changelog, no deprecation or
+  sunset policy, no SLA, and a status page its own docs link to that does not resolve.
+versioning:
+  scheme: uri-path
+  current: v1
+  base_url: https://server.smartlead.ai/api/v1
+  policy_url: null
+  note: >-
+    No version-negotiation header, no dated versions, and no published policy describing what
+    constitutes a breaking change or how a v2 would be introduced.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  note: >-
+    No operation in the 98-operation published OpenAPI carries `deprecated: true`, and no
+    deprecation or sunset policy is published anywhere in the docs.
+changelog:
+  url: null
+  probed:
+  - url: https://api.smartlead.ai/changelog
+    status: 404
+  - url: https://www.smartlead.ai/changelog
+    status: 404
+  note: >-
+    No dated API changelog. The docs corpus (17 top-level pages plus the api-reference tree,
+    enumerated via the docs MCP server) contains no changelog page.
+sla:
+  url: null
+  uptime_target: null
+status_page:
+  url: null
+  advertised: https://status.smartlead.ai
+  reachable: false
+  note: >-
+    The error-handling guide tells developers to "check the SmartLead status page" at
+    https://status.smartlead.ai — that hostname does not resolve (connection failure, no HTTP
+    status). The underlying Statuspage tenant https://smartlead.statuspage.io answers 200 but its
+    API reports "Your page is inactive." There is no working status page to point an integrator at.
+  probed:
+  - url: https://status.smartlead.ai/
+    status: 000
+  - url: https://smartlead.statuspage.io/api/v2/summary.json
+    status: 200
+    body: Your page is inactive. Please include an API key to access this resource.
+environments:
+- name: production
+  url: https://server.smartlead.ai/api
+  reachable: true
+- name: staging
+  url: https://staging.smartlead.ai/api
+  reachable: false
+  advertised_in: openapi servers[] as "Staging server (for testing)"
+  note: >-
+    The published OpenAPI advertises a staging server for testing, but staging.smartlead.ai does
+    not resolve. An integrator following the spec to a test environment hits a dead host.
+roadmap:
+  url: https://roadmap.smartlead.ai/
+  status: 200
+  note: Public product roadmap (product-level, not API-level).
+support:
+  contact: support@smartlead.ai
+  source: openapi info.contact
+  help_center: https://help.smartlead.ai
+related:
+  conventions: conventions/smartlead-ai-conventions.yml
+  errors: errors/smartlead-ai-problem-types.yml
+x-evidence:
+- url: https://api.smartlead.ai/api-reference/openapi.yaml
+  http_status: 200
+  fetched: '2026-08-13'
+- url: https://status.smartlead.ai/
+  http_status: 000
+  fetched: '2026-08-13'
+- url: https://roadmap.smartlead.ai/
+  http_status: 200
+  fetched: '2026-08-13'

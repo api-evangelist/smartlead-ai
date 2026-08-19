@@ -1,0 +1,27 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.smartlead.ai/.well-known/agent-skills/smartlead/skill.md
+description: >-
+  SmartLead publishes its own Agent Skill and advertises it from its A2A agent card. The file
+  below is saved VERBATIM as served — API Evangelist did not author or edit it.
+skills:
+- file: smartlead-ai-smartlead.md
+  name: Smartlead
+  description: >-
+    Use when building cold email campaign automation, managing leads at scale, configuring email
+    account rotation, tracking campaign performance, or integrating outreach workflows with CRMs
+    and external tools via webhooks.
+  api: openapi/smartlead-ai-openapi.yml
+  method: searched
+  source: https://api.smartlead.ai/.well-known/agent-skills/smartlead/skill.md
+  http_status: 200
+  content_type: text/markdown
+  bytes: 9235
+  advertised_by: a2a/smartlead-ai-agent-card.json
+  covers:
+  - campaigns
+  - leads
+  - email-accounts
+  - sequences
+  - webhooks
+  - analytics

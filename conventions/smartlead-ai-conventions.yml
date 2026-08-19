@@ -1,0 +1,126 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://api.smartlead.ai/authentication, https://api.smartlead.ai/guides/error-handling,
+  https://api.smartlead.ai/guides/rate-limits, https://api.smartlead.ai/guides/webhook-integration,
+  openapi/smartlead-ai-openapi.yml
+description: >-
+  Cross-cutting request/response semantics for the SmartLead REST API — how to authenticate,
+  paginate, read errors, read rate-limit signals, and verify inbound webhooks.
+authentication:
+  style: api-key
+  transport: query parameter
+  parameter: api_key
+  example: "https://server.smartlead.ai/api/v1/campaigns/?api_key=YOUR_API_KEY"
+  scheme: openapi/smartlead-ai-openapi.yml#/components/securitySchemes/ApiKeyAuth
+  issued_from: SmartLead dashboard, Settings -> API Keys
+  applies_to: every operation (spec declares a global security requirement)
+  oauth2: false
+  scopes: false
+  agency_keys: >-
+    Agency accounts can mint, list, reset and revoke per-client API keys through the Clients
+    surface (createClientApiKey / resetClientApiKey in the CLI's clients group).
+  caution: >-
+    Keys travel in the URL query string, which means they are routinely written to proxy, CDN and
+    web-server access logs and to browser history. There is no header alternative documented.
+  detail: authentication/smartlead-ai-authentication.yml
+versioning:
+  scheme: uri-path
+  current: v1
+  base_url: https://server.smartlead.ai/api/v1
+  server_block: https://server.smartlead.ai/api
+  note: >-
+    servers[] in the published OpenAPI is https://server.smartlead.ai/api and every path template
+    begins with /v1, so the effective base is https://server.smartlead.ai/api/v1 — which is what
+    the llms.txt, the quickstart and every code sample use.
+  version_header: false
+  date_versioning: false
+pagination:
+  style: offset-limit
+  params:
+  - name: limit
+    in: query
+    used_by: 4 operations in the published spec
+  - name: offset
+    in: query
+    used_by: 4 operations in the published spec
+  coverage: >-
+    Partial and undocumented as a policy. Only a handful of list operations declare limit/offset in
+    the spec; there is no pagination guide, no documented default or maximum page size, and no
+    cursor or Link-header envelope. The first-party CLI compensates with an --all flag that walks
+    pages client-side on leads list / list-all.
+  response_envelope: none documented
+field_expansion: none documented
+sparse_fieldsets: none documented
+metadata:
+  custom_fields: >-
+    Leads carry an arbitrary custom_fields object used for sequence personalization; this is the
+    only user-extensible metadata surface.
+request_tracing:
+  request_id_header: null
+  note: >-
+    No request-id is documented on API responses. X-Request-Id exists only on OUTBOUND webhook
+    deliveries (see webhooks below). SmartLead's debugging guidance is client-side logging of
+    request and response bodies.
+idempotency:
+  request_side: false
+  header: null
+  note: >-
+    SmartLead does NOT publish a request idempotency contract. There is no Idempotency-Key header
+    or parameter anywhere in the docs or the 98-operation OpenAPI, and no documented safe-retry
+    guarantee for POST/PATCH. Retrying a write is at the caller's risk.
+  natural_dedupe: >-
+    Lead import is naturally deduplicating: adding a lead already present in the campaign returns
+    409 / lands in the response's skipped_leads array rather than double-sending.
+  delivery_side: >-
+    Idempotency IS documented, but for the CONSUMER of webhooks: SmartLead retries deliveries and
+    tells integrators to dedupe on the X-Request-Id header (or campaign_id + to_email +
+    event_type + timestamp). That is delivery-side dedupe, not API request idempotency.
+error_envelope:
+  format: vendor JSON, nested under "error"
+  rfc9457: false
+  catalog: errors/smartlead-ai-problem-types.yml
+rate_limit_signaling:
+  headers: [X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After]
+  exhausted_status: 429
+  error_code: RATE_LIMIT_EXCEEDED
+  detail: rate-limits/smartlead-ai-rate-limits.yml
+bulk_operations:
+- operation: addLeadsToCampaign
+  max_batch: 400
+  note: Larger payloads are rejected with a 400.
+webhooks:
+  direction: outbound
+  transport: HTTPS POST, application/json
+  headers:
+  - name: X-Smartlead-Signature
+    description: HMAC SHA256 of the raw body, prefixed "sha256=", keyed with the signing secret
+  - name: X-Request-Id
+    description: Unique identifier for each delivery — the documented dedupe key
+  - name: X-Webhook-Level
+    description: "Webhook scope: user, client or campaign"
+  verification: >-
+    hmac.compare_digest('sha256=' + HMAC_SHA256(signing_secret, raw_body), X-Smartlead-Signature)
+  retry_semantics: >-
+    Return 2xx for success; 4xx marks a permanent failure and is NOT retried; 5xx or a timeout is
+    treated as temporary and IS retried. Respond 200 quickly and process asynchronously.
+  catalog: asyncapi/smartlead-ai-webhooks.yml
+content_types:
+  request: application/json
+  response: application/json
+related:
+  authentication: authentication/smartlead-ai-authentication.yml
+  errors: errors/smartlead-ai-problem-types.yml
+  rate_limits: rate-limits/smartlead-ai-rate-limits.yml
+  lifecycle: lifecycle/smartlead-ai-lifecycle.yml
+  webhooks: asyncapi/smartlead-ai-webhooks.yml
+x-evidence:
+- url: https://api.smartlead.ai/guides/webhook-integration
+  http_status: 200
+  fetched: '2026-08-13'
+- url: https://api.smartlead.ai/guides/rate-limits
+  http_status: 200
+  fetched: '2026-08-13'
+- url: https://api.smartlead.ai/api-reference/openapi.yaml
+  http_status: 200
+  fetched: '2026-08-13'

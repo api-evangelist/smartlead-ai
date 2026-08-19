@@ -1,0 +1,44 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Smartlead Campaign Statistics API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Campaign Statistics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get campaign statistics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://server.smartlead.ai/api/v1/campaigns/:id/statistics",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve campaign performance metrics."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

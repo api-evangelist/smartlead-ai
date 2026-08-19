@@ -3,56 +3,103 @@ specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
 provider: Smartlead
 providerId: smartlead-ai
+generated: '2026-08-13'
+method: searched
+source: https://api.smartlead.ai/guides/rate-limits
 created: '2026-05-22'
-modified: '2026-05-22'
+modified: '2026-08-13'
 tags:
 - Cold Email
 - Outbound
 - Sales
 - Deliverability
-- Email Warmup
-- Automation
-- Sequences
 - Rate Limiting
 - Quotas
 - Throttling
-description: Scaffolded rate limit definitions for the Smartlead API surface. Captures per-tier quotas, burst behavior, response
-  signaling, and recovery semantics. Defaults are scaffold values to be replaced with published provider limits.
+description: >-
+  SmartLead's published rate limits, read from its Rate Limits guide. Limits are enforced per API
+  key and are shared across every endpoint — campaign, lead and analytics calls all draw on the
+  same budget. This file replaces an earlier scaffold whose numbers were placeholder defaults.
+scope: per-api-key
+applies_to_all_endpoints: true
 headers:
   limit: X-RateLimit-Limit
   remaining: X-RateLimit-Remaining
   reset: X-RateLimit-Reset
   retryAfter: Retry-After
-  policy: RateLimit-Policy
+  note: >-
+    X-RateLimit-Reset is a Unix timestamp for the end of the current window. Retry-After is
+    returned only on a 429.
 responseCodes:
   throttled: 429
   quotaExceeded: 429
-  serviceUnavailable: 503
+error_body:
+  example: |
+    {
+      "error": {
+        "code": "RATE_LIMIT_EXCEEDED",
+        "message": "Too many requests. Please retry after 30 seconds.",
+        "retry_after": 30
+      }
+    }
+  code: RATE_LIMIT_EXCEEDED
+  retry_after_field: error.retry_after
+limit_count: 3
 limits:
-- tier: free
-  name: Free Tier Default
+- tier: standard
+  name: Standard
   scope: api-key
   metric: requests_per_minute
-  limit: 10
-  burst: 20
+  limit: 60
   timeFrame: minute
-  applies:
-  - https://server.smartlead.ai/api/v1/campaigns
-  description: Default per-token request rate for the free tier. Bursts above the limit return HTTP 429 with Retry-After.
+  applies: [https://server.smartlead.ai/api/v1]
+- tier: standard
+  name: Standard (hourly)
+  scope: api-key
+  metric: requests_per_hour
+  limit: 1000
+  timeFrame: hour
+  burst: 10 requests/second
+  applies: [https://server.smartlead.ai/api/v1]
 - tier: pro
-  name: Pro Tier Default
+  name: Pro
   scope: api-key
   metric: requests_per_minute
   limit: 120
-  burst: 240
   timeFrame: minute
-  applies:
-  - https://server.smartlead.ai/api/v1/campaigns
-  description: Higher rate envelope for paid plans; reconcile against published commercial terms.
+  applies: [https://server.smartlead.ai/api/v1]
+- tier: pro
+  name: Pro (hourly)
+  scope: api-key
+  metric: requests_per_hour
+  limit: 3000
+  timeFrame: hour
+  burst: 20 requests/second
+  applies: [https://server.smartlead.ai/api/v1]
+- tier: enterprise
+  name: Enterprise
+  scope: api-key
+  metric: requests_per_minute
+  limit: null
+  timeFrame: minute
+  note: Custom — SmartLead publishes "Custom" for per-minute, per-hour and burst on this tier.
+payload_limits:
+- operation: addLeadsToCampaign
+  limit: 400
+  unit: leads per request
+  source: https://api.smartlead.ai/guides/rate-limits
 recoveryStrategies:
-- name: Exponential Backoff
-  description: Wait Retry-After seconds (or back off exponentially up to 60s) before retrying.
-- name: Queue and Retry
-  description: Submit bulk work in batches under the burst envelope.
-notes:
-- Replace scaffold values with the provider's published rate limit policy.
+- name: Exponential backoff with jitter
+  description: >-
+    SmartLead's documented approach — honor Retry-After when present, otherwise back off 1s, 2s,
+    4s, 8s, 16s with random jitter, to a documented default of 5 retries.
+- name: Proactive client-side throttling
+  description: >-
+    SmartLead recommends setting a client-side ceiling at ~80% of the tier limit (50/min against
+    the 60/min Standard limit) to absorb timing skew.
+- name: Batch instead of per-record calls
+  description: Use the bulk lead-import endpoint (max 400 per request) rather than one call per lead.
+x-evidence:
+- url: https://api.smartlead.ai/guides/rate-limits
+  http_status: 200
+  fetched: '2026-08-13'

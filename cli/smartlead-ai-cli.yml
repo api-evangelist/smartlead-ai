@@ -1,0 +1,130 @@
+generated: '2026-08-13'
+method: searched
+source: https://github.com/Smartlead-Public/smartlead-cli (README, master branch)
+name: smartlead
+package: "@smartlead/cli"
+version: 0.1.0
+published: '2026-03-17'
+official: true
+license: MIT
+description: >-
+  First-party command-line interface for the SmartLead REST API, built for terminals, scripts,
+  CI/CD and AI-assisted workflows. Auto-detects output format (table on a TTY, JSON when piped),
+  writes data to stdout and errors to stderr, and returns typed exit codes.
+requirements:
+  runtime: Node.js 20+
+  binaries: no runtime dependency for the standalone builds
+install:
+- method: npm
+  command: npm install -g @smartlead/cli
+  recommended: true
+- method: npx
+  command: npx @smartlead/cli campaigns list
+- method: binary
+  url: https://github.com/Smartlead-Public/smartlead-cli/releases
+  artifacts:
+  - smartlead-macos-arm64
+  - smartlead-macos-x64
+  - smartlead-linux-x64
+  - smartlead-win-x64.exe
+authentication:
+  resolution_order:
+  - flag: --api-key
+  - env: SMARTLEAD_API_KEY
+  - config_file: ~/.smartlead/config.json
+  config_permissions: '0600'
+  commands:
+  - smartlead config set api_key <KEY>
+  - smartlead config get api_key
+  - smartlead config clear
+output:
+  default_tty: table
+  default_piped: json
+  formats: [table, json, csv]
+  flag: --format
+  streams: data to stdout, errors and warnings to stderr
+  no_color_env: NO_COLOR
+environment:
+- name: SMARTLEAD_API_KEY
+  description: API key; overrides the config file, overridden by --api-key
+- name: SMARTLEAD_PROSPECT_API_URL
+  description: >-
+    Override the prospect service base URL (default
+    https://prospect-api.smartlead.ai/api/v1/search-email-leads)
+- name: NO_COLOR
+  description: Disable table borders/formatting
+exit_codes:
+- code: 0
+  meaning: Success
+- code: 1
+  meaning: General error (bad input, API error)
+- code: 2
+  meaning: Authentication failure (missing or invalid API key)
+- code: 3
+  meaning: Resource not found (404)
+command_groups:
+- group: config
+  description: Manage CLI configuration.
+  commands: [set, get, list, clear]
+- group: campaigns
+  description: Create, configure, schedule, sequence, export and delete campaigns.
+  commands: [list, get, create, update-schedule, update-settings, save-sequence, set-status,
+    get-sequence, by-lead, export, delete, sequence-analytics, create-subsequence]
+- group: leads
+  description: Import, update, categorize, pause/resume, unsubscribe and blocklist leads.
+  commands: [list, list-all, get-by-email, categories, overview, sequence-details, add, push,
+    update, update-category, pause, resume, unsubscribe, unsubscribe-all, delete, deactivate,
+    deactivate-campaign, messages, blocklist, blocklist-add, blocklist-remove]
+  note: "--all on list/list-all auto-paginates across every page."
+- group: mailboxes
+  description: Manage sender email accounts, warmup, tags and message fetch.
+  commands: [create, list, list-all, get, list-by-campaign, add-to-campaign, remove, update,
+    set-warmup, warmup-stats, reconnect, update-tag, add-tags, remove-tags, tags-by-email,
+    fetch-messages, bulk-fetch-messages]
+- group: stats
+  description: Campaign and account statistics.
+  commands: [campaign, campaign-range, top-level, top-level-range, leads, mailboxes]
+- group: webhooks
+  description: Manage campaign webhooks and replay deliveries.
+  commands: [list, upsert, delete, summary, retrigger]
+- group: clients
+  description: Agency client workspaces and their API keys.
+  commands: [create, list, create-key, keys, delete-key, reset-key]
+- group: analytics
+  description: Cross-campaign analytics and reporting; most commands require --from/--to.
+  commands: [campaigns, clients, client-monthly, overall, daily, daily-sent, daily-replies,
+    daily-replies-sent, campaign-stats, client-stats, mailbox-health, domain-health, provider-perf,
+    team-board, lead-stats, lead-categories, first-reply, followup-rate, reply-time,
+    campaign-responses, campaign-status, mailbox-stats]
+  common_flags: [--timezone, --client-ids, --campaign-ids]
+- group: inbox
+  description: Unified master inbox — read, reply, forward, categorize, task and assign.
+  commands: [replies, unread, snoozed, important, scheduled, reminders, archived, lead, untracked,
+    reply, forward, update-revenue, update-category, create-task, create-note, block-domains,
+    resume-lead, read-status, set-reminder, push-subsequence, assign-member]
+- group: prospect
+  description: Prospect search, lookups, enrichment and saved searches.
+  commands: [departments, cities, countries, states, industries, sub-industries, headcounts, levels,
+    revenue, companies, domains, job-titles, keywords, search, fetch, get, find-emails, review,
+    saved-searches, recent-searches, fetched-searches, save-search, update-search, update-fetched,
+    search-analytics, reply-analytics]
+key_flows:
+- name: Campaign audit
+  steps: [smartlead campaigns list, smartlead stats campaign --id <ID>]
+- name: Mailbox health check
+  steps: [smartlead mailboxes list-all, smartlead mailboxes warmup-stats --id <ID>]
+- name: Lead export
+  steps: ["smartlead leads list --campaign-id <ID> --all --format csv > leads.csv"]
+- name: Daily analytics report
+  steps: [smartlead analytics overall --from <DATE> --to <DATE>, smartlead analytics daily --from <DATE> --to <DATE>]
+agent_notes: >-
+  The README documents the CLI explicitly as an agent surface, with worked prompts for driving it
+  from Claude Code (campaign audit, mailbox health, lead export, analytics report, prospect
+  workflow). It is a local, human-installed surface — not something an agent reaches on its own.
+related:
+  package: packages/smartlead-ai-packages.yml
+  api: openapi/smartlead-ai-openapi.yml
+x-evidence:
+- url: https://raw.githubusercontent.com/Smartlead-Public/smartlead-cli/master/README.md
+  http_status: 200
+  fetched: '2026-08-13'

@@ -1,0 +1,214 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/smartlead-ai-openapi.yml
+description: >-
+  Entity-relationship graph for the SmartLead API, derived from the 28 component schemas and the
+  path templates of the 98 published operations. Relationships are inferred from id-reference
+  fields (user_id, client_id, campaign_id, email_campaign_id) and from path nesting — the spec
+  declares no $ref between schemas, so every edge below comes from a named id field or a URL path,
+  and each edge records which.
+entities:
+- name: User
+  schema: User
+  id: id
+  description: The SmartLead account the API key belongs to; resolved by getUserByApiKey.
+  operations: [getUserByApiKey]
+- name: Client
+  id: client_id
+  description: >-
+    An agency's white-labeled client workspace. Referenced by Campaign.client_id and User.client_id
+    and filtered on via client_id / client_ids query parameters; no standalone Client schema is
+    published even though client operations exist.
+  schema: null
+- name: Campaign
+  schema: Campaign
+  id: id
+  description: An email campaign — the central object; sequences, leads, mailboxes and webhooks all hang off it.
+  operations: [getAllCampaigns, getCampaignById, createCampaign, deleteCampaign, updateCampaignStatus,
+    updateCampaignSettings, updateCampaignSchedule]
+- name: CampaignSettings
+  schema: CampaignSettings
+  description: Sending configuration for one campaign (value object, no id).
+  operations: [updateCampaignSettings]
+- name: CampaignSchedule
+  schema: CampaignSchedule
+  description: Sending window/timezone configuration for one campaign (value object, no id).
+  operations: [updateCampaignSchedule]
+- name: EmailSequence
+  schema: EmailSequence
+  id: id
+  description: An ordered email step within a campaign, including A/B variants and delays.
+  operations: [getCampaignSequences, updateCampaignSequences]
+- name: Lead
+  schema: Lead
+  id: id
+  description: A prospect. Global identity is the email address; membership in a campaign is a separate association.
+  operations: [getCampaignLeads, addLeadsToCampaign, updateLead, deleteLeadFromCampaign, pauseLead,
+    resumeLead, unsubscribeLeadFromCampaign, getLeadByEmail, getLeadCampaigns, unsubscribeLeadGlobally]
+- name: LeadCategory
+  schema: LeadCategory
+  id: id
+  description: Reply-classification bucket (interested, not interested, meeting booked, …).
+  operations: [getLeadCategories, updateLeadCategory]
+- name: LeadList
+  schema: LeadList
+  id: id
+  description: A named list of leads owned by a user, importable into campaigns.
+  operations: [createLeadList, getAllLeadLists, getLeadListById, updateLeadList, deleteLeadList,
+    importLeadsToList, assignTagsToLeadLists]
+- name: EmailAccount
+  schema: EmailAccount
+  id: id
+  description: A sender mailbox (SMTP, Gmail/OAuth, Outlook) with sending limits and warmup state.
+  operations: [getAllEmailAccounts, getEmailAccountById, addSmtpEmailAccount, addOauthEmailAccount,
+    updateEmailAccount, deleteEmailAccount, suspendEmailAccount, unsuspendEmailAccount]
+- name: WarmupSettings
+  schema: WarmupSettings
+  description: Warmup ramp configuration attached to one email account (value object).
+  operations: [updateWarmupSettings]
+- name: WarmupStats
+  schema: WarmupStats
+  description: Reputation and warmup performance readings for one email account.
+  operations: [getWarmupStats]
+- name: Webhook
+  schema: Webhook
+  id: id
+  description: An event subscription scoped to user, client or campaign.
+  operations: [createWebhook, getWebhookDetails, updateWebhook, deleteWebhook]
+- name: CampaignStatistics
+  schema: CampaignStatistics
+  description: Per-campaign performance rollup (read model).
+  operations: [getCampaignStatistics]
+- name: CampaignAnalytics
+  schema: CampaignAnalytics
+  description: Per-campaign analytics keyed on campaign_id (read model).
+  operations: [getCampaignAnalytics]
+- name: CampaignPerformance
+  schema: CampaignPerformance
+  description: Cross-campaign performance row keyed on campaign_id (read model).
+  operations: [getCampaignWisePerformance]
+- name: OverallStats
+  schema: OverallStats
+  description: Account-level aggregate (read model).
+  operations: [getOverallStats]
+- name: DailyStats
+  schema: DailyStats
+  description: Day-bucketed aggregate (read model).
+  operations: [getDayWiseStats, getDayWisePositiveReplyStats]
+- name: InboxMessage
+  schema: InboxResponse
+  description: A message in the unified master inbox; filtered by InboxFilter.
+  operations: [getInboxReplies, getUnreadReplies, getImportantEmails, getSentEmails,
+    replyToEmailThread, forwardEmail]
+relationships:
+- from: User
+  to: Client
+  type: belongs_to
+  via: client_id
+  evidence: User.client_id
+- from: Campaign
+  to: User
+  type: belongs_to
+  via: user_id
+  evidence: Campaign.user_id
+- from: Campaign
+  to: Client
+  type: belongs_to
+  via: client_id
+  evidence: Campaign.client_id
+- from: Campaign
+  to: CampaignSettings
+  type: has_one
+  via: path
+  evidence: PATCH /v1/campaigns/{campaign_id}/settings
+- from: Campaign
+  to: CampaignSchedule
+  type: has_one
+  via: path
+  evidence: PATCH /v1/campaigns/{campaign_id}/schedule
+- from: Campaign
+  to: EmailSequence
+  type: has_many
+  via: path
+  evidence: GET/POST /v1/campaigns/{campaign_id}/sequences
+- from: Campaign
+  to: Lead
+  type: has_many
+  via: campaign_id
+  evidence: Lead.campaign_id and /v1/campaigns/{campaign_id}/leads
+- from: Campaign
+  to: EmailAccount
+  type: has_many
+  via: path
+  evidence: /v1/campaigns/{campaign_id}/email-accounts (many-to-many; a mailbox serves many campaigns)
+- from: Campaign
+  to: CampaignStatistics
+  type: has_one
+  via: path
+  evidence: GET /v1/campaigns/{campaign_id}/statistics
+- from: Campaign
+  to: CampaignAnalytics
+  type: has_one
+  via: campaign_id
+  evidence: CampaignAnalytics.campaign_id
+- from: Lead
+  to: Campaign
+  type: belongs_to
+  via: campaign_id
+  evidence: Lead.campaign_id
+- from: Lead
+  to: LeadCategory
+  type: has_one
+  via: path
+  evidence: POST /v1/campaigns/{campaign_id}/leads/{lead_id}/category
+- from: LeadList
+  to: User
+  type: belongs_to
+  via: user_id
+  evidence: LeadList.user_id
+- from: LeadList
+  to: Lead
+  type: has_many
+  via: import
+  evidence: importLeadsToList
+- from: EmailAccount
+  to: WarmupSettings
+  type: has_one
+  via: path
+  evidence: POST /v1/email-accounts/{account_id}/warmup
+- from: EmailAccount
+  to: WarmupStats
+  type: has_one
+  via: path
+  evidence: GET /v1/email-accounts/{account_id}/warmup-stats
+- from: Webhook
+  to: Campaign
+  type: belongs_to
+  via: email_campaign_id
+  evidence: WebhookInput.email_campaign_id (association_type campaign)
+- from: Webhook
+  to: Client
+  type: belongs_to
+  via: client_id
+  evidence: association_type client
+- from: Webhook
+  to: User
+  type: belongs_to
+  via: account
+  evidence: association_type user
+id_conventions:
+  format: integer
+  prefixes: none — SmartLead uses bare numeric ids, no typed prefixes
+  path_params: [campaign_id, lead_id, account_id, webhook_id, test_id, folder_id, id]
+  natural_keys:
+  - entity: Lead
+    key: email
+    note: getLeadByEmail resolves a lead globally by email address.
+notes:
+- >-
+  The published spec declares no $ref between component schemas — every schema is self-contained
+  and every relationship above is evidenced by a named id field or a URL path, not by a schema
+  reference. That is a real modelling gap: an agent cannot traverse the object graph from the spec
+  alone.
+- Smart Delivery (28 operations) and Smart Senders (5) publish no component schemas at all; their
+  request and response bodies are untyped objects in the spec.

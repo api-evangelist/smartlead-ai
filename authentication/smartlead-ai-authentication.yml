@@ -1,16 +1,76 @@
-generated: '2026-07-11'
-method: derived
+generated: '2026-08-13'
+method: searched
 source: openapi/smartlead-ai-openapi.yml
+docs: https://api.smartlead.ai/authentication
 summary:
   types:
   - apiKey
   api_key_in:
   - query
+  - body
+  oauth2_flows: []
+  scopes: false
 schemes:
-- name: ApiKeyQuery
+- name: ApiKeyAuth
   type: apiKey
   in: query
   parameter: api_key
-  description: Smartlead API key passed as the `api_key` query parameter on every request.
+  description: |-
+    Your SmartLead API key. You can generate this from your dashboard under Settings > API Keys.
+
+    Include this as a query parameter in all API requests:
+    ```
+    ?api_key=YOUR_API_KEY
+    ```
+  applied: >-
+    globally — the spec declares a root-level security requirement of [{ApiKeyAuth: []}]
   sources:
+  - openapi/smartlead-ai-campaign-statistics-api-openapi.yml
+  - openapi/smartlead-ai-campaigns-api-openapi.yml
   - openapi/smartlead-ai-openapi.yml
+alternate_transport:
+  in: body
+  parameter: api_key
+  note: >-
+    The auth docs state that on POST/PATCH the key may instead be included as an `api_key` field in
+    the JSON request body. This is documented but is NOT modelled in the OpenAPI, which declares
+    only the query-parameter scheme.
+issuance:
+  console: https://app.smartlead.ai
+  path: Profile icon -> Settings -> API Keys -> Generate New API Key
+  shown_once: true
+  rotation: >-
+    Keys can be regenerated from the dashboard. Agency accounts can additionally create, list,
+    reset and revoke per-client keys (see the CLI `clients` command group).
+  agency_scoped_keys: true
+failure:
+  status: 401
+  body_shape: '{"success": false, ...}'
+  detail: errors/smartlead-ai-problem-types.yml
+risk_notes:
+- >-
+  The credential is carried in the URL query string on every request, including GETs. Query
+  strings are routinely recorded in proxy, CDN, load-balancer and web-server access logs, in
+  browser history, and in Referer headers — so the key is exposed anywhere the URL is logged.
+  SmartLead documents no header-based alternative.
+- >-
+  Keys are account-wide bearer credentials with no scopes and no least-privilege model: any key
+  can read the master inbox, send email, import leads and manage mailboxes. SmartLead's own docs
+  say "your API key carries many privileges".
+- >-
+  The one mitigation SmartLead does offer is agency key segmentation — a separate key per client
+  workspace, revocable independently.
+not_supported:
+- oauth2
+- openIdConnect
+- mutualTLS
+- http bearer
+- scopes / granular permissions
+- key expiry or TTL (none documented)
+related:
+  conventions: conventions/smartlead-ai-conventions.yml
+  conformance: conformance/smartlead-ai-conformance.yml
+x-evidence:
+- url: https://api.smartlead.ai/authentication
+  http_status: 200
+  fetched: '2026-08-13'

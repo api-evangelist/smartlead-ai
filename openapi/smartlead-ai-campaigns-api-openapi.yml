@@ -1,129 +1,990 @@
-openapi: 3.1.0
+openapi: 3.1.1
 info:
-  title: Smartlead Campaign Statistics Campaigns API
-  description: Smartlead is cold email infrastructure for outbound sales and lead generation. The Smartlead REST API exposes campaigns, leads, email accounts, warmup, webhooks, analytics, and client management. Authentication uses an API key passed as the `api_key` query parameter on every request.
-  version: '1.0'
+  title: SmartLead Campaigns API
+  description: '# SmartLead API Documentation
+
+
+    Welcome to the SmartLead API! SmartLead is a comprehensive cold email outreach platform that helps you manage email campaigns,
+    leads, email accounts, and analytics.
+
+
+    ## Base URL
+
+
+    All API requests should be made to:
+
+    ```
+
+    https://server.smartlead.ai/api
+
+    ```
+
+
+    ## Authentication
+
+
+    SmartLead uses API keys for authentication. Include your API key as a query parameter in all requests:
+
+    ```
+
+    ?api_key=YOUR_API_KEY
+
+    ```
+
+
+    You can generate your API key from your SmartLead dashboard under Settings > API Keys.
+
+
+    ## Rate Limiting
+
+
+    API requests are rate-limited to ensure fair usage. If you exceed the rate limit, you''ll receive a 429 error.
+
+
+    ## Support
+
+
+    For API support, contact support@smartlead.ai or visit https://smartlead.ai
+
+    '
+  version: 1.0.0
   contact:
-    name: Smartlead API
-    url: https://api.smartlead.ai/reference
+    name: SmartLead Support
+    email: support@smartlead.ai
+    url: https://smartlead.ai
 servers:
-- url: https://server.smartlead.ai/api/v1
-  description: Smartlead REST API v1
+- url: https://server.smartlead.ai/api
+  description: Production server
+- url: https://staging.smartlead.ai/api
+  description: Staging server (for testing)
 security:
-- ApiKeyQuery: []
+- ApiKeyAuth: []
 tags:
 - name: Campaigns
-  description: Manage Smartlead email campaigns.
+  description: Create, manage, and monitor email campaigns
 paths:
-  /campaigns/:
+  /v1/campaigns/:
     get:
-      summary: List campaigns
-      description: Retrieves all email campaigns for the authenticated user with comprehensive campaign data.
-      operationId: listCampaigns
       tags:
       - Campaigns
+      summary: Get All Campaigns
+      description: 'Retrieves all email campaigns for the authenticated user with comprehensive campaign data including status,
+        schedule settings, tracking configuration, AI matching preferences, and sending limits.
+
+
+        **Key Features:**
+
+        - Returns campaigns ordered by ID descending (newest first)
+
+        - Supports optional client_id filtering for agency/white-label accounts
+
+        - When include_tags=true, returns campaign tags with IDs, names, and colors
+
+        - Returns direct array of campaign objects (not wrapped)
+
+        '
+      operationId: getAllCampaigns
       parameters:
-      - in: query
-        name: client_id
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: client_id
+        in: query
+        description: Filter campaigns by specific client ID (for agency accounts)
+        required: false
         schema:
-          type: string
-        description: Optional client identifier for agency accounts.
-      - in: query
-        name: include_tags
+          type: integer
+      - name: include_tags
+        in: query
+        description: Include campaign tags in the response
+        required: false
         schema:
           type: boolean
-        description: Include campaign tag IDs, names, and colors.
+          default: false
       responses:
         '200':
-          description: A list of campaigns.
+          description: Campaigns retrieved successfully
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: object
+                  $ref: '#/components/schemas/Campaign'
+              example:
+              - id: 2710262
+                user_id: 196026
+                created_at: '2025-11-25T10:43:46.826Z'
+                updated_at: '2025-11-25T14:02:21.776Z'
+                status: ACTIVE
+                name: Cold Outreach Q1 2024
+                track_settings:
+                - DONT_EMAIL_OPEN
+                - DONT_LINK_CLICK
+                scheduler_cron_value:
+                  tz: America/New_York
+                  days:
+                  - 1
+                  - 2
+                  - 3
+                  - 4
+                  - 5
+                  endHour: '19:00'
+                  startHour: 09:00
+                min_time_btwn_emails: 24
+                max_leads_per_day: 100
+                stop_lead_settings: REPLY_TO_AN_EMAIL
+                enable_ai_esp_matching: true
+                send_as_plain_text: false
+                follow_up_percentage: 20
+                client_id: null
+                tags:
+                - tag_id: 1
+                  tag_name: Q1
+                  tag_color: '#FF5733'
         '401':
-          description: Invalid API key.
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/campaigns/{campaign_id}:
+    get:
+      tags:
+      - Campaigns
+      summary: Get Campaign by ID
+      description: 'Retrieves detailed information about a specific campaign by its ID. Returns complete campaign configuration
+        including all settings, schedule, and metadata.
+
+
+        **Features:**
+
+        - Verifies campaign ownership
+
+        - Returns 404 if campaign not found
+
+        - Optionally includes tags when include_tags=true
+
+        '
+      operationId: getCampaignById
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        description: Unique identifier of the campaign
+        required: true
+        schema:
+          type: integer
+      - name: include_tags
+        in: query
+        description: Include campaign tags in response
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Campaign details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - Campaigns
+      summary: Delete Campaign
+      description: 'Permanently deletes a campaign and all associated data including leads, sequences, and statistics.
+
+
+        **Warning:** This operation cannot be undone. All campaign data will be permanently deleted.
+
+        '
+      operationId: deleteCampaign
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        description: Unique identifier of the campaign to delete
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Campaign deleted successfully
           content:
             application/json:
               schema:
                 type: object
                 properties:
+                  ok:
+                    type: boolean
+                    example: true
                   message:
                     type: string
-                    example: Invalid API Key
+                    example: Campaign deleted successfully
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/campaigns/create:
     post:
-      summary: Create campaign
-      description: Create a new email campaign.
+      tags:
+      - Campaigns
+      summary: Create Campaign
+      description: 'Creates a new email campaign with default settings in DRAFTED status. Campaign name defaults to ''Untitled
+        Campaign'' if not provided.
+
+
+        **Default Settings:**
+
+        - Status: DRAFTED
+
+        - Track Settings: Not set (configure later)
+
+        - Schedule: Not set (configure later)
+
+        - Sequences: Empty (add later)
+
+        - Email Accounts: None (add later)
+
+        - Leads: None (add later)
+
+
+        **Next Steps After Creation:**
+
+        1. Add email sequences
+
+        2. Add email accounts
+
+        3. Add leads
+
+        4. Configure schedule
+
+        5. Configure settings
+
+        6. Start campaign
+
+        '
       operationId: createCampaign
-      tags:
-      - Campaigns
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-      responses:
-        '200':
-          description: Campaign created.
-          content:
-            application/json:
-              schema:
-                type: object
-  /campaigns/{id}:
-    get:
-      summary: Get campaign
-      description: Get specific campaign details by ID.
-      operationId: getCampaign
-      tags:
-      - Campaigns
       parameters:
-      - in: path
-        name: id
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: Campaign details.
-          content:
-            application/json:
-              schema:
-                type: object
-  /campaigns/{id}/status:
-    patch:
-      summary: Update campaign status
-      description: Update the status of an existing campaign.
-      operationId: updateCampaignStatus
-      tags:
-      - Campaigns
-      parameters:
-      - in: path
-        name: id
-        required: true
-        schema:
-          type: string
+      - $ref: '#/components/parameters/ApiKeyParam'
       requestBody:
-        required: true
+        required: false
         content:
           application/json:
             schema:
               type: object
               properties:
-                status:
+                name:
                   type: string
+                  description: Campaign name. Defaults to "Untitled Campaign" if not provided
+                  example: Q1 2024 Cold Outreach
+                client_id:
+                  type: integer
+                  nullable: true
+                  description: Associate campaign with a specific client (for agency accounts)
+                  example: null
       responses:
         '200':
-          description: Status updated.
+          description: Campaign created successfully
           content:
             application/json:
               schema:
                 type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  id:
+                    type: integer
+                    description: Unique identifier for the newly created campaign
+                    example: 125
+                  name:
+                    type: string
+                    description: Campaign name
+                    example: Q1 2024 Cold Outreach
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: ISO 8601 timestamp when campaign was created
+                    example: '2024-01-25T10:30:00Z'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/campaigns/{campaign_id}/status:
+    post:
+      tags:
+      - Campaigns
+      summary: Update Campaign Status
+      description: 'Updates the campaign status to START, PAUSED, or STOPPED.
+
+
+        **Status Values:**
+
+        - `START`: Activates the campaign (validates sequences, accounts, and leads first)
+
+        - `PAUSED`: Temporarily pauses the campaign
+
+        - `STOPPED`: Stops the campaign permanently
+
+
+        **Validation on START:**
+
+        - Campaign must have at least one email sequence
+
+        - Campaign must have at least one email account
+
+        - Campaign must have at least one lead
+
+        '
+      operationId: updateCampaignStatus
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - status
+              properties:
+                status:
+                  type: string
+                  enum:
+                  - START
+                  - PAUSED
+                  - STOPPED
+                  description: New campaign status
+                  example: START
+      responses:
+        '200':
+          description: Campaign status updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/campaigns/{campaign_id}/settings:
+    post:
+      tags:
+      - Campaigns
+      summary: Update Campaign Settings
+      description: 'Updates campaign settings including tracking, limits, and stop conditions.
+
+
+        **Configurable Settings:**
+
+        - Email tracking (open/click tracking)
+
+        - Daily lead limits
+
+        - Stop lead conditions
+
+        - AI ESP matching
+
+        - Plain text sending
+
+        - Follow-up percentage
+
+        - Custom unsubscribe text
+
+        '
+      operationId: updateCampaignSettings
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignSettings'
+      responses:
+        '200':
+          description: Campaign settings updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/campaigns/{campaign_id}/schedule:
+    post:
+      tags:
+      - Campaigns
+      summary: Update Campaign Schedule
+      description: 'Configures the campaign sending schedule including timezone, days of week, and sending hours.
+
+
+        **Schedule Configuration:**
+
+        - Timezone (IANA format)
+
+        - Days of week to send (0=Sunday, 6=Saturday)
+
+        - Start and end hours (24-hour format)
+
+        - Minimum time between emails
+
+        '
+      operationId: updateCampaignSchedule
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignSchedule'
+      responses:
+        '200':
+          description: Campaign schedule updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/campaigns/{campaign_id}/sequences:
+    get:
+      tags:
+      - Campaigns
+      summary: Get Campaign Sequences
+      description: 'Retrieves all email sequences (initial email + follow-ups) configured for a campaign.
+
+
+        Returns an array of sequence objects ordered by sequence number.
+
+        '
+      operationId: getCampaignSequences
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Sequences retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmailSequence'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - Campaigns
+      summary: Update Campaign Sequences
+      description: 'Updates or replaces email sequences for a campaign. This endpoint accepts an array of sequence objects.
+
+
+        **Sequence Configuration:**
+
+        - seq_number: Sequence order (1 for initial email, 2+ for follow-ups)
+
+        - subject: Email subject line (supports variables)
+
+        - email_body: Email content (HTML or plain text, supports variables)
+
+        - seq_delay_details: Delay configuration before sending
+
+
+        **Variable Support:**
+
+        - {{first_name}}, {{last_name}}, {{company}}, etc.
+
+        '
+      operationId: updateCampaignSequences
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - sequences
+              properties:
+                sequences:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/EmailSequenceInput'
+      responses:
+        '200':
+          description: Sequences updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/campaigns/{campaign_id}/email-accounts:
+    get:
+      tags:
+      - Campaigns
+      summary: Get Campaign Email Accounts
+      description: 'Retrieves all email accounts associated with a campaign. These are the sender accounts used to send emails
+        in this campaign.
+
+        '
+      operationId: getCampaignEmailAccounts
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Email accounts retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmailAccount'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - Campaigns
+      summary: Add Email Accounts to Campaign
+      description: 'Associates one or more email accounts with a campaign. These accounts will be used to send emails in this
+        campaign.
+
+
+        **Requirements:**
+
+        - Email accounts must exist and be verified
+
+        - Email accounts must belong to the user
+
+        '
+      operationId: addEmailAccountsToCampaign
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email_account_ids
+              properties:
+                email_account_ids:
+                  type: array
+                  items:
+                    type: integer
+                  description: Array of email account IDs to add
+                  example:
+                  - 456
+                  - 457
+                  - 458
+      responses:
+        '200':
+          description: Email accounts added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - Campaigns
+      summary: Remove Email Accounts from Campaign
+      description: 'Removes email accounts from a campaign. Leads currently assigned to these accounts will be reassigned
+        to remaining accounts.
+
+        '
+      operationId: removeEmailAccountsFromCampaign
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email_account_ids
+              properties:
+                email_account_ids:
+                  type: array
+                  items:
+                    type: integer
+                  description: Array of email account IDs to remove
+                  example:
+                  - 456
+      responses:
+        '200':
+          description: Email accounts removed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 components:
   securitySchemes:
-    ApiKeyQuery:
+    ApiKeyAuth:
       type: apiKey
       in: query
       name: api_key
-      description: Smartlead API key passed as the `api_key` query parameter on every request.
+      description: 'Your SmartLead API key. You can generate this from your dashboard under Settings > API Keys.
+
+
+        Include this as a query parameter in all API requests:
+
+        ```
+
+        ?api_key=YOUR_API_KEY
+
+        ```
+
+        '
+  schemas:
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique campaign identifier
+          example: 2710262
+        user_id:
+          type: integer
+          description: ID of the user who owns this campaign
+        name:
+          type: string
+          description: Campaign name
+          example: Q1 2024 Cold Outreach
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - PAUSED
+          - STOPPED
+          - ARCHIVED
+          - DRAFTED
+          description: Current campaign status
+        created_at:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp when campaign was created
+        updated_at:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of last modification
+        track_settings:
+          type: array
+          items:
+            type: string
+            enum:
+            - DONT_EMAIL_OPEN
+            - DONT_LINK_CLICK
+          description: Tracking configuration
+        scheduler_cron_value:
+          type: object
+          properties:
+            tz:
+              type: string
+              example: America/New_York
+            days:
+              type: array
+              items:
+                type: integer
+              example:
+              - 1
+              - 2
+              - 3
+              - 4
+              - 5
+            startHour:
+              type: string
+              example: 09:00
+            endHour:
+              type: string
+              example: '19:00'
+        min_time_btwn_emails:
+          type: integer
+          description: Minimum minutes between emails
+        max_leads_per_day:
+          type: integer
+          description: Maximum leads per day
+        stop_lead_settings:
+          type: string
+          enum:
+          - REPLY_TO_AN_EMAIL
+          - OPENED_EMAIL
+          - CLICKED_LINK
+          - NEVER
+        enable_ai_esp_matching:
+          type: boolean
+        send_as_plain_text:
+          type: boolean
+        follow_up_percentage:
+          type: integer
+        client_id:
+          type: integer
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: object
+            properties:
+              tag_id:
+                type: integer
+              tag_name:
+                type: string
+              tag_color:
+                type: string
+    CampaignSchedule:
+      type: object
+      required:
+      - timezone
+      - days
+      - startHour
+      - endHour
+      properties:
+        timezone:
+          type: string
+          description: IANA timezone
+          example: America/New_York
+        days:
+          type: array
+          items:
+            type: integer
+          description: Days of week (0=Sunday, 6=Saturday)
+          example:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+        startHour:
+          type: string
+          description: Start sending time (24-hour format)
+          example: 09:00
+        endHour:
+          type: string
+          description: End sending time (24-hour format)
+          example: '17:00'
+        min_time_btw_emails:
+          type: integer
+          description: Minimum minutes between emails
+          example: 24
+    CampaignSettings:
+      type: object
+      properties:
+        track_settings:
+          type: array
+          items:
+            type: string
+            enum:
+            - DONT_EMAIL_OPEN
+            - DONT_LINK_CLICK
+        max_leads_per_day:
+          type: integer
+        stop_lead_settings:
+          type: string
+          enum:
+          - REPLY_TO_AN_EMAIL
+          - OPENED_EMAIL
+          - CLICKED_LINK
+          - NEVER
+        enable_ai_esp_matching:
+          type: boolean
+        send_as_plain_text:
+          type: boolean
+        follow_up_percentage:
+          type: integer
+        unsubscribe_text:
+          type: string
+    EmailAccount:
+      type: object
+      properties:
+        id:
+          type: integer
+        from_name:
+          type: string
+        from_email:
+          type: string
+          format: email
+        smtp_host:
+          type: string
+        smtp_port:
+          type: integer
+        imap_host:
+          type: string
+        imap_port:
+          type: integer
+        warmup_enabled:
+          type: boolean
+        total_warmup_per_day:
+          type: integer
+        daily_rampup:
+          type: integer
+        max_email_per_day:
+          type: integer
+        is_suspended:
+          type: boolean
+        connection_status:
+          type: string
+          enum:
+          - CONNECTED
+          - DISCONNECTED
+          - ERROR
+    EmailSequence:
+      type: object
+      properties:
+        id:
+          type: integer
+        seq_number:
+          type: integer
+          description: Sequence order (1, 2, 3...)
+        subject:
+          type: string
+          description: Email subject line
+        email_body:
+          type: string
+          description: Email content (supports HTML and variables)
+        seq_delay_details:
+          type: object
+          properties:
+            delay_in_days:
+              type: integer
+    EmailSequenceInput:
+      type: object
+      required:
+      - seq_number
+      - subject
+      - email_body
+      - seq_delay_details
+      properties:
+        seq_number:
+          type: integer
+          description: Sequence order (1 for initial, 2+ for follow-ups)
+        subject:
+          type: string
+          description: Email subject line (supports variables)
+        email_body:
+          type: string
+          description: Email content (HTML or plain text)
+        seq_delay_details:
+          type: object
+          required:
+          - delay_in_days
+          properties:
+            delay_in_days:
+              type: integer
+              description: Days to wait before sending

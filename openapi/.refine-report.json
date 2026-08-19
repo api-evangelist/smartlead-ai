@@ -1,16 +1,11 @@
 {
-  "provider": "smartlead-ai",
-  "sources": [
-    "smartlead-ai-campaign-statistics-api-openapi.yml",
-    "smartlead-ai-campaigns-api-openapi.yml"
-  ],
-  "outputs": [
-    "smartlead-ai-campaign-statistics-api-openapi.yml",
-    "smartlead-ai-campaigns-api-openapi.yml"
-  ],
-  "archived": [],
-  "errors": [],
-  "warnings": [],
-  "notes": [],
-  "skipped": []
+  "source": "https://api.smartlead.ai/api-reference/openapi.yaml",
+  "harvested": "2026-08-13",
+  "method": "searched",
+  "note": "Tag splits derived from the provider-published SmartLead OpenAPI 3.1.1 harvested from the docs host. Supersedes the earlier hand-authored 5-operation scaffold.",
+  "files": [
+    "openapi/smartlead-ai-openapi.yml",
+    "openapi/smartlead-ai-campaigns-api-openapi.yml",
+    "openapi/smartlead-ai-campaign-statistics-api-openapi.yml"
+  ]
 }

@@ -1,0 +1,104 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://api.smartlead.ai/api-reference/webhooks/events,
+  https://api.smartlead.ai/guides/webhook-integration,
+  https://api.smartlead.ai/core/webhooks
+spec_type: none
+asyncapi_published: false
+description: >-
+  SmartLead's event surface is webhooks only — it publishes no AsyncAPI, no streaming endpoint and
+  no event-schema registry. The catalog below is its documented webhook event reference: 13 event
+  types, a signed HTTPS POST delivery contract, and CRUD operations in the REST API for managing
+  subscriptions. Captured as a Webhooks artifact; nothing here is an AsyncAPI document and none
+  was fabricated.
+delivery:
+  transport: HTTPS POST
+  content_type: application/json
+  signature_header: X-Smartlead-Signature
+  signature_algorithm: HMAC SHA256 over the raw body, value prefixed "sha256="
+  delivery_id_header: X-Request-Id
+  scope_header: X-Webhook-Level
+  ack: return 2xx quickly; 4xx = permanent failure (no retry); 5xx or timeout = retried
+  dedupe: dedupe on X-Request-Id, or campaign_id + to_email + event_type + timestamp
+  test_events: SmartLead sends test events when a webhook is saved
+subscription:
+  managed_by: REST API
+  operations:
+  - createWebhook
+  - getWebhookDetails
+  - updateWebhook
+  - deleteWebhook
+  spec: openapi/smartlead-ai-openapi.yml
+  association_types:
+  - value: user
+    numeric: 1
+    scope: all campaigns for the account
+  - value: client
+    numeric: 2
+    scope: all campaigns for one client (requires client_id)
+  - value: campaign
+    numeric: 3
+    scope: a single campaign (requires email_campaign_id)
+  event_selection: event_type_map object — set each event key to true to subscribe
+  replay: >-
+    The first-party CLI exposes `webhooks retrigger --campaign-id <ID> --from <ts> --to <ts>`, so
+    deliveries can be replayed over a time window.
+events:
+- name: EMAIL_SENT
+  description: An email was successfully sent to a lead.
+  when: Immediately after delivery confirmation.
+- name: FIRST_EMAIL_SENT
+  description: The first email in a sequence was sent to a lead (sequence_number 1 only).
+  when: When sequence step 1 is sent.
+- name: EMAIL_OPEN
+  description: A lead opened an email (tracking pixel loaded).
+- name: EMAIL_LINK_CLICK
+  description: A lead clicked a tracked link.
+- name: EMAIL_REPLY
+  description: A lead replied to an email.
+- name: EMAIL_BOUNCE
+  description: An email failed to deliver.
+- name: LEAD_UNSUBSCRIBED
+  description: A lead unsubscribed.
+- name: LEAD_CATEGORY_UPDATED
+  description: A lead's category changed (interested, not interested, meeting booked, …).
+- name: CAMPAIGN_STATUS_CHANGED
+  description: A campaign changed status (ACTIVE / PAUSED / STOPPED).
+- name: UNTRACKED_REPLIES
+  description: A reply arrived that could not be attributed to a tracked sequence email.
+- name: MANUAL_STEP_REACHED
+  description: A lead reached a manual step in a sequence and needs human action.
+- name: EMAIL_ACCOUNT_DISCONNECTED
+  description: A sender mailbox lost its connection and stopped sending.
+- name: LINKEDIN_DISCONNECTED
+  description: A connected LinkedIn account was disconnected.
+event_count: 13
+payload:
+  common_fields:
+  - event_type
+  - from_email
+  - to_email
+  - to_name
+  - campaign_id
+  - campaign_name
+  - sequence_number
+  event_specific_fields:
+    EMAIL_SENT: [time_sent, custom_subject, custom_email_message, message_id]
+    EMAIL_OPEN: [time_opened]
+  note: >-
+    SmartLead documents two payload shapes across its docs — a flat shape keyed on `event_type`
+    (the events reference) and a nested shape keyed on `event` with a `lead` object (the webhooks
+    concept page). Consumers should tolerate both; no JSON Schema is published for either.
+gaps:
+- No AsyncAPI document.
+- No JSON Schema or machine-readable schema for any event payload.
+- No documented signing-secret rotation procedure.
+- Two inconsistent payload shapes documented for the same events.
+x-evidence:
+- url: https://api.smartlead.ai/api-reference/webhooks/events
+  http_status: 200
+  fetched: '2026-08-13'
+- url: https://api.smartlead.ai/core/webhooks
+  http_status: 200
+  fetched: '2026-08-13'
