@@ -33,6 +33,14 @@ tags:
   - Outbound
   - Sales
   - Deliverability
+  - Email Warm-up
+  - Automation
+  - Sequences
+tags_raw:
+  - Cold Email
+  - Outbound
+  - Sales
+  - Deliverability
   - Email Warmup
   - Automation
   - Sequences
@@ -50,6 +58,13 @@ apis:
   humanURL: https://api.smartlead.ai/api-reference
   baseURL: https://server.smartlead.ai/api/v1
   tags:
+  - Campaigns
+  - Leads
+  - Email Accounts
+  - Webhook
+  - Analytics
+  - Deliverability
+  tags_raw:
   - Campaigns
   - Leads
   - Email Accounts
@@ -129,6 +144,10 @@ apis:
   humanURL: https://api.smartlead.ai/api-reference/webhooks/events
   baseURL: https://server.smartlead.ai/api/v1/webhooks
   tags:
+  - Webhook
+  - Event
+  - Subscription
+  tags_raw:
   - Webhooks
   - Events
   - Subscriptions
