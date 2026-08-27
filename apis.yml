@@ -48,38 +48,6 @@ created: '2026-05-23'
 modified: '2026-08-13'
 specificationVersion: '0.23'
 apis:
-- aid: smartlead-ai:smartlead-api
-  name: SmartLead API
-  description: >-
-    The complete SmartLead REST API as published by SmartLead — OpenAPI 3.1.1, 85 paths and 98
-    operations across campaigns, sequences, leads and lead lists, email accounts and warmup, the
-    master inbox, webhooks, analytics, campaign statistics, Smart Delivery, Smart Senders and
-    utilities. Harvested verbatim from the SmartLead documentation host.
-  humanURL: https://api.smartlead.ai/api-reference
-  baseURL: https://server.smartlead.ai/api/v1
-  tags:
-  - Campaigns
-  - Leads
-  - Email Accounts
-  - Webhook
-  - Analytics
-  - Deliverability
-  tags_raw:
-  - Campaigns
-  - Leads
-  - Email Accounts
-  - Webhooks
-  - Analytics
-  - Deliverability
-  properties:
-  - type: OpenAPI
-    url: openapi/smartlead-ai-openapi.yml
-  - type: Documentation
-    url: https://api.smartlead.ai/introduction
-  - type: APIReference
-    url: https://api.smartlead.ai/api-reference
-  - type: Overlay
-    url: overlays/smartlead-ai-openapi-overlay.yaml
 - aid: smartlead-ai:campaigns-api
   name: Smartlead Campaigns API
   description: >-
@@ -207,9 +175,9 @@ apis:
 - aid: smartlead-ai:mcp-server
   name: SmartLead Documentation MCP Server
   description: >-
-    SmartLead's remote Model Context Protocol server. tools/list answers anonymously with three
-    documentation tools (search, a read-only docs filesystem, feedback). It exposes the SmartLead
-    documentation and OpenAPI to agents; it does not execute SmartLead REST operations.
+    SmartLead's remote Model Context Protocol server. tools/list answers anonymously with three documentation
+    tools (search, a read-only docs filesystem, feedback). It exposes the SmartLead documentation and
+    OpenAPI to agents; it does not execute SmartLead REST operations.
   humanURL: https://api.smartlead.ai/introduction
   baseURL: https://api.smartlead.ai/mcp
   tags:
@@ -221,6 +189,132 @@ apis:
     url: mcp/smartlead-ai-mcp.yml
   - type: ToolCrosswalk
     url: mcp/smartlead-ai-tool-crosswalk.yml
+- aid: smartlead-ai:smartlead-ai-analytics-api
+  name: Smartlead Analytics API
+  description: Global analytics and reporting across all campaigns
+  humanURL: https://api.smartlead.ai/api-reference
+  baseURL: https://server.smartlead.ai/api/v1
+  tags:
+  - Analytics
+  properties:
+  - type: OpenAPI
+    url: openapi/smartlead-ai-analytics-api-openapi.yml
+  - type: Documentation
+    url: https://api.smartlead.ai/introduction
+  - type: APIReference
+    url: https://api.smartlead.ai/api-reference
+- aid: smartlead-ai:smartlead-ai-authentication-api
+  name: Smartlead Authentication API
+  description: User authentication and account management
+  humanURL: https://api.smartlead.ai/api-reference
+  baseURL: https://server.smartlead.ai/api/v1
+  tags:
+  - Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/smartlead-ai-authentication-api-openapi.yml
+  - type: Documentation
+    url: https://api.smartlead.ai/introduction
+  - type: APIReference
+    url: https://api.smartlead.ai/api-reference
+- aid: smartlead-ai:smartlead-ai-email-accounts-api
+  name: Smartlead Email Accounts API
+  description: Configure and manage email sending accounts
+  humanURL: https://api.smartlead.ai/api-reference
+  baseURL: https://server.smartlead.ai/api/v1
+  tags:
+  - Email Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/smartlead-ai-email-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://api.smartlead.ai/introduction
+  - type: APIReference
+    url: https://api.smartlead.ai/api-reference
+- aid: smartlead-ai:smartlead-ai-leads-api
+  name: Smartlead Leads API
+  description: Manage leads and prospects across campaigns
+  humanURL: https://api.smartlead.ai/api-reference
+  baseURL: https://server.smartlead.ai/api/v1
+  tags:
+  - Leads
+  properties:
+  - type: OpenAPI
+    url: openapi/smartlead-ai-leads-api-openapi.yml
+  - type: Documentation
+    url: https://api.smartlead.ai/introduction
+  - type: APIReference
+    url: https://api.smartlead.ai/api-reference
+- aid: smartlead-ai:smartlead-ai-master-inbox-api
+  name: Smartlead Master Inbox API
+  description: Unified inbox for all campaign communications
+  humanURL: https://api.smartlead.ai/api-reference
+  baseURL: https://server.smartlead.ai/api/v1
+  tags:
+  - Master Inbox
+  properties:
+  - type: OpenAPI
+    url: openapi/smartlead-ai-master-inbox-api-openapi.yml
+  - type: Documentation
+    url: https://api.smartlead.ai/introduction
+  - type: APIReference
+    url: https://api.smartlead.ai/api-reference
+- aid: smartlead-ai:smartlead-ai-smart-delivery-api
+  name: Smartlead Smart Delivery API
+  description: Email deliverability testing and monitoring
+  humanURL: https://api.smartlead.ai/api-reference
+  baseURL: https://server.smartlead.ai/api/v1
+  tags:
+  - Smart Delivery
+  properties:
+  - type: OpenAPI
+    url: openapi/smartlead-ai-smart-delivery-api-openapi.yml
+  - type: Documentation
+    url: https://api.smartlead.ai/introduction
+  - type: APIReference
+    url: https://api.smartlead.ai/api-reference
+- aid: smartlead-ai:smartlead-ai-smart-senders-api
+  name: Smartlead Smart Senders API
+  description: Automated email account provisioning marketplace
+  humanURL: https://api.smartlead.ai/api-reference
+  baseURL: https://server.smartlead.ai/api/v1
+  tags:
+  - Smart Senders
+  properties:
+  - type: OpenAPI
+    url: openapi/smartlead-ai-smart-senders-api-openapi.yml
+  - type: Documentation
+    url: https://api.smartlead.ai/introduction
+  - type: APIReference
+    url: https://api.smartlead.ai/api-reference
+- aid: smartlead-ai:smartlead-ai-utilities-api
+  name: Smartlead Utilities API
+  description: Utility endpoints for various operations
+  humanURL: https://api.smartlead.ai/api-reference
+  baseURL: https://server.smartlead.ai/api/v1
+  tags:
+  - Utilities
+  properties:
+  - type: OpenAPI
+    url: openapi/smartlead-ai-utilities-api-openapi.yml
+  - type: Documentation
+    url: https://api.smartlead.ai/introduction
+  - type: APIReference
+    url: https://api.smartlead.ai/api-reference
+- aid: smartlead-ai:smartlead-ai-webhooks-api
+  name: Smartlead Webhooks API
+  description: Configure webhooks for real-time event notifications
+  humanURL: https://api.smartlead.ai/api-reference
+  baseURL: https://server.smartlead.ai/api/v1
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/smartlead-ai-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://api.smartlead.ai/introduction
+  - type: APIReference
+    url: https://api.smartlead.ai/api-reference
 common:
   - type: AgenticAccess
     url: agentic-access/smartlead-ai-agentic-access.yml
