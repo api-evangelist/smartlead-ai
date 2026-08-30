@@ -1,0 +1,383 @@
+openapi: 3.2.0
+info:
+  title: SmartLead Master Inbox API
+  version: 1.0.0
+  description: '# SmartLead API Documentation
+
+
+    Welcome to the SmartLead API! SmartLead is a comprehensive cold email outreach platform that helps you manage email campaigns, leads, email accounts, and analytics.
+
+
+    ## Base URL
+
+
+    All API requests should be made to:
+
+    ```
+
+    https://server.smartlead.ai/api
+
+    ```
+
+
+    ## Authentication
+
+
+    SmartLead uses API keys for authentication. Include your API key as a query parameter in all requests:
+
+    ```
+
+    ?api_key=YOUR_API_KEY
+
+    ```
+
+
+    You can generate your API key from your SmartLead dashboard under Settings > API Keys.
+
+
+    ## Rate Limiting
+
+
+    API requests are rate-limited to ensure fair usage. If you exceed the rate limit, you''ll receive a 429 error.
+
+
+    ## Support
+
+
+    For API support, contact support@smartlead.ai or visit https://smartlead.ai
+
+    '
+  contact:
+    name: SmartLead Support
+    email: support@smartlead.ai
+    url: https://smartlead.ai
+  license:
+    name: Proprietary
+    url: https://smartlead.ai/terms
+servers:
+- url: https://server.smartlead.ai/api
+  description: Production server
+- url: https://staging.smartlead.ai/api
+  description: Staging server (for testing)
+security:
+- ApiKeyAuth: []
+tags:
+- name: Master Inbox
+  description: Unified inbox for all campaign communications
+paths:
+  /v1/campaigns/{campaign_id}/reply-email-thread:
+    post:
+      tags:
+      - Master Inbox
+      summary: Reply to Email Thread
+      description: 'Sends a reply to an existing email conversation in a campaign.
+
+        '
+      operationId: replyToEmailThread
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - lead_id
+              - message
+              properties:
+                lead_id:
+                  type: integer
+                  description: ID of the lead to reply to
+                message:
+                  type: string
+                  description: Reply message content
+                attachments:
+                  type: array
+                  items:
+                    type: string
+                  description: Array of attachment URLs
+      responses:
+        '200':
+          description: Reply sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/campaigns/{campaign_id}/forward-email:
+    post:
+      tags:
+      - Master Inbox
+      summary: Forward Email
+      description: 'Forwards an email conversation to another email address.
+
+        '
+      operationId: forwardEmail
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - reply_id
+              - forward_to
+              properties:
+                reply_id:
+                  type: integer
+                  description: ID of the email to forward
+                forward_to:
+                  type: string
+                  format: email
+                  description: Recipient email address
+                message:
+                  type: string
+                  description: Optional message to include
+      responses:
+        '200':
+          description: Email forwarded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/master-inbox/sent:
+    post:
+      tags:
+      - Master Inbox
+      summary: Get Sent Emails
+      description: 'Retrieves sent emails with comprehensive filtering and pagination.
+
+        '
+      operationId: getSentEmails
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InboxFilter'
+      responses:
+        '200':
+          description: Sent emails retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InboxResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/master-inbox/inbox-replies:
+    post:
+      tags:
+      - Master Inbox
+      summary: Get Inbox Replies
+      description: 'Retrieves all inbox replies with filtering options.
+
+        '
+      operationId: getInboxReplies
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InboxFilter'
+      responses:
+        '200':
+          description: Inbox replies retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InboxResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/master-inbox/unread-replies:
+    post:
+      tags:
+      - Master Inbox
+      summary: Get Unread Replies
+      description: 'Retrieves all unread replies.
+
+        '
+      operationId: getUnreadReplies
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InboxFilter'
+      responses:
+        '200':
+          description: Unread replies retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InboxResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/master-inbox/important:
+    post:
+      tags:
+      - Master Inbox
+      summary: Get Important Emails
+      description: 'Retrieves emails marked as important.
+
+        '
+      operationId: getImportantEmails
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InboxFilter'
+      responses:
+        '200':
+          description: Important emails retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InboxResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+  schemas:
+    InboxResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            type: object
+        total_count:
+          type: integer
+    InboxFilter:
+      type: object
+      properties:
+        offset:
+          type: integer
+          minimum: 0
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 20
+        filters:
+          type: object
+          properties:
+            search:
+              type: string
+            campaignId:
+              oneOf:
+              - type: integer
+              - type: array
+                items:
+                  type: integer
+            emailAccountId:
+              oneOf:
+              - type: integer
+              - type: array
+                items:
+                  type: integer
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+      description: 'Your SmartLead API key. You can generate this from your dashboard under Settings > API Keys.
+
+
+        Include this as a query parameter in all API requests:
+
+        ```
+
+        ?api_key=YOUR_API_KEY
+
+        ```
+
+        '

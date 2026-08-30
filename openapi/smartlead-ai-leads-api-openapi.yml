@@ -1,0 +1,1152 @@
+openapi: 3.2.0
+info:
+  title: SmartLead Leads API
+  version: 1.0.0
+  description: '# SmartLead API Documentation
+
+
+    Welcome to the SmartLead API! SmartLead is a comprehensive cold email outreach platform that helps you manage email campaigns, leads, email accounts, and analytics.
+
+
+    ## Base URL
+
+
+    All API requests should be made to:
+
+    ```
+
+    https://server.smartlead.ai/api
+
+    ```
+
+
+    ## Authentication
+
+
+    SmartLead uses API keys for authentication. Include your API key as a query parameter in all requests:
+
+    ```
+
+    ?api_key=YOUR_API_KEY
+
+    ```
+
+
+    You can generate your API key from your SmartLead dashboard under Settings > API Keys.
+
+
+    ## Rate Limiting
+
+
+    API requests are rate-limited to ensure fair usage. If you exceed the rate limit, you''ll receive a 429 error.
+
+
+    ## Support
+
+
+    For API support, contact support@smartlead.ai or visit https://smartlead.ai
+
+    '
+  contact:
+    name: SmartLead Support
+    email: support@smartlead.ai
+    url: https://smartlead.ai
+  license:
+    name: Proprietary
+    url: https://smartlead.ai/terms
+servers:
+- url: https://server.smartlead.ai/api
+  description: Production server
+- url: https://staging.smartlead.ai/api
+  description: Staging server (for testing)
+security:
+- ApiKeyAuth: []
+tags:
+- name: Leads
+  description: Manage leads and prospects across campaigns
+paths:
+  /v1/campaigns/{campaign_id}/leads:
+    get:
+      tags:
+      - Leads
+      summary: Get Campaign Leads
+      description: 'Retrieves all leads in a campaign with comprehensive filtering, sorting, and pagination options.
+
+
+        **Filtering Options:**
+
+        - Status (Active, Paused, Completed, etc.)
+
+        - Email sequence number
+
+        - Email status (Opened, Clicked, Replied, etc.)
+
+        - Date ranges
+
+        - Search by name or email
+
+
+        **Returns:**
+
+        - Paginated list of leads
+
+        - Lead contact information
+
+        - Campaign progress
+
+        - Email activity
+
+        - Custom fields
+
+        '
+      operationId: getCampaignLeads
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Number of records to skip for pagination
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+      - name: limit
+        in: query
+        description: Maximum number of records to return
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 100
+      - name: status
+        in: query
+        description: Filter by lead status
+        schema:
+          type: string
+          enum:
+          - ACTIVE
+          - PAUSED
+          - COMPLETED
+          - UNSUBSCRIBED
+          - BOUNCED
+      - name: email_sequence_number
+        in: query
+        description: Filter by specific sequence number
+        schema:
+          type: integer
+      - name: email_status
+        in: query
+        description: Filter by email status
+        schema:
+          type: string
+          enum:
+          - Sent
+          - Opened
+          - Clicked
+          - Replied
+          - Bounced
+      responses:
+        '200':
+          description: Leads retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  leads:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Lead'
+                  total_count:
+                    type: integer
+                    description: Total number of leads matching the filter
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - Leads
+      summary: Add Leads to Campaign
+      description: 'Adds new leads to a campaign. Maximum 400 leads per request.
+
+
+        **Required Fields:**
+
+        - email (must be valid and unique)
+
+
+        **Optional Fields:**
+
+        - first_name, last_name
+
+        - company_name
+
+        - phone_number
+
+        - website
+
+        - Any custom fields defined in your account
+
+
+        **Settings:**
+
+        - ignore_global_block_list: Skip global blocklist check
+
+        - ignore_unsubscribe: Add leads even if previously unsubscribed
+
+        '
+      operationId: addLeadsToCampaign
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - lead_list
+              properties:
+                lead_list:
+                  type: array
+                  maxItems: 400
+                  items:
+                    $ref: '#/components/schemas/LeadInput'
+                settings:
+                  type: object
+                  properties:
+                    ignore_global_block_list:
+                      type: boolean
+                      default: false
+                    ignore_unsubscribe:
+                      type: boolean
+                      default: false
+      responses:
+        '200':
+          description: Leads added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  inserted_count:
+                    type: integer
+                    description: Number of leads successfully added
+                  duplicate_count:
+                    type: integer
+                    description: Number of duplicate leads skipped
+                  blocked_count:
+                    type: integer
+                    description: Number of leads blocked by filters
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/campaigns/{campaign_id}/leads/{lead_id}:
+    delete:
+      tags:
+      - Leads
+      summary: Delete Lead from Campaign
+      description: 'Removes a specific lead from a campaign. This does not delete the lead globally, only from this campaign.
+
+        '
+      operationId: deleteLeadFromCampaign
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: lead_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Lead deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - Leads
+      summary: Update Lead
+      description: 'Updates lead information such as name, company, phone, or custom fields.
+
+        '
+      operationId: updateLead
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: lead_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeadUpdate'
+      responses:
+        '200':
+          description: Lead updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/campaigns/{campaign_id}/leads/{lead_id}/pause:
+    post:
+      tags:
+      - Leads
+      summary: Pause Lead
+      description: 'Temporarily pauses a lead. No more emails will be sent until the lead is resumed.
+
+        '
+      operationId: pauseLead
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: lead_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Lead paused successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/campaigns/{campaign_id}/leads/{lead_id}/resume:
+    post:
+      tags:
+      - Leads
+      summary: Resume Lead
+      description: 'Resumes a paused lead. The campaign will continue sending emails to this lead.
+
+        '
+      operationId: resumeLead
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: lead_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Lead resumed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/campaigns/{campaign_id}/leads/{lead_id}/unsubscribe:
+    post:
+      tags:
+      - Leads
+      summary: Unsubscribe Lead from Campaign
+      description: 'Unsubscribes a lead from a specific campaign. The lead will no longer receive emails from this campaign.
+
+        '
+      operationId: unsubscribeLeadFromCampaign
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: lead_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Lead unsubscribed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/campaigns/{campaign_id}/leads/{lead_id}/category:
+    post:
+      tags:
+      - Leads
+      summary: Update Lead Category
+      description: 'Updates the category/label assigned to a lead (e.g., "Interested", "Not Interested", "Meeting Scheduled").
+
+        '
+      operationId: updateLeadCategory
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: campaign_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: lead_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - category_id
+              properties:
+                category_id:
+                  type: integer
+                  description: ID of the category to assign
+      responses:
+        '200':
+          description: Lead category updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/leads/:
+    get:
+      tags:
+      - Leads
+      summary: Get Lead by Email
+      description: 'Retrieves lead information by email address across all campaigns.
+
+        '
+      operationId: getLeadByEmail
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: email
+        in: query
+        required: true
+        description: Email address of the lead
+        schema:
+          type: string
+          format: email
+      responses:
+        '200':
+          description: Lead retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lead'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/leads/{lead_id}/campaigns:
+    get:
+      tags:
+      - Leads
+      summary: Get Lead Campaigns
+      description: 'Retrieves all campaigns that a specific lead is part of.
+
+        '
+      operationId: getLeadCampaigns
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: lead_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Lead campaigns retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    campaign_id:
+                      type: integer
+                    campaign_name:
+                      type: string
+                    status:
+                      type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/leads/fetch-categories:
+    get:
+      tags:
+      - Leads
+      summary: Get Lead Categories
+      description: 'Retrieves all lead categories/labels configured for the user.
+
+        '
+      operationId: getLeadCategories
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Categories retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LeadCategory'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/leads/{lead_id}/unsubscribe:
+    post:
+      tags:
+      - Leads
+      summary: Unsubscribe Lead Globally
+      description: 'Unsubscribes a lead from all campaigns. The lead will no longer receive any emails.
+
+        '
+      operationId: unsubscribeLeadGlobally
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: lead_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Lead unsubscribed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/lead-list/:
+    post:
+      tags:
+      - Leads
+      summary: Create Lead List
+      description: 'Creates a new lead list/group to organize your leads.
+
+        '
+      operationId: createLeadList
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - listName
+              properties:
+                listName:
+                  type: string
+                  description: Name of the lead list
+      responses:
+        '200':
+          description: Lead list created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  id:
+                    type: integer
+                  listName:
+                    type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Leads
+      summary: Get All Lead Lists
+      description: 'Retrieves all lead lists with filtering and pagination.
+
+        '
+      operationId: getAllLeadLists
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: listName
+        in: query
+        description: Filter by list name
+        schema:
+          type: string
+      - name: tagIds
+        in: query
+        description: Comma-separated tag IDs to filter
+        schema:
+          type: string
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 10
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+      responses:
+        '200':
+          description: Lead lists retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lists:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LeadList'
+                  total_count:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/lead-list/{id}:
+    get:
+      tags:
+      - Leads
+      summary: Get Lead List by ID
+      description: 'Retrieves a specific lead list by ID.
+
+        '
+      operationId: getLeadListById
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Lead list retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+      - Leads
+      summary: Update Lead List
+      description: 'Updates a lead list''s name.
+
+        '
+      operationId: updateLeadList
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - listName
+              properties:
+                listName:
+                  type: string
+      responses:
+        '200':
+          description: Lead list updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - Leads
+      summary: Delete Lead List
+      description: 'Deletes a lead list. This does not delete the leads themselves, only the list.
+
+        '
+      operationId: deleteLeadList
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Lead list deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/lead-list/{id}/import:
+    post:
+      tags:
+      - Leads
+      summary: Import Leads to List
+      description: 'Imports leads from a CSV file to a specific lead list.
+
+        '
+      operationId: importLeadsToList
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - leadList
+              - fileName
+              properties:
+                leadList:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/LeadInput'
+                fileName:
+                  type: string
+                emailFieldsAdded:
+                  type: object
+                customFields:
+                  type: object
+                  nullable: true
+                csvSettings:
+                  type: object
+                  properties:
+                    ignoreGlobalBlockList:
+                      type: boolean
+      responses:
+        '200':
+          description: Leads imported successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  imported_count:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/lead-list/assign-tags:
+    post:
+      tags:
+      - Leads
+      summary: Assign Tags to Lead Lists
+      description: 'Assigns or removes tags from lead lists (max 10 lists and 10 tags per request).
+
+        '
+      operationId: assignTagsToLeadLists
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - listIds
+              properties:
+                listIds:
+                  type: array
+                  items:
+                    type: integer
+                  minItems: 1
+                  maxItems: 10
+                tagIds:
+                  type: array
+                  items:
+                    type: integer
+                  minItems: 1
+                  maxItems: 10
+                removeTagIds:
+                  type: array
+                  items:
+                    type: integer
+                  minItems: 1
+                  maxItems: 10
+      responses:
+        '200':
+          description: Tags assigned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  responses:
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
+    BadRequestError:
+      description: Bad request - Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid request parameters
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+  schemas:
+    LeadList:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique lead list identifier
+        listName:
+          type: string
+          description: Name of the lead list
+        user_id:
+          type: integer
+          description: Owner user ID
+        lead_count:
+          type: integer
+          description: Number of leads in this list
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: object
+            properties:
+              tag_id:
+                type: integer
+              tag_name:
+                type: string
+              tag_color:
+                type: string
+    LeadUpdate:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        company_name:
+          type: string
+        phone_number:
+          type: string
+        website:
+          type: string
+        custom_fields:
+          type: object
+    LeadInput:
+      type: object
+      required:
+      - email
+      properties:
+        email:
+          type: string
+          format: email
+          description: Lead email address (required)
+        first_name:
+          type: string
+        last_name:
+          type: string
+        company_name:
+          type: string
+        phone_number:
+          type: string
+        website:
+          type: string
+        custom_fields:
+          type: object
+          additionalProperties: true
+    LeadCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        color:
+          type: string
+    Lead:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        company_name:
+          type: string
+        phone_number:
+          type: string
+        website:
+          type: string
+        custom_fields:
+          type: object
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - PAUSED
+          - COMPLETED
+          - UNSUBSCRIBED
+          - BOUNCED
+        campaign_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+      description: 'Your SmartLead API key. You can generate this from your dashboard under Settings > API Keys.
+
+
+        Include this as a query parameter in all API requests:
+
+        ```
+
+        ?api_key=YOUR_API_KEY
+
+        ```
+
+        '

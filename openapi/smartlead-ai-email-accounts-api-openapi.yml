@@ -1,0 +1,639 @@
+openapi: 3.2.0
+info:
+  title: SmartLead Email Accounts API
+  version: 1.0.0
+  description: '# SmartLead API Documentation
+
+
+    Welcome to the SmartLead API! SmartLead is a comprehensive cold email outreach platform that helps you manage email campaigns, leads, email accounts, and analytics.
+
+
+    ## Base URL
+
+
+    All API requests should be made to:
+
+    ```
+
+    https://server.smartlead.ai/api
+
+    ```
+
+
+    ## Authentication
+
+
+    SmartLead uses API keys for authentication. Include your API key as a query parameter in all requests:
+
+    ```
+
+    ?api_key=YOUR_API_KEY
+
+    ```
+
+
+    You can generate your API key from your SmartLead dashboard under Settings > API Keys.
+
+
+    ## Rate Limiting
+
+
+    API requests are rate-limited to ensure fair usage. If you exceed the rate limit, you''ll receive a 429 error.
+
+
+    ## Support
+
+
+    For API support, contact support@smartlead.ai or visit https://smartlead.ai
+
+    '
+  contact:
+    name: SmartLead Support
+    email: support@smartlead.ai
+    url: https://smartlead.ai
+  license:
+    name: Proprietary
+    url: https://smartlead.ai/terms
+servers:
+- url: https://server.smartlead.ai/api
+  description: Production server
+- url: https://staging.smartlead.ai/api
+  description: Staging server (for testing)
+security:
+- ApiKeyAuth: []
+tags:
+- name: Email Accounts
+  description: Configure and manage email sending accounts
+paths:
+  /v1/email-accounts/:
+    get:
+      tags:
+      - Email Accounts
+      summary: Get All Email Accounts
+      description: 'Retrieves all email accounts configured for the authenticated user.
+
+
+        Returns complete account details including connection status, warmup settings, and daily limits.
+
+        '
+      operationId: getAllEmailAccounts
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Email accounts retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmailAccount'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/email-accounts/{account_id}:
+    get:
+      tags:
+      - Email Accounts
+      summary: Get Email Account by ID
+      description: 'Retrieves details of a specific email account by ID.
+
+        '
+      operationId: getEmailAccountById
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Email account details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailAccount'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - Email Accounts
+      summary: Update Email Account
+      description: 'Updates an existing email account''s configuration including SMTP/IMAP settings, sending limits, and warmup settings.
+
+        '
+      operationId: updateEmailAccount
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailAccountUpdate'
+      responses:
+        '200':
+          description: Email account updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - Email Accounts
+      summary: Delete Email Account
+      description: 'Permanently deletes an email account. This will remove it from all campaigns.
+
+        '
+      operationId: deleteEmailAccount
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Email account deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/email-accounts/save:
+    post:
+      tags:
+      - Email Accounts
+      summary: Add SMTP Email Account
+      description: 'Adds a new SMTP/IMAP email account for sending campaigns.
+
+
+        **Required Information:**
+
+        - SMTP host, port, username, password
+
+        - IMAP host, port, username, password
+
+        - From name and email
+
+        - Warmup settings
+
+        '
+      operationId: addSmtpEmailAccount
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailAccountInput'
+      responses:
+        '200':
+          description: Email account added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  id:
+                    type: integer
+                    description: ID of the newly created email account
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/email-accounts/save-oauth:
+    post:
+      tags:
+      - Email Accounts
+      summary: Add OAuth Email Account
+      description: 'Adds a Gmail or Microsoft 365 email account using OAuth authentication.
+
+        '
+      operationId: addOauthEmailAccount
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailAccountOAuthInput'
+      responses:
+        '200':
+          description: OAuth email account added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  id:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/email-accounts/{account_id}/warmup:
+    post:
+      tags:
+      - Email Accounts
+      summary: Update Warmup Settings
+      description: 'Updates email warmup configuration for an account.
+
+
+        **Warmup helps improve deliverability by gradually increasing sending volume.**
+
+        '
+      operationId: updateWarmupSettings
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WarmupSettings'
+      responses:
+        '200':
+          description: Warmup settings updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/email-accounts/{account_id}/warmup-stats:
+    get:
+      tags:
+      - Email Accounts
+      summary: Get Warmup Statistics
+      description: 'Retrieves warmup statistics and progress for an email account.
+
+        '
+      operationId: getWarmupStats
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Warmup statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WarmupStats'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/email-accounts/suspend/{accountId}:
+    put:
+      tags:
+      - Email Accounts
+      summary: Suspend Email Account
+      description: 'Temporarily suspends an email account. No emails will be sent from this account until unsuspended.
+
+        '
+      operationId: suspendEmailAccount
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Email account suspended successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/email-accounts/unsuspend/{accountId}:
+    delete:
+      tags:
+      - Email Accounts
+      summary: Unsuspend Email Account
+      description: 'Reactivates a suspended email account, allowing it to send emails again.
+
+        '
+      operationId: unsuspendEmailAccount
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Email account unsuspended successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  responses:
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
+    BadRequestError:
+      description: Bad request - Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid request parameters
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+  schemas:
+    EmailAccountOAuthInput:
+      type: object
+      required:
+      - from_name
+      - from_email
+      - token
+      - type
+      properties:
+        from_name:
+          type: string
+        from_email:
+          type: string
+          format: email
+        token:
+          type: object
+          properties:
+            access_token:
+              type: string
+            refresh_token:
+              type: string
+            expiry_date:
+              type: integer
+        type:
+          type: string
+          enum:
+          - gmail
+          - microsoft
+        warmup_enabled:
+          type: boolean
+    EmailAccountInput:
+      type: object
+      required:
+      - from_name
+      - from_email
+      - user_name
+      - password
+      - smtp_host
+      - smtp_port
+      - imap_host
+      - imap_port
+      - warmup_enabled
+      properties:
+        from_name:
+          type: string
+        from_email:
+          type: string
+          format: email
+        user_name:
+          type: string
+        password:
+          type: string
+        smtp_host:
+          type: string
+        smtp_port:
+          type: integer
+        imap_host:
+          type: string
+        imap_port:
+          type: integer
+        warmup_enabled:
+          type: boolean
+        total_warmup_per_day:
+          type: integer
+        daily_rampup:
+          type: integer
+        max_email_per_day:
+          type: integer
+    EmailAccount:
+      type: object
+      properties:
+        id:
+          type: integer
+        from_name:
+          type: string
+        from_email:
+          type: string
+          format: email
+        smtp_host:
+          type: string
+        smtp_port:
+          type: integer
+        imap_host:
+          type: string
+        imap_port:
+          type: integer
+        warmup_enabled:
+          type: boolean
+        total_warmup_per_day:
+          type: integer
+        daily_rampup:
+          type: integer
+        max_email_per_day:
+          type: integer
+        is_suspended:
+          type: boolean
+        connection_status:
+          type: string
+          enum:
+          - CONNECTED
+          - DISCONNECTED
+          - ERROR
+    EmailAccountUpdate:
+      type: object
+      properties:
+        from_name:
+          type: string
+        max_email_per_day:
+          type: integer
+        signature:
+          type: string
+        custom_tracking_url:
+          type: string
+        bcc:
+          type: string
+    WarmupStats:
+      type: object
+      properties:
+        total_sent:
+          type: integer
+        total_inbox:
+          type: integer
+        total_spam:
+          type: integer
+        warmup_reputation:
+          type: number
+        days_in_warmup:
+          type: integer
+    WarmupSettings:
+      type: object
+      properties:
+        warmup_enabled:
+          type: boolean
+        total_warmup_per_day:
+          type: integer
+        daily_rampup:
+          type: integer
+        reply_rate_percentage:
+          type: integer
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+      description: 'Your SmartLead API key. You can generate this from your dashboard under Settings > API Keys.
+
+
+        Include this as a query parameter in all API requests:
+
+        ```
+
+        ?api_key=YOUR_API_KEY
+
+        ```
+
+        '

@@ -1,0 +1,561 @@
+openapi: 3.2.0
+info:
+  title: SmartLead Analytics API
+  version: 1.0.0
+  description: '# SmartLead API Documentation
+
+
+    Welcome to the SmartLead API! SmartLead is a comprehensive cold email outreach platform that helps you manage email campaigns, leads, email accounts, and analytics.
+
+
+    ## Base URL
+
+
+    All API requests should be made to:
+
+    ```
+
+    https://server.smartlead.ai/api
+
+    ```
+
+
+    ## Authentication
+
+
+    SmartLead uses API keys for authentication. Include your API key as a query parameter in all requests:
+
+    ```
+
+    ?api_key=YOUR_API_KEY
+
+    ```
+
+
+    You can generate your API key from your SmartLead dashboard under Settings > API Keys.
+
+
+    ## Rate Limiting
+
+
+    API requests are rate-limited to ensure fair usage. If you exceed the rate limit, you''ll receive a 429 error.
+
+
+    ## Support
+
+
+    For API support, contact support@smartlead.ai or visit https://smartlead.ai
+
+    '
+  contact:
+    name: SmartLead Support
+    email: support@smartlead.ai
+    url: https://smartlead.ai
+  license:
+    name: Proprietary
+    url: https://smartlead.ai/terms
+servers:
+- url: https://server.smartlead.ai/api
+  description: Production server
+- url: https://staging.smartlead.ai/api
+  description: Staging server (for testing)
+security:
+- ApiKeyAuth: []
+tags:
+- name: Analytics
+  description: Global analytics and reporting across all campaigns
+paths:
+  /v1/analytics/overall-stats-v2:
+    get:
+      tags:
+      - Analytics
+      summary: Get Overall Statistics
+      description: 'Retrieves comprehensive statistics across all campaigns for a date range.
+
+
+        **Metrics included:**
+
+        - Total emails sent
+
+        - Open rate
+
+        - Click rate
+
+        - Reply rate
+
+        - Bounce rate
+
+        - Unsubscribe rate
+
+        '
+      operationId: getOverallStats
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - $ref: '#/components/parameters/StartDateParam'
+      - $ref: '#/components/parameters/EndDateParam'
+      - $ref: '#/components/parameters/TimezoneParam'
+      - name: client_ids
+        in: query
+        description: Comma-separated list of client IDs to filter
+        schema:
+          type: string
+      - name: campaign_ids
+        in: query
+        description: Comma-separated list of campaign IDs to filter
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OverallStats'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/analytics/day-wise-overall-stats:
+    get:
+      tags:
+      - Analytics
+      summary: Get Day-Wise Statistics
+      description: 'Retrieves daily statistics breakdown for a date range.
+
+        '
+      operationId: getDayWiseStats
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - $ref: '#/components/parameters/StartDateParam'
+      - $ref: '#/components/parameters/EndDateParam'
+      - $ref: '#/components/parameters/TimezoneParam'
+      - name: client_ids
+        in: query
+        schema:
+          type: string
+      - name: campaign_ids
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Day-wise statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DailyStats'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/analytics/campaign/overall-stats:
+    get:
+      tags:
+      - Analytics
+      summary: Get Campaign-Wise Performance
+      description: 'Retrieves performance statistics broken down by campaign.
+
+        '
+      operationId: getCampaignWisePerformance
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - $ref: '#/components/parameters/StartDateParam'
+      - $ref: '#/components/parameters/EndDateParam'
+      - $ref: '#/components/parameters/TimezoneParam'
+      - name: client_ids
+        in: query
+        schema:
+          type: string
+      - name: campaign_ids
+        in: query
+        schema:
+          type: string
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 100
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          default: 0
+      responses:
+        '200':
+          description: Campaign-wise performance retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CampaignPerformance'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/analytics/campaign/list:
+    get:
+      tags:
+      - Analytics
+      summary: Get Campaign List for Analytics
+      description: 'Retrieves a list of all campaigns with basic metrics.
+
+        '
+      operationId: getCampaignListAnalytics
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: client_ids
+        in: query
+        description: Comma-separated client IDs
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Campaign list retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    campaign_id:
+                      type: integer
+                    campaign_name:
+                      type: string
+                    status:
+                      type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/analytics/day-wise-positive-reply-stats:
+    get:
+      tags:
+      - Analytics
+      summary: Get Day-Wise Positive Reply Statistics
+      description: 'Retrieves daily positive reply statistics for a date range.
+
+        '
+      operationId: getDayWisePositiveReplyStats
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - $ref: '#/components/parameters/StartDateParam'
+      - $ref: '#/components/parameters/EndDateParam'
+      - $ref: '#/components/parameters/TimezoneParam'
+      - name: client_ids
+        in: query
+        schema:
+          type: string
+      - name: campaign_ids
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                    positive_replies:
+                      type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/analytics/mailbox/overall-stats:
+    get:
+      tags:
+      - Analytics
+      summary: Get Mailbox Statistics
+      description: 'Retrieves overall mailbox/email account performance statistics.
+
+        '
+      operationId: getMailboxStats
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - $ref: '#/components/parameters/StartDateParam'
+      - $ref: '#/components/parameters/EndDateParam'
+      - $ref: '#/components/parameters/TimezoneParam'
+      - name: client_ids
+        in: query
+        schema:
+          type: string
+      - name: email_account_ids
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Mailbox statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    email_account_id:
+                      type: integer
+                    email:
+                      type: string
+                    sent:
+                      type: integer
+                    opened:
+                      type: integer
+                    clicked:
+                      type: integer
+                    replied:
+                      type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/analytics/lead/overall-stats:
+    get:
+      tags:
+      - Analytics
+      summary: Get Lead Statistics
+      description: 'Retrieves overall lead statistics and conversion metrics.
+
+        '
+      operationId: getLeadStats
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - $ref: '#/components/parameters/StartDateParam'
+      - $ref: '#/components/parameters/EndDateParam'
+      - $ref: '#/components/parameters/TimezoneParam'
+      - name: client_ids
+        in: query
+        schema:
+          type: string
+      - name: campaign_ids
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Lead statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_leads:
+                    type: integer
+                  active_leads:
+                    type: integer
+                  contacted_leads:
+                    type: integer
+                  replied_leads:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/analytics/lead/category-wise-response:
+    get:
+      tags:
+      - Analytics
+      summary: Get Category-Wise Lead Responses
+      description: 'Retrieves lead response statistics broken down by category.
+
+        '
+      operationId: getCategoryWiseResponses
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - $ref: '#/components/parameters/StartDateParam'
+      - $ref: '#/components/parameters/EndDateParam'
+      - $ref: '#/components/parameters/TimezoneParam'
+      - name: client_ids
+        in: query
+        schema:
+          type: string
+      - name: campaign_ids
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Category-wise responses retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    category_id:
+                      type: integer
+                    category_name:
+                      type: string
+                    lead_count:
+                      type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    OverallStats:
+      type: object
+      properties:
+        total_sent:
+          type: integer
+        total_opened:
+          type: integer
+        total_clicked:
+          type: integer
+        total_replied:
+          type: integer
+        total_bounced:
+          type: integer
+        open_rate:
+          type: number
+        click_rate:
+          type: number
+        reply_rate:
+          type: number
+    CampaignPerformance:
+      type: object
+      properties:
+        campaign_id:
+          type: integer
+        campaign_name:
+          type: string
+        sent:
+          type: integer
+        opened:
+          type: integer
+        clicked:
+          type: integer
+        replied:
+          type: integer
+        open_rate:
+          type: number
+        click_rate:
+          type: number
+        reply_rate:
+          type: number
+    DailyStats:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        sent:
+          type: integer
+        opened:
+          type: integer
+        clicked:
+          type: integer
+        replied:
+          type: integer
+  parameters:
+    EndDateParam:
+      name: end_date
+      in: query
+      description: End date for analytics (ISO 8601 format)
+      required: true
+      schema:
+        type: string
+        format: date
+      example: '2024-01-31'
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
+    StartDateParam:
+      name: start_date
+      in: query
+      description: Start date for analytics (ISO 8601 format)
+      required: true
+      schema:
+        type: string
+        format: date
+      example: '2024-01-01'
+    TimezoneParam:
+      name: timezone
+      in: query
+      description: Timezone for date calculations (IANA format)
+      required: false
+      schema:
+        type: string
+        default: UTC
+      example: America/New_York
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+      description: 'Your SmartLead API key. You can generate this from your dashboard under Settings > API Keys.
+
+
+        Include this as a query parameter in all API requests:
+
+        ```
+
+        ?api_key=YOUR_API_KEY
+
+        ```
+
+        '

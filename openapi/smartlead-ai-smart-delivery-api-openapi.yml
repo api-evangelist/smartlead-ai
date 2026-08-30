@@ -1,0 +1,891 @@
+openapi: 3.2.0
+info:
+  title: SmartLead Smart Delivery API
+  version: 1.0.0
+  description: '# SmartLead API Documentation
+
+
+    Welcome to the SmartLead API! SmartLead is a comprehensive cold email outreach platform that helps you manage email campaigns, leads, email accounts, and analytics.
+
+
+    ## Base URL
+
+
+    All API requests should be made to:
+
+    ```
+
+    https://server.smartlead.ai/api
+
+    ```
+
+
+    ## Authentication
+
+
+    SmartLead uses API keys for authentication. Include your API key as a query parameter in all requests:
+
+    ```
+
+    ?api_key=YOUR_API_KEY
+
+    ```
+
+
+    You can generate your API key from your SmartLead dashboard under Settings > API Keys.
+
+
+    ## Rate Limiting
+
+
+    API requests are rate-limited to ensure fair usage. If you exceed the rate limit, you''ll receive a 429 error.
+
+
+    ## Support
+
+
+    For API support, contact support@smartlead.ai or visit https://smartlead.ai
+
+    '
+  contact:
+    name: SmartLead Support
+    email: support@smartlead.ai
+    url: https://smartlead.ai
+  license:
+    name: Proprietary
+    url: https://smartlead.ai/terms
+servers:
+- url: https://server.smartlead.ai/api
+  description: Production server
+- url: https://staging.smartlead.ai/api
+  description: Staging server (for testing)
+security:
+- ApiKeyAuth: []
+tags:
+- name: Smart Delivery
+  description: Email deliverability testing and monitoring
+paths:
+  /v1/smart-delivery/provider-ids:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Provider IDs
+      description: 'Get region-wise email provider IDs for spam testing configuration.
+
+
+        **Note:** Smart Delivery is a premium feature. Contact support@smartlead.ai for access.
+
+        '
+      operationId: getProviderIds
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Provider IDs retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/automated-test:
+    post:
+      tags:
+      - Smart Delivery
+      summary: Create Automated Placement Test
+      description: 'Create automated recurring spam test with scheduled monitoring.
+
+        '
+      operationId: createAutomatedTest
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email_account_id:
+                  type: integer
+                test_name:
+                  type: string
+                schedule:
+                  type: string
+      responses:
+        '200':
+          description: Automated test created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/manual-test:
+    post:
+      tags:
+      - Smart Delivery
+      summary: Create Manual Placement Test
+      description: 'Create one-time manual spam placement test.
+
+        '
+      operationId: createManualTest
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email_account_id:
+                  type: integer
+                test_name:
+                  type: string
+      responses:
+        '200':
+          description: Manual test created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/tests:
+    get:
+      tags:
+      - Smart Delivery
+      summary: List All Tests
+      description: 'Retrieve list of all spam placement tests.
+
+        '
+      operationId: listTests
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Tests retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/test/{test_id}:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Test Details
+      description: 'Get detailed results of a specific placement test.
+
+        '
+      operationId: getTestDetails
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: test_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Test details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/test/{test_id}/email-content:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Test Email Content
+      description: 'Retrieve the email content used in a specific test.
+
+        '
+      operationId: getTestEmailContent
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: test_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Email content retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/automated-test/{test_id}/stop:
+    post:
+      tags:
+      - Smart Delivery
+      summary: Stop Automated Test
+      description: 'Stop a running automated placement test.
+
+        '
+      operationId: stopAutomatedTest
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: test_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Automated test stopped successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/tests/bulk-delete:
+    post:
+      tags:
+      - Smart Delivery
+      summary: Bulk Delete Tests
+      description: 'Delete multiple placement tests at once.
+
+        '
+      operationId: bulkDeleteTests
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - test_ids
+              properties:
+                test_ids:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Tests deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/folders:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Folders
+      description: 'Retrieve all test folders for organization.
+
+        '
+      operationId: getFolders
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Folders retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - Smart Delivery
+      summary: Create Folder
+      description: 'Create a new folder to organize tests.
+
+        '
+      operationId: createFolder
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Folder created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/folder/{folder_id}:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Folder by ID
+      description: 'Get details of a specific folder.
+
+        '
+      operationId: getFolderById
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: folder_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Folder retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - Smart Delivery
+      summary: Delete Folder
+      description: 'Delete a test folder.
+
+        '
+      operationId: deleteFolder
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: folder_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Folder deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/mailbox-summary:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Mailbox Summary
+      description: 'Get summary of mailbox deliverability metrics.
+
+        '
+      operationId: getMailboxSummary
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Mailbox summary retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/mailbox-count:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Mailbox Count
+      description: 'Get count of monitored mailboxes.
+
+        '
+      operationId: getMailboxCount
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Mailbox count retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/sender-list:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Sender List
+      description: 'Get list of all configured senders for testing.
+
+        '
+      operationId: getSenderList
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Sender list retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/sender-report:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Sender Report
+      description: 'Get detailed deliverability report for a sender.
+
+        '
+      operationId: getSenderReport
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Sender report retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/provider-report:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Provider Report
+      description: 'Get placement report broken down by email provider.
+
+        '
+      operationId: getProviderReport
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Provider report retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/geo-report:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Geographic Report
+      description: 'Get placement report broken down by geographic region.
+
+        '
+      operationId: getGeoReport
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Geographic report retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/spam-filter-report:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Spam Filter Report
+      description: 'Get report on spam filter performance and placement.
+
+        '
+      operationId: getSpamFilterReport
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Spam filter report retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/schedule-history:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Schedule History
+      description: 'Get history of scheduled automated tests.
+
+        '
+      operationId: getScheduleHistory
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Schedule history retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/blacklists:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Blacklist Status
+      description: 'Check if domains or IPs are on email blacklists.
+
+        '
+      operationId: getBlacklists
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Blacklist status retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/domain-blacklist:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Domain Blacklist Status
+      description: 'Check domain blacklist status across major blacklist providers.
+
+        '
+      operationId: getDomainBlacklist
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Domain blacklist status retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/ip-blacklist-count:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get IP Blacklist Count
+      description: 'Get count of blacklists an IP appears on.
+
+        '
+      operationId: getIpBlacklistCount
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: IP blacklist count retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/spf-details:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get SPF Details
+      description: 'Get SPF (Sender Policy Framework) configuration details.
+
+        '
+      operationId: getSpfDetails
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: SPF details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/dkim-details:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get DKIM Details
+      description: 'Get DKIM (DomainKeys Identified Mail) configuration details.
+
+        '
+      operationId: getDkimDetails
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: DKIM details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/rdns-report:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Reverse DNS Report
+      description: 'Get reverse DNS (rDNS) configuration report.
+
+        '
+      operationId: getRdnsReport
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: rDNS report retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/ip-details:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get IP Details
+      description: 'Get detailed information about IP reputation and configuration.
+
+        '
+      operationId: getIpDetails
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: IP details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/smart-delivery/reply-headers:
+    get:
+      tags:
+      - Smart Delivery
+      summary: Get Reply Headers
+      description: 'Get email header analysis from test replies.
+
+        '
+      operationId: getReplyHeaders
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      responses:
+        '200':
+          description: Reply headers retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  responses:
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+      description: 'Your SmartLead API key. You can generate this from your dashboard under Settings > API Keys.
+
+
+        Include this as a query parameter in all API requests:
+
+        ```
+
+        ?api_key=YOUR_API_KEY
+
+        ```
+
+        '

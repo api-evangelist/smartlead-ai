@@ -1,0 +1,340 @@
+openapi: 3.2.0
+info:
+  title: SmartLead Webhooks API
+  version: 1.0.0
+  description: '# SmartLead API Documentation
+
+
+    Welcome to the SmartLead API! SmartLead is a comprehensive cold email outreach platform that helps you manage email campaigns, leads, email accounts, and analytics.
+
+
+    ## Base URL
+
+
+    All API requests should be made to:
+
+    ```
+
+    https://server.smartlead.ai/api
+
+    ```
+
+
+    ## Authentication
+
+
+    SmartLead uses API keys for authentication. Include your API key as a query parameter in all requests:
+
+    ```
+
+    ?api_key=YOUR_API_KEY
+
+    ```
+
+
+    You can generate your API key from your SmartLead dashboard under Settings > API Keys.
+
+
+    ## Rate Limiting
+
+
+    API requests are rate-limited to ensure fair usage. If you exceed the rate limit, you''ll receive a 429 error.
+
+
+    ## Support
+
+
+    For API support, contact support@smartlead.ai or visit https://smartlead.ai
+
+    '
+  contact:
+    name: SmartLead Support
+    email: support@smartlead.ai
+    url: https://smartlead.ai
+  license:
+    name: Proprietary
+    url: https://smartlead.ai/terms
+servers:
+- url: https://server.smartlead.ai/api
+  description: Production server
+- url: https://staging.smartlead.ai/api
+  description: Staging server (for testing)
+security:
+- ApiKeyAuth: []
+tags:
+- name: Webhooks
+  description: Configure webhooks for real-time event notifications
+paths:
+  /v1/webhook/create:
+    post:
+      tags:
+      - Webhooks
+      summary: Create Webhook
+      description: 'Creates a new webhook to receive real-time notifications for campaign events.
+
+
+        **Supported Events:**
+
+        - LEAD_REPLIED
+
+        - LEAD_OPENED
+
+        - LEAD_CLICKED
+
+        - LEAD_BOUNCED
+
+        - LEAD_UNSUBSCRIBED
+
+        - LEAD_CREATED
+
+        - And more...
+
+        '
+      operationId: createWebhook
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookInput'
+      responses:
+        '200':
+          description: Webhook created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  webhook_id:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/webhook/{webhook_id}:
+    get:
+      tags:
+      - Webhooks
+      summary: Get Webhook Details
+      description: 'Retrieves details of a specific webhook.
+
+        '
+      operationId: getWebhookDetails
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: webhook_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Webhook details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/webhook/update/{webhook_id}:
+    put:
+      tags:
+      - Webhooks
+      summary: Update Webhook
+      description: 'Updates an existing webhook configuration.
+
+        '
+      operationId: updateWebhook
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: webhook_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookUpdate'
+      responses:
+        '200':
+          description: Webhook updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/webhook/delete/{webhook_id}:
+    delete:
+      tags:
+      - Webhooks
+      summary: Delete Webhook
+      description: 'Deletes a webhook. You will no longer receive notifications for this webhook.
+
+        '
+      operationId: deleteWebhook
+      parameters:
+      - $ref: '#/components/parameters/ApiKeyParam'
+      - name: webhook_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Webhook deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  responses:
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+  schemas:
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        webhook_url:
+          type: string
+        event_type:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    WebhookUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        webhook_url:
+          type: string
+        event_type:
+          type: string
+    WebhookInput:
+      type: object
+      required:
+      - webhook_url
+      - association_type
+      properties:
+        name:
+          type: string
+        webhook_url:
+          type: string
+          format: uri
+        event_type:
+          type: string
+        email_campaign_id:
+          type: integer
+        association_type:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+      description: 'Your SmartLead API key. You can generate this from your dashboard under Settings > API Keys.
+
+
+        Include this as a query parameter in all API requests:
+
+        ```
+
+        ?api_key=YOUR_API_KEY
+
+        ```
+
+        '
