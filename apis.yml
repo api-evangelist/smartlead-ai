@@ -45,7 +45,7 @@ tags:
   - Outbound
   - Sales
   - Deliverability
-  - Email Warm-up
+  - Email Warmup
   - Automation
   - Sequences
 tags_raw:
@@ -319,6 +319,8 @@ apis:
   humanURL: https://api.smartlead.ai/api-reference
   baseURL: https://server.smartlead.ai/api/v1
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
