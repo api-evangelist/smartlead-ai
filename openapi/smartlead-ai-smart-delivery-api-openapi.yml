@@ -5,48 +5,7 @@ info:
   description: '# SmartLead API Documentation
 
 
-    Welcome to the SmartLead API! SmartLead is a comprehensive cold email outreach platform that helps you manage email campaigns, leads, email accounts, and analytics.
-
-
-    ## Base URL
-
-
-    All API requests should be made to:
-
-    ```
-
-    https://server.smartlead.ai/api
-
-    ```
-
-
-    ## Authentication
-
-
-    SmartLead uses API keys for authentication. Include your API key as a query parameter in all requests:
-
-    ```
-
-    ?api_key=YOUR_API_KEY
-
-    ```
-
-
-    You can generate your API key from your SmartLead dashboard under Settings > API Keys.
-
-
-    ## Rate Limiting
-
-
-    API requests are rate-limited to ensure fair usage. If you exceed the rate limit, you''ll receive a 429 error.
-
-
-    ## Support
-
-
-    For API support, contact support@smartlead.ai or visit https://smartlead.ai
-
-    '
+    Welcome to the SmartLead API!'
   contact:
     name: SmartLead Support
     email: support@smartlead.ai
@@ -73,9 +32,7 @@ paths:
       description: 'Get region-wise email provider IDs for spam testing configuration.
 
 
-        **Note:** Smart Delivery is a premium feature. Contact support@smartlead.ai for access.
-
-        '
+        **Note:** Smart Delivery is a premium feature. Contact support@smartlead.ai for access.'
       operationId: getProviderIds
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -100,9 +57,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Create Automated Placement Test
-      description: 'Create automated recurring spam test with scheduled monitoring.
-
-        '
+      description: Create automated recurring spam test with scheduled monitoring.
       operationId: createAutomatedTest
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -142,9 +97,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Create Manual Placement Test
-      description: 'Create one-time manual spam placement test.
-
-        '
+      description: Create one-time manual spam placement test.
       operationId: createManualTest
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -182,9 +135,7 @@ paths:
       tags:
       - Smart Delivery
       summary: List All Tests
-      description: 'Retrieve list of all spam placement tests.
-
-        '
+      description: Retrieve list of all spam placement tests.
       operationId: listTests
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -211,9 +162,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Test Details
-      description: 'Get detailed results of a specific placement test.
-
-        '
+      description: Get detailed results of a specific placement test.
       operationId: getTestDetails
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -240,9 +189,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Test Email Content
-      description: 'Retrieve the email content used in a specific test.
-
-        '
+      description: Retrieve the email content used in a specific test.
       operationId: getTestEmailContent
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -269,9 +216,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Stop Automated Test
-      description: 'Stop a running automated placement test.
-
-        '
+      description: Stop a running automated placement test.
       operationId: stopAutomatedTest
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -301,9 +246,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Bulk Delete Tests
-      description: 'Delete multiple placement tests at once.
-
-        '
+      description: Delete multiple placement tests at once.
       operationId: bulkDeleteTests
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -341,9 +284,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Folders
-      description: 'Retrieve all test folders for organization.
-
-        '
+      description: Retrieve all test folders for organization.
       operationId: getFolders
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -364,9 +305,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Create Folder
-      description: 'Create a new folder to organize tests.
-
-        '
+      description: Create a new folder to organize tests.
       operationId: createFolder
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -402,9 +341,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Folder by ID
-      description: 'Get details of a specific folder.
-
-        '
+      description: Get details of a specific folder.
       operationId: getFolderById
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -430,9 +367,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Delete Folder
-      description: 'Delete a test folder.
-
-        '
+      description: Delete a test folder.
       operationId: deleteFolder
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -462,9 +397,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Mailbox Summary
-      description: 'Get summary of mailbox deliverability metrics.
-
-        '
+      description: Get summary of mailbox deliverability metrics.
       operationId: getMailboxSummary
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -484,9 +417,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Mailbox Count
-      description: 'Get count of monitored mailboxes.
-
-        '
+      description: Get count of monitored mailboxes.
       operationId: getMailboxCount
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -509,9 +440,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Sender List
-      description: 'Get list of all configured senders for testing.
-
-        '
+      description: Get list of all configured senders for testing.
       operationId: getSenderList
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -533,9 +462,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Sender Report
-      description: 'Get detailed deliverability report for a sender.
-
-        '
+      description: Get detailed deliverability report for a sender.
       operationId: getSenderReport
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -555,9 +482,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Provider Report
-      description: 'Get placement report broken down by email provider.
-
-        '
+      description: Get placement report broken down by email provider.
       operationId: getProviderReport
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -577,9 +502,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Geographic Report
-      description: 'Get placement report broken down by geographic region.
-
-        '
+      description: Get placement report broken down by geographic region.
       operationId: getGeoReport
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -599,9 +522,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Spam Filter Report
-      description: 'Get report on spam filter performance and placement.
-
-        '
+      description: Get report on spam filter performance and placement.
       operationId: getSpamFilterReport
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -621,9 +542,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Schedule History
-      description: 'Get history of scheduled automated tests.
-
-        '
+      description: Get history of scheduled automated tests.
       operationId: getScheduleHistory
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -645,9 +564,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Blacklist Status
-      description: 'Check if domains or IPs are on email blacklists.
-
-        '
+      description: Check if domains or IPs are on email blacklists.
       operationId: getBlacklists
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -667,9 +584,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Domain Blacklist Status
-      description: 'Check domain blacklist status across major blacklist providers.
-
-        '
+      description: Check domain blacklist status across major blacklist providers.
       operationId: getDomainBlacklist
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -689,9 +604,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get IP Blacklist Count
-      description: 'Get count of blacklists an IP appears on.
-
-        '
+      description: Get count of blacklists an IP appears on.
       operationId: getIpBlacklistCount
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -714,9 +627,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get SPF Details
-      description: 'Get SPF (Sender Policy Framework) configuration details.
-
-        '
+      description: Get SPF (Sender Policy Framework) configuration details.
       operationId: getSpfDetails
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -736,9 +647,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get DKIM Details
-      description: 'Get DKIM (DomainKeys Identified Mail) configuration details.
-
-        '
+      description: Get DKIM (DomainKeys Identified Mail) configuration details.
       operationId: getDkimDetails
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -758,9 +667,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Reverse DNS Report
-      description: 'Get reverse DNS (rDNS) configuration report.
-
-        '
+      description: Get reverse DNS (rDNS) configuration report.
       operationId: getRdnsReport
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -780,9 +687,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get IP Details
-      description: 'Get detailed information about IP reputation and configuration.
-
-        '
+      description: Get detailed information about IP reputation and configuration.
       operationId: getIpDetails
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -802,9 +707,7 @@ paths:
       tags:
       - Smart Delivery
       summary: Get Reply Headers
-      description: 'Get email header analysis from test replies.
-
-        '
+      description: Get email header analysis from test replies.
       operationId: getReplyHeaders
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -831,6 +734,26 @@ components:
               error:
                 type: string
                 example: Resource not found
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
     UnauthorizedError:
       description: Unauthorized - Invalid or missing API key
       content:
@@ -843,26 +766,6 @@ components:
                 example: Invalid API Key
           example:
             message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    ValidationError:
-      description: Request validation failed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid parameters provided
   parameters:
     ApiKeyParam:
       name: api_key

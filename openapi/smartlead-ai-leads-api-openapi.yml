@@ -5,48 +5,7 @@ info:
   description: '# SmartLead API Documentation
 
 
-    Welcome to the SmartLead API! SmartLead is a comprehensive cold email outreach platform that helps you manage email campaigns, leads, email accounts, and analytics.
-
-
-    ## Base URL
-
-
-    All API requests should be made to:
-
-    ```
-
-    https://server.smartlead.ai/api
-
-    ```
-
-
-    ## Authentication
-
-
-    SmartLead uses API keys for authentication. Include your API key as a query parameter in all requests:
-
-    ```
-
-    ?api_key=YOUR_API_KEY
-
-    ```
-
-
-    You can generate your API key from your SmartLead dashboard under Settings > API Keys.
-
-
-    ## Rate Limiting
-
-
-    API requests are rate-limited to ensure fair usage. If you exceed the rate limit, you''ll receive a 429 error.
-
-
-    ## Support
-
-
-    For API support, contact support@smartlead.ai or visit https://smartlead.ai
-
-    '
+    Welcome to the SmartLead API!'
   contact:
     name: SmartLead Support
     email: support@smartlead.ai
@@ -96,9 +55,7 @@ paths:
 
         - Email activity
 
-        - Custom fields
-
-        '
+        - Custom fields'
       operationId: getCampaignLeads
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -203,9 +160,7 @@ paths:
 
         - ignore_global_block_list: Skip global blocklist check
 
-        - ignore_unsubscribe: Add leads even if previously unsubscribed
-
-        '
+        - ignore_unsubscribe: Add leads even if previously unsubscribed'
       operationId: addLeadsToCampaign
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -270,9 +225,7 @@ paths:
       tags:
       - Leads
       summary: Delete Lead from Campaign
-      description: 'Removes a specific lead from a campaign. This does not delete the lead globally, only from this campaign.
-
-        '
+      description: Removes a specific lead from a campaign. This does not delete the lead globally, only from this campaign.
       operationId: deleteLeadFromCampaign
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -307,9 +260,7 @@ paths:
       tags:
       - Leads
       summary: Update Lead
-      description: 'Updates lead information such as name, company, phone, or custom fields.
-
-        '
+      description: Updates lead information such as name, company, phone, or custom fields.
       operationId: updateLead
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -353,9 +304,7 @@ paths:
       tags:
       - Leads
       summary: Pause Lead
-      description: 'Temporarily pauses a lead. No more emails will be sent until the lead is resumed.
-
-        '
+      description: Temporarily pauses a lead. No more emails will be sent until the lead is resumed.
       operationId: pauseLead
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -391,9 +340,7 @@ paths:
       tags:
       - Leads
       summary: Resume Lead
-      description: 'Resumes a paused lead. The campaign will continue sending emails to this lead.
-
-        '
+      description: Resumes a paused lead. The campaign will continue sending emails to this lead.
       operationId: resumeLead
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -429,9 +376,7 @@ paths:
       tags:
       - Leads
       summary: Unsubscribe Lead from Campaign
-      description: 'Unsubscribes a lead from a specific campaign. The lead will no longer receive emails from this campaign.
-
-        '
+      description: Unsubscribes a lead from a specific campaign. The lead will no longer receive emails from this campaign.
       operationId: unsubscribeLeadFromCampaign
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -467,9 +412,7 @@ paths:
       tags:
       - Leads
       summary: Update Lead Category
-      description: 'Updates the category/label assigned to a lead (e.g., "Interested", "Not Interested", "Meeting Scheduled").
-
-        '
+      description: Updates the category/label assigned to a lead (e.g., "Interested", "Not Interested", "Meeting Scheduled").
       operationId: updateLeadCategory
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -517,9 +460,7 @@ paths:
       tags:
       - Leads
       summary: Get Lead by Email
-      description: 'Retrieves lead information by email address across all campaigns.
-
-        '
+      description: Retrieves lead information by email address across all campaigns.
       operationId: getLeadByEmail
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -548,9 +489,7 @@ paths:
       tags:
       - Leads
       summary: Get Lead Campaigns
-      description: 'Retrieves all campaigns that a specific lead is part of.
-
-        '
+      description: Retrieves all campaigns that a specific lead is part of.
       operationId: getLeadCampaigns
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -586,9 +525,7 @@ paths:
       tags:
       - Leads
       summary: Get Lead Categories
-      description: 'Retrieves all lead categories/labels configured for the user.
-
-        '
+      description: Retrieves all lead categories/labels configured for the user.
       operationId: getLeadCategories
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -610,9 +547,7 @@ paths:
       tags:
       - Leads
       summary: Unsubscribe Lead Globally
-      description: 'Unsubscribes a lead from all campaigns. The lead will no longer receive any emails.
-
-        '
+      description: Unsubscribes a lead from all campaigns. The lead will no longer receive any emails.
       operationId: unsubscribeLeadGlobally
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -643,9 +578,7 @@ paths:
       tags:
       - Leads
       summary: Create Lead List
-      description: 'Creates a new lead list/group to organize your leads.
-
-        '
+      description: Creates a new lead list/group to organize your leads.
       operationId: createLeadList
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -686,9 +619,7 @@ paths:
       tags:
       - Leads
       summary: Get All Lead Lists
-      description: 'Retrieves all lead lists with filtering and pagination.
-
-        '
+      description: Retrieves all lead lists with filtering and pagination.
       operationId: getAllLeadLists
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -738,9 +669,7 @@ paths:
       tags:
       - Leads
       summary: Get Lead List by ID
-      description: 'Retrieves a specific lead list by ID.
-
-        '
+      description: Retrieves a specific lead list by ID.
       operationId: getLeadListById
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -766,9 +695,7 @@ paths:
       tags:
       - Leads
       summary: Update Lead List
-      description: 'Updates a lead list''s name.
-
-        '
+      description: Updates a lead list's name.
       operationId: updateLeadList
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -811,9 +738,7 @@ paths:
       tags:
       - Leads
       summary: Delete Lead List
-      description: 'Deletes a lead list. This does not delete the leads themselves, only the list.
-
-        '
+      description: Deletes a lead list. This does not delete the leads themselves, only the list.
       operationId: deleteLeadList
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -844,9 +769,7 @@ paths:
       tags:
       - Leads
       summary: Import Leads to List
-      description: 'Imports leads from a CSV file to a specific lead list.
-
-        '
+      description: Imports leads from a CSV file to a specific lead list.
       operationId: importLeadsToList
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -905,9 +828,7 @@ paths:
       tags:
       - Leads
       summary: Assign Tags to Lead Lists
-      description: 'Assigns or removes tags from lead lists (max 10 lists and 10 tags per request).
-
-        '
+      description: Assigns or removes tags from lead lists (max 10 lists and 10 tags per request).
       operationId: assignTagsToLeadLists
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -956,92 +877,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    NotFoundError:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Resource not found
-    BadRequestError:
-      description: Bad request - Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid request parameters
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Invalid API Key
-          example:
-            message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    ValidationError:
-      description: Request validation failed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid parameters provided
   schemas:
-    LeadList:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Unique lead list identifier
-        listName:
-          type: string
-          description: Name of the lead list
-        user_id:
-          type: integer
-          description: Owner user ID
-        lead_count:
-          type: integer
-          description: Number of leads in this list
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-        tags:
-          type: array
-          items:
-            type: object
-            properties:
-              tag_id:
-                type: integer
-              tag_name:
-                type: string
-              tag_color:
-                type: string
     LeadUpdate:
       type: object
       properties:
@@ -1124,6 +960,91 @@ components:
         updated_at:
           type: string
           format: date-time
+    LeadList:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique lead list identifier
+        listName:
+          type: string
+          description: Name of the lead list
+        user_id:
+          type: integer
+          description: Owner user ID
+        lead_count:
+          type: integer
+          description: Number of leads in this list
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: object
+            properties:
+              tag_id:
+                type: integer
+              tag_name:
+                type: string
+              tag_color:
+                type: string
+  responses:
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    BadRequestError:
+      description: Bad request - Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid request parameters
   parameters:
     ApiKeyParam:
       name: api_key

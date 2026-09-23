@@ -5,48 +5,7 @@ info:
   description: '# SmartLead API Documentation
 
 
-    Welcome to the SmartLead API! SmartLead is a comprehensive cold email outreach platform that helps you manage email campaigns, leads, email accounts, and analytics.
-
-
-    ## Base URL
-
-
-    All API requests should be made to:
-
-    ```
-
-    https://server.smartlead.ai/api
-
-    ```
-
-
-    ## Authentication
-
-
-    SmartLead uses API keys for authentication. Include your API key as a query parameter in all requests:
-
-    ```
-
-    ?api_key=YOUR_API_KEY
-
-    ```
-
-
-    You can generate your API key from your SmartLead dashboard under Settings > API Keys.
-
-
-    ## Rate Limiting
-
-
-    API requests are rate-limited to ensure fair usage. If you exceed the rate limit, you''ll receive a 429 error.
-
-
-    ## Support
-
-
-    For API support, contact support@smartlead.ai or visit https://smartlead.ai
-
-    '
+    Welcome to the SmartLead API!'
   contact:
     name: SmartLead Support
     email: support@smartlead.ai
@@ -87,9 +46,7 @@ paths:
 
         - LEAD_CREATED
 
-        - And more...
-
-        '
+        - And more...'
       operationId: createWebhook
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -123,9 +80,7 @@ paths:
       tags:
       - Webhooks
       summary: Get Webhook Details
-      description: 'Retrieves details of a specific webhook.
-
-        '
+      description: Retrieves details of a specific webhook.
       operationId: getWebhookDetails
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -152,9 +107,7 @@ paths:
       tags:
       - Webhooks
       summary: Update Webhook
-      description: 'Updates an existing webhook configuration.
-
-        '
+      description: Updates an existing webhook configuration.
       operationId: updateWebhook
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -193,9 +146,7 @@ paths:
       tags:
       - Webhooks
       summary: Delete Webhook
-      description: 'Deletes a webhook. You will no longer receive notifications for this webhook.
-
-        '
+      description: Deletes a webhook. You will no longer receive notifications for this webhook.
       operationId: deleteWebhook
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -222,50 +173,16 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    NotFoundError:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Resource not found
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Invalid API Key
-          example:
-            message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    ValidationError:
-      description: Request validation failed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid parameters provided
   schemas:
+    WebhookUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        webhook_url:
+          type: string
+        event_type:
+          type: string
     Webhook:
       type: object
       properties:
@@ -282,15 +199,6 @@ components:
         created_at:
           type: string
           format: date-time
-    WebhookUpdate:
-      type: object
-      properties:
-        name:
-          type: string
-        webhook_url:
-          type: string
-        event_type:
-          type: string
     WebhookInput:
       type: object
       required:
@@ -312,6 +220,49 @@ components:
           - 1
           - 2
           - 3
+  responses:
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
   parameters:
     ApiKeyParam:
       name: api_key

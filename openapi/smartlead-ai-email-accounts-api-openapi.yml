@@ -5,48 +5,7 @@ info:
   description: '# SmartLead API Documentation
 
 
-    Welcome to the SmartLead API! SmartLead is a comprehensive cold email outreach platform that helps you manage email campaigns, leads, email accounts, and analytics.
-
-
-    ## Base URL
-
-
-    All API requests should be made to:
-
-    ```
-
-    https://server.smartlead.ai/api
-
-    ```
-
-
-    ## Authentication
-
-
-    SmartLead uses API keys for authentication. Include your API key as a query parameter in all requests:
-
-    ```
-
-    ?api_key=YOUR_API_KEY
-
-    ```
-
-
-    You can generate your API key from your SmartLead dashboard under Settings > API Keys.
-
-
-    ## Rate Limiting
-
-
-    API requests are rate-limited to ensure fair usage. If you exceed the rate limit, you''ll receive a 429 error.
-
-
-    ## Support
-
-
-    For API support, contact support@smartlead.ai or visit https://smartlead.ai
-
-    '
+    Welcome to the SmartLead API!'
   contact:
     name: SmartLead Support
     email: support@smartlead.ai
@@ -73,9 +32,7 @@ paths:
       description: 'Retrieves all email accounts configured for the authenticated user.
 
 
-        Returns complete account details including connection status, warmup settings, and daily limits.
-
-        '
+        Returns complete account details including connection status, warmup settings, and daily limits.'
       operationId: getAllEmailAccounts
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -97,9 +54,7 @@ paths:
       tags:
       - Email Accounts
       summary: Get Email Account by ID
-      description: 'Retrieves details of a specific email account by ID.
-
-        '
+      description: Retrieves details of a specific email account by ID.
       operationId: getEmailAccountById
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -125,9 +80,7 @@ paths:
       tags:
       - Email Accounts
       summary: Update Email Account
-      description: 'Updates an existing email account''s configuration including SMTP/IMAP settings, sending limits, and warmup settings.
-
-        '
+      description: Updates an existing email account's configuration including SMTP/IMAP settings, sending limits, and warmup settings.
       operationId: updateEmailAccount
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -165,9 +118,7 @@ paths:
       tags:
       - Email Accounts
       summary: Delete Email Account
-      description: 'Permanently deletes an email account. This will remove it from all campaigns.
-
-        '
+      description: Permanently deletes an email account. This will remove it from all campaigns.
       operationId: deleteEmailAccount
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -209,9 +160,7 @@ paths:
 
         - From name and email
 
-        - Warmup settings
-
-        '
+        - Warmup settings'
       operationId: addSmtpEmailAccount
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -248,9 +197,7 @@ paths:
       tags:
       - Email Accounts
       summary: Add OAuth Email Account
-      description: 'Adds a Gmail or Microsoft 365 email account using OAuth authentication.
-
-        '
+      description: Adds a Gmail or Microsoft 365 email account using OAuth authentication.
       operationId: addOauthEmailAccount
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -287,9 +234,7 @@ paths:
       description: 'Updates email warmup configuration for an account.
 
 
-        **Warmup helps improve deliverability by gradually increasing sending volume.**
-
-        '
+        **Warmup helps improve deliverability by gradually increasing sending volume.**'
       operationId: updateWarmupSettings
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -328,9 +273,7 @@ paths:
       tags:
       - Email Accounts
       summary: Get Warmup Statistics
-      description: 'Retrieves warmup statistics and progress for an email account.
-
-        '
+      description: Retrieves warmup statistics and progress for an email account.
       operationId: getWarmupStats
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -357,9 +300,7 @@ paths:
       tags:
       - Email Accounts
       summary: Suspend Email Account
-      description: 'Temporarily suspends an email account. No emails will be sent from this account until unsuspended.
-
-        '
+      description: Temporarily suspends an email account. No emails will be sent from this account until unsuspended.
       operationId: suspendEmailAccount
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -390,9 +331,7 @@ paths:
       tags:
       - Email Accounts
       summary: Unsuspend Email Account
-      description: 'Reactivates a suspended email account, allowing it to send emails again.
-
-        '
+      description: Reactivates a suspended email account, allowing it to send emails again.
       operationId: unsuspendEmailAccount
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -419,89 +358,44 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    NotFoundError:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Resource not found
-    BadRequestError:
-      description: Bad request - Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid request parameters
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Invalid API Key
-          example:
-            message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    ValidationError:
-      description: Request validation failed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid parameters provided
   schemas:
-    EmailAccountOAuthInput:
+    WarmupSettings:
       type: object
-      required:
-      - from_name
-      - from_email
-      - token
-      - type
+      properties:
+        warmup_enabled:
+          type: boolean
+        total_warmup_per_day:
+          type: integer
+        daily_rampup:
+          type: integer
+        reply_rate_percentage:
+          type: integer
+    EmailAccountUpdate:
+      type: object
       properties:
         from_name:
           type: string
-        from_email:
+        max_email_per_day:
+          type: integer
+        signature:
           type: string
-          format: email
-        token:
-          type: object
-          properties:
-            access_token:
-              type: string
-            refresh_token:
-              type: string
-            expiry_date:
-              type: integer
-        type:
+        custom_tracking_url:
           type: string
-          enum:
-          - gmail
-          - microsoft
-        warmup_enabled:
-          type: boolean
+        bcc:
+          type: string
+    WarmupStats:
+      type: object
+      properties:
+        total_sent:
+          type: integer
+        total_inbox:
+          type: integer
+        total_spam:
+          type: integer
+        warmup_reputation:
+          type: number
+        days_in_warmup:
+          type: integer
     EmailAccountInput:
       type: object
       required:
@@ -540,6 +434,35 @@ components:
           type: integer
         max_email_per_day:
           type: integer
+    EmailAccountOAuthInput:
+      type: object
+      required:
+      - from_name
+      - from_email
+      - token
+      - type
+      properties:
+        from_name:
+          type: string
+        from_email:
+          type: string
+          format: email
+        token:
+          type: object
+          properties:
+            access_token:
+              type: string
+            refresh_token:
+              type: string
+            expiry_date:
+              type: integer
+        type:
+          type: string
+          enum:
+          - gmail
+          - microsoft
+        warmup_enabled:
+          type: boolean
     EmailAccount:
       type: object
       properties:
@@ -574,43 +497,59 @@ components:
           - CONNECTED
           - DISCONNECTED
           - ERROR
-    EmailAccountUpdate:
-      type: object
-      properties:
-        from_name:
-          type: string
-        max_email_per_day:
-          type: integer
-        signature:
-          type: string
-        custom_tracking_url:
-          type: string
-        bcc:
-          type: string
-    WarmupStats:
-      type: object
-      properties:
-        total_sent:
-          type: integer
-        total_inbox:
-          type: integer
-        total_spam:
-          type: integer
-        warmup_reputation:
-          type: number
-        days_in_warmup:
-          type: integer
-    WarmupSettings:
-      type: object
-      properties:
-        warmup_enabled:
-          type: boolean
-        total_warmup_per_day:
-          type: integer
-        daily_rampup:
-          type: integer
-        reply_rate_percentage:
-          type: integer
+  responses:
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    BadRequestError:
+      description: Bad request - Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid request parameters
   parameters:
     ApiKeyParam:
       name: api_key

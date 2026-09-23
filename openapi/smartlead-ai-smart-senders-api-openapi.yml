@@ -5,48 +5,7 @@ info:
   description: '# SmartLead API Documentation
 
 
-    Welcome to the SmartLead API! SmartLead is a comprehensive cold email outreach platform that helps you manage email campaigns, leads, email accounts, and analytics.
-
-
-    ## Base URL
-
-
-    All API requests should be made to:
-
-    ```
-
-    https://server.smartlead.ai/api
-
-    ```
-
-
-    ## Authentication
-
-
-    SmartLead uses API keys for authentication. Include your API key as a query parameter in all requests:
-
-    ```
-
-    ?api_key=YOUR_API_KEY
-
-    ```
-
-
-    You can generate your API key from your SmartLead dashboard under Settings > API Keys.
-
-
-    ## Rate Limiting
-
-
-    API requests are rate-limited to ensure fair usage. If you exceed the rate limit, you''ll receive a 429 error.
-
-
-    ## Support
-
-
-    For API support, contact support@smartlead.ai or visit https://smartlead.ai
-
-    '
+    Welcome to the SmartLead API!'
   contact:
     name: SmartLead Support
     email: support@smartlead.ai
@@ -73,9 +32,7 @@ paths:
       description: 'Get list of mailbox vendors with pricing and service details.
 
 
-        **Note:** Smart Senders is a marketplace feature. Contact support@smartlead.ai for access.
-
-        '
+        **Note:** Smart Senders is a marketplace feature. Contact support@smartlead.ai for access.'
       operationId: getVendors
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -102,9 +59,7 @@ paths:
       tags:
       - Smart Senders
       summary: Search Domain
-      description: 'Search for available domains for mailbox purchase.
-
-        '
+      description: Search for available domains for mailbox purchase.
       operationId: searchDomain
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -136,9 +91,7 @@ paths:
       tags:
       - Smart Senders
       summary: Get Domain List
-      description: 'Get list of purchased or available domains.
-
-        '
+      description: Get list of purchased or available domains.
       operationId: getDomainList
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -165,9 +118,7 @@ paths:
       tags:
       - Smart Senders
       summary: Place Order
-      description: 'Place an order for mailbox purchase from a vendor.
-
-        '
+      description: Place an order for mailbox purchase from a vendor.
       operationId: placeOrder
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -210,9 +161,7 @@ paths:
       tags:
       - Smart Senders
       summary: Auto-Generate Mailboxes
-      description: 'Automatically generate and configure mailboxes.
-
-        '
+      description: Automatically generate and configure mailboxes.
       operationId: autoGenerateMailboxes
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -251,8 +200,8 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   responses:
-    ValidationError:
-      description: Request validation failed
+    InternalServerError:
+      description: Internal server error
       content:
         application/json:
           schema:
@@ -260,7 +209,7 @@ components:
             properties:
               error:
                 type: string
-                example: Invalid parameters provided
+                example: Internal server error occurred
     UnauthorizedError:
       description: Unauthorized - Invalid or missing API key
       content:
@@ -273,8 +222,8 @@ components:
                 example: Invalid API Key
           example:
             message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
+    ValidationError:
+      description: Request validation failed
       content:
         application/json:
           schema:
@@ -282,7 +231,7 @@ components:
             properties:
               error:
                 type: string
-                example: Internal server error occurred
+                example: Invalid parameters provided
   parameters:
     ApiKeyParam:
       name: api_key

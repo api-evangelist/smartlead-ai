@@ -1,57 +1,18 @@
-openapi: 3.1.1
+openapi: 3.2.0
 info:
   title: SmartLead Campaign Statistics API
+  version: 1.0.0
   description: '# SmartLead API Documentation
 
 
-    Welcome to the SmartLead API! SmartLead is a comprehensive cold email outreach platform that helps you manage email campaigns,
-    leads, email accounts, and analytics.
-
-
-    ## Base URL
-
-
-    All API requests should be made to:
-
-    ```
-
-    https://server.smartlead.ai/api
-
-    ```
-
-
-    ## Authentication
-
-
-    SmartLead uses API keys for authentication. Include your API key as a query parameter in all requests:
-
-    ```
-
-    ?api_key=YOUR_API_KEY
-
-    ```
-
-
-    You can generate your API key from your SmartLead dashboard under Settings > API Keys.
-
-
-    ## Rate Limiting
-
-
-    API requests are rate-limited to ensure fair usage. If you exceed the rate limit, you''ll receive a 429 error.
-
-
-    ## Support
-
-
-    For API support, contact support@smartlead.ai or visit https://smartlead.ai
-
-    '
-  version: 1.0.0
+    Welcome to the SmartLead API!'
   contact:
     name: SmartLead Support
     email: support@smartlead.ai
     url: https://smartlead.ai
+  license:
+    name: Proprietary
+    url: https://smartlead.ai/terms
 servers:
 - url: https://server.smartlead.ai/api
   description: Production server
@@ -68,13 +29,10 @@ paths:
       tags:
       - Campaign Statistics
       summary: Get Campaign Statistics
-      description: 'Retrieves detailed statistics for a campaign including email sent, opened, clicked, replied, bounced,
-        and unsubscribed counts.
+      description: 'Retrieves detailed statistics for a campaign including email sent, opened, clicked, replied, bounced, and unsubscribed counts.
 
 
-        Supports filtering and pagination.
-
-        '
+        Supports filtering and pagination.'
       operationId: getCampaignStatistics
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -114,9 +72,7 @@ paths:
       tags:
       - Campaign Statistics
       summary: Get Campaign Analytics
-      description: 'Retrieves comprehensive campaign analytics including performance metrics over time.
-
-        '
+      description: Retrieves comprehensive campaign analytics including performance metrics over time.
       operationId: getCampaignAnalytics
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -139,35 +95,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  securitySchemes:
-    ApiKeyAuth:
-      type: apiKey
-      in: query
-      name: api_key
-      description: 'Your SmartLead API key. You can generate this from your dashboard under Settings > API Keys.
-
-
-        Include this as a query parameter in all API requests:
-
-        ```
-
-        ?api_key=YOUR_API_KEY
-
-        ```
-
-        '
   schemas:
-    CampaignAnalytics:
-      type: object
-      properties:
-        campaign_id:
-          type: integer
-        metrics:
-          type: object
-        time_series:
-          type: array
-          items:
-            type: object
     CampaignStatistics:
       type: object
       properties:
@@ -193,3 +121,73 @@ components:
           type: number
         bounce_rate:
           type: number
+    CampaignAnalytics:
+      type: object
+      properties:
+        campaign_id:
+          type: integer
+        metrics:
+          type: object
+        time_series:
+          type: array
+          items:
+            type: object
+  responses:
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+      description: 'Your SmartLead API key. You can generate this from your dashboard under Settings > API Keys.
+
+
+        Include this as a query parameter in all API requests:
+
+        ```
+
+        ?api_key=YOUR_API_KEY
+
+        ```
+
+        '

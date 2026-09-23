@@ -1,57 +1,18 @@
-openapi: 3.1.1
+openapi: 3.2.0
 info:
   title: SmartLead Campaigns API
+  version: 1.0.0
   description: '# SmartLead API Documentation
 
 
-    Welcome to the SmartLead API! SmartLead is a comprehensive cold email outreach platform that helps you manage email campaigns,
-    leads, email accounts, and analytics.
-
-
-    ## Base URL
-
-
-    All API requests should be made to:
-
-    ```
-
-    https://server.smartlead.ai/api
-
-    ```
-
-
-    ## Authentication
-
-
-    SmartLead uses API keys for authentication. Include your API key as a query parameter in all requests:
-
-    ```
-
-    ?api_key=YOUR_API_KEY
-
-    ```
-
-
-    You can generate your API key from your SmartLead dashboard under Settings > API Keys.
-
-
-    ## Rate Limiting
-
-
-    API requests are rate-limited to ensure fair usage. If you exceed the rate limit, you''ll receive a 429 error.
-
-
-    ## Support
-
-
-    For API support, contact support@smartlead.ai or visit https://smartlead.ai
-
-    '
-  version: 1.0.0
+    Welcome to the SmartLead API!'
   contact:
     name: SmartLead Support
     email: support@smartlead.ai
     url: https://smartlead.ai
+  license:
+    name: Proprietary
+    url: https://smartlead.ai/terms
 servers:
 - url: https://server.smartlead.ai/api
   description: Production server
@@ -68,8 +29,7 @@ paths:
       tags:
       - Campaigns
       summary: Get All Campaigns
-      description: 'Retrieves all email campaigns for the authenticated user with comprehensive campaign data including status,
-        schedule settings, tracking configuration, AI matching preferences, and sending limits.
+      description: 'Retrieves all email campaigns for the authenticated user with comprehensive campaign data including status, schedule settings, tracking configuration, AI matching preferences, and sending limits.
 
 
         **Key Features:**
@@ -80,9 +40,7 @@ paths:
 
         - When include_tags=true, returns campaign tags with IDs, names, and colors
 
-        - Returns direct array of campaign objects (not wrapped)
-
-        '
+        - Returns direct array of campaign objects (not wrapped)'
       operationId: getAllCampaigns
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -152,8 +110,7 @@ paths:
       tags:
       - Campaigns
       summary: Get Campaign by ID
-      description: 'Retrieves detailed information about a specific campaign by its ID. Returns complete campaign configuration
-        including all settings, schedule, and metadata.
+      description: 'Retrieves detailed information about a specific campaign by its ID. Returns complete campaign configuration including all settings, schedule, and metadata.
 
 
         **Features:**
@@ -162,9 +119,7 @@ paths:
 
         - Returns 404 if campaign not found
 
-        - Optionally includes tags when include_tags=true
-
-        '
+        - Optionally includes tags when include_tags=true'
       operationId: getCampaignById
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -203,9 +158,7 @@ paths:
       description: 'Permanently deletes a campaign and all associated data including leads, sequences, and statistics.
 
 
-        **Warning:** This operation cannot be undone. All campaign data will be permanently deleted.
-
-        '
+        **Warning:** This operation cannot be undone. All campaign data will be permanently deleted.'
       operationId: deleteCampaign
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -240,8 +193,7 @@ paths:
       tags:
       - Campaigns
       summary: Create Campaign
-      description: 'Creates a new email campaign with default settings in DRAFTED status. Campaign name defaults to ''Untitled
-        Campaign'' if not provided.
+      description: 'Creates a new email campaign with default settings in DRAFTED status. Campaign name defaults to ''Untitled Campaign'' if not provided.
 
 
         **Default Settings:**
@@ -271,9 +223,7 @@ paths:
 
         5. Configure settings
 
-        6. Start campaign
-
-        '
+        6. Start campaign'
       operationId: createCampaign
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -348,9 +298,7 @@ paths:
 
         - Campaign must have at least one email account
 
-        - Campaign must have at least one lead
-
-        '
+        - Campaign must have at least one lead'
       operationId: updateCampaignStatus
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -417,9 +365,7 @@ paths:
 
         - Follow-up percentage
 
-        - Custom unsubscribe text
-
-        '
+        - Custom unsubscribe text'
       operationId: updateCampaignSettings
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -467,9 +413,7 @@ paths:
 
         - Start and end hours (24-hour format)
 
-        - Minimum time between emails
-
-        '
+        - Minimum time between emails'
       operationId: updateCampaignSchedule
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -509,9 +453,7 @@ paths:
       description: 'Retrieves all email sequences (initial email + follow-ups) configured for a campaign.
 
 
-        Returns an array of sequence objects ordered by sequence number.
-
-        '
+        Returns an array of sequence objects ordered by sequence number.'
       operationId: getCampaignSequences
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -555,9 +497,7 @@ paths:
 
         **Variable Support:**
 
-        - {{first_name}}, {{last_name}}, {{company}}, etc.
-
-        '
+        - {{first_name}}, {{last_name}}, {{company}}, etc.'
       operationId: updateCampaignSequences
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -601,10 +541,7 @@ paths:
       tags:
       - Campaigns
       summary: Get Campaign Email Accounts
-      description: 'Retrieves all email accounts associated with a campaign. These are the sender accounts used to send emails
-        in this campaign.
-
-        '
+      description: Retrieves all email accounts associated with a campaign. These are the sender accounts used to send emails in this campaign.
       operationId: getCampaignEmailAccounts
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -632,17 +569,14 @@ paths:
       tags:
       - Campaigns
       summary: Add Email Accounts to Campaign
-      description: 'Associates one or more email accounts with a campaign. These accounts will be used to send emails in this
-        campaign.
+      description: 'Associates one or more email accounts with a campaign. These accounts will be used to send emails in this campaign.
 
 
         **Requirements:**
 
         - Email accounts must exist and be verified
 
-        - Email accounts must belong to the user
-
-        '
+        - Email accounts must belong to the user'
       operationId: addEmailAccountsToCampaign
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -690,10 +624,7 @@ paths:
       tags:
       - Campaigns
       summary: Remove Email Accounts from Campaign
-      description: 'Removes email accounts from a campaign. Leads currently assigned to these accounts will be reassigned
-        to remaining accounts.
-
-        '
+      description: Removes email accounts from a campaign. Leads currently assigned to these accounts will be reassigned to remaining accounts.
       operationId: removeEmailAccountsFromCampaign
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -736,24 +667,42 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  securitySchemes:
-    ApiKeyAuth:
-      type: apiKey
-      in: query
-      name: api_key
-      description: 'Your SmartLead API key. You can generate this from your dashboard under Settings > API Keys.
-
-
-        Include this as a query parameter in all API requests:
-
-        ```
-
-        ?api_key=YOUR_API_KEY
-
-        ```
-
-        '
   schemas:
+    CampaignSchedule:
+      type: object
+      required:
+      - timezone
+      - days
+      - startHour
+      - endHour
+      properties:
+        timezone:
+          type: string
+          description: IANA timezone
+          example: America/New_York
+        days:
+          type: array
+          items:
+            type: integer
+          description: Days of week (0=Sunday, 6=Saturday)
+          example:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+        startHour:
+          type: string
+          description: Start sending time (24-hour format)
+          example: 09:00
+        endHour:
+          type: string
+          description: End sending time (24-hour format)
+          example: '17:00'
+        min_time_btw_emails:
+          type: integer
+          description: Minimum minutes between emails
+          example: 24
     Campaign:
       type: object
       properties:
@@ -848,41 +797,31 @@ components:
                 type: string
               tag_color:
                 type: string
-    CampaignSchedule:
+    EmailSequenceInput:
       type: object
       required:
-      - timezone
-      - days
-      - startHour
-      - endHour
+      - seq_number
+      - subject
+      - email_body
+      - seq_delay_details
       properties:
-        timezone:
-          type: string
-          description: IANA timezone
-          example: America/New_York
-        days:
-          type: array
-          items:
-            type: integer
-          description: Days of week (0=Sunday, 6=Saturday)
-          example:
-          - 1
-          - 2
-          - 3
-          - 4
-          - 5
-        startHour:
-          type: string
-          description: Start sending time (24-hour format)
-          example: 09:00
-        endHour:
-          type: string
-          description: End sending time (24-hour format)
-          example: '17:00'
-        min_time_btw_emails:
+        seq_number:
           type: integer
-          description: Minimum minutes between emails
-          example: 24
+          description: Sequence order (1 for initial, 2+ for follow-ups)
+        subject:
+          type: string
+          description: Email subject line (supports variables)
+        email_body:
+          type: string
+          description: Email content (HTML or plain text)
+        seq_delay_details:
+          type: object
+          required:
+          - delay_in_days
+          properties:
+            delay_in_days:
+              type: integer
+              description: Days to wait before sending
     CampaignSettings:
       type: object
       properties:
@@ -910,6 +849,25 @@ components:
           type: integer
         unsubscribe_text:
           type: string
+    EmailSequence:
+      type: object
+      properties:
+        id:
+          type: integer
+        seq_number:
+          type: integer
+          description: Sequence order (1, 2, 3...)
+        subject:
+          type: string
+          description: Email subject line
+        email_body:
+          type: string
+          description: Email content (supports HTML and variables)
+        seq_delay_details:
+          type: object
+          properties:
+            delay_in_days:
+              type: integer
     EmailAccount:
       type: object
       properties:
@@ -944,47 +902,92 @@ components:
           - CONNECTED
           - DISCONNECTED
           - ERROR
-    EmailSequence:
-      type: object
-      properties:
-        id:
-          type: integer
-        seq_number:
-          type: integer
-          description: Sequence order (1, 2, 3...)
-        subject:
-          type: string
-          description: Email subject line
-        email_body:
-          type: string
-          description: Email content (supports HTML and variables)
-        seq_delay_details:
-          type: object
-          properties:
-            delay_in_days:
-              type: integer
-    EmailSequenceInput:
-      type: object
-      required:
-      - seq_number
-      - subject
-      - email_body
-      - seq_delay_details
-      properties:
-        seq_number:
-          type: integer
-          description: Sequence order (1 for initial, 2+ for follow-ups)
-        subject:
-          type: string
-          description: Email subject line (supports variables)
-        email_body:
-          type: string
-          description: Email content (HTML or plain text)
-        seq_delay_details:
-          type: object
-          required:
-          - delay_in_days
-          properties:
-            delay_in_days:
-              type: integer
-              description: Days to wait before sending
+  responses:
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
+    RateLimitError:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Too many requests. Please slow down and retry later.
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    BadRequestError:
+      description: Bad request - Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid request parameters
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+      description: 'Your SmartLead API key. You can generate this from your dashboard under Settings > API Keys.
+
+
+        Include this as a query parameter in all API requests:
+
+        ```
+
+        ?api_key=YOUR_API_KEY
+
+        ```
+
+        '

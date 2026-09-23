@@ -1,11 +1,40 @@
 {
-  "source": "https://api.smartlead.ai/api-reference/openapi.yaml",
-  "harvested": "2026-08-13",
-  "method": "searched",
-  "note": "Tag splits derived from the provider-published SmartLead OpenAPI 3.1.1 harvested from the docs host. Supersedes the earlier hand-authored 5-operation scaffold.",
-  "files": [
-    "openapi/smartlead-ai-openapi.yml",
-    "openapi/smartlead-ai-campaigns-api-openapi.yml",
-    "openapi/smartlead-ai-campaign-statistics-api-openapi.yml"
+  "provider": "smartlead-ai",
+  "sources": [
+    "_original/smartlead-ai-openapi.yml"
+  ],
+  "outputs": [
+    "smartlead-ai-analytics-api-openapi.yml",
+    "smartlead-ai-authentication-api-openapi.yml",
+    "smartlead-ai-campaign-statistics-api-openapi.yml",
+    "smartlead-ai-campaigns-api-openapi.yml",
+    "smartlead-ai-email-accounts-api-openapi.yml",
+    "smartlead-ai-leads-api-openapi.yml",
+    "smartlead-ai-master-inbox-api-openapi.yml",
+    "smartlead-ai-smart-delivery-api-openapi.yml",
+    "smartlead-ai-smart-senders-api-openapi.yml",
+    "smartlead-ai-utilities-api-openapi.yml",
+    "smartlead-ai-webhooks-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "smartlead-ai-openapi.yml: upgraded openapi 3.1.1 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "smartlead-ai-analytics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "smartlead-ai-authentication-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "smartlead-ai-campaign-statistics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "smartlead-ai-campaigns-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "smartlead-ai-email-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "smartlead-ai-leads-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "smartlead-ai-master-inbox-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "smartlead-ai-smart-delivery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "smartlead-ai-smart-senders-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "smartlead-ai-utilities-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "smartlead-ai-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
   ]
 }

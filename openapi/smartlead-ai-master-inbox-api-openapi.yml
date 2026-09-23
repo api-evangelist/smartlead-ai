@@ -5,48 +5,7 @@ info:
   description: '# SmartLead API Documentation
 
 
-    Welcome to the SmartLead API! SmartLead is a comprehensive cold email outreach platform that helps you manage email campaigns, leads, email accounts, and analytics.
-
-
-    ## Base URL
-
-
-    All API requests should be made to:
-
-    ```
-
-    https://server.smartlead.ai/api
-
-    ```
-
-
-    ## Authentication
-
-
-    SmartLead uses API keys for authentication. Include your API key as a query parameter in all requests:
-
-    ```
-
-    ?api_key=YOUR_API_KEY
-
-    ```
-
-
-    You can generate your API key from your SmartLead dashboard under Settings > API Keys.
-
-
-    ## Rate Limiting
-
-
-    API requests are rate-limited to ensure fair usage. If you exceed the rate limit, you''ll receive a 429 error.
-
-
-    ## Support
-
-
-    For API support, contact support@smartlead.ai or visit https://smartlead.ai
-
-    '
+    Welcome to the SmartLead API!'
   contact:
     name: SmartLead Support
     email: support@smartlead.ai
@@ -70,9 +29,7 @@ paths:
       tags:
       - Master Inbox
       summary: Reply to Email Thread
-      description: 'Sends a reply to an existing email conversation in a campaign.
-
-        '
+      description: Sends a reply to an existing email conversation in a campaign.
       operationId: replyToEmailThread
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -124,9 +81,7 @@ paths:
       tags:
       - Master Inbox
       summary: Forward Email
-      description: 'Forwards an email conversation to another email address.
-
-        '
+      description: Forwards an email conversation to another email address.
       operationId: forwardEmail
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -177,9 +132,7 @@ paths:
       tags:
       - Master Inbox
       summary: Get Sent Emails
-      description: 'Retrieves sent emails with comprehensive filtering and pagination.
-
-        '
+      description: Retrieves sent emails with comprehensive filtering and pagination.
       operationId: getSentEmails
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -205,9 +158,7 @@ paths:
       tags:
       - Master Inbox
       summary: Get Inbox Replies
-      description: 'Retrieves all inbox replies with filtering options.
-
-        '
+      description: Retrieves all inbox replies with filtering options.
       operationId: getInboxReplies
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -233,9 +184,7 @@ paths:
       tags:
       - Master Inbox
       summary: Get Unread Replies
-      description: 'Retrieves all unread replies.
-
-        '
+      description: Retrieves all unread replies.
       operationId: getUnreadReplies
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -261,9 +210,7 @@ paths:
       tags:
       - Master Inbox
       summary: Get Important Emails
-      description: 'Retrieves emails marked as important.
-
-        '
+      description: Retrieves emails marked as important.
       operationId: getImportantEmails
       parameters:
       - $ref: '#/components/parameters/ApiKeyParam'
@@ -285,49 +232,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Invalid API Key
-          example:
-            message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    ValidationError:
-      description: Request validation failed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid parameters provided
   schemas:
-    InboxResponse:
-      type: object
-      properties:
-        messages:
-          type: array
-          items:
-            type: object
-        total_count:
-          type: integer
     InboxFilter:
       type: object
       properties:
@@ -355,6 +260,48 @@ components:
               - type: array
                 items:
                   type: integer
+    InboxResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            type: object
+        total_count:
+          type: integer
+  responses:
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
   parameters:
     ApiKeyParam:
       name: api_key
