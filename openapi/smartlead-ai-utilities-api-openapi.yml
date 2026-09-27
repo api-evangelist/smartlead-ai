@@ -167,7 +167,26 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
   responses:
+    BadRequestError:
+      description: Bad request - Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid request parameters
     ValidationError:
       description: Request validation failed
       content:
@@ -178,16 +197,6 @@ components:
               error:
                 type: string
                 example: Invalid parameters provided
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
     UnauthorizedError:
       description: Unauthorized - Invalid or missing API key
       content:
@@ -200,8 +209,8 @@ components:
                 example: Invalid API Key
           example:
             message: Invalid API Key
-    BadRequestError:
-      description: Bad request - Invalid request parameters
+    InternalServerError:
+      description: Internal server error
       content:
         application/json:
           schema:
@@ -209,16 +218,7 @@ components:
             properties:
               error:
                 type: string
-                example: Invalid request parameters
-  parameters:
-    ApiKeyParam:
-      name: api_key
-      in: query
-      description: Your SmartLead API key for authentication
-      required: true
-      schema:
-        type: string
-      example: REDACTED_STRIPE_KEY
+                example: Internal server error occurred
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

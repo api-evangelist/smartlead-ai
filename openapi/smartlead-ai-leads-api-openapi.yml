@@ -877,53 +877,16 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
   schemas:
-    LeadUpdate:
-      type: object
-      properties:
-        first_name:
-          type: string
-        last_name:
-          type: string
-        company_name:
-          type: string
-        phone_number:
-          type: string
-        website:
-          type: string
-        custom_fields:
-          type: object
-    LeadInput:
-      type: object
-      required:
-      - email
-      properties:
-        email:
-          type: string
-          format: email
-          description: Lead email address (required)
-        first_name:
-          type: string
-        last_name:
-          type: string
-        company_name:
-          type: string
-        phone_number:
-          type: string
-        website:
-          type: string
-        custom_fields:
-          type: object
-          additionalProperties: true
-    LeadCategory:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        color:
-          type: string
     Lead:
       type: object
       properties:
@@ -960,6 +923,30 @@ components:
         updated_at:
           type: string
           format: date-time
+    LeadCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        color:
+          type: string
+    LeadUpdate:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        company_name:
+          type: string
+        phone_number:
+          type: string
+        website:
+          type: string
+        custom_fields:
+          type: object
     LeadList:
       type: object
       properties:
@@ -992,9 +979,31 @@ components:
                 type: string
               tag_color:
                 type: string
+    LeadInput:
+      type: object
+      required:
+      - email
+      properties:
+        email:
+          type: string
+          format: email
+          description: Lead email address (required)
+        first_name:
+          type: string
+        last_name:
+          type: string
+        company_name:
+          type: string
+        phone_number:
+          type: string
+        website:
+          type: string
+        custom_fields:
+          type: object
+          additionalProperties: true
   responses:
-    NotFoundError:
-      description: Resource not found
+    BadRequestError:
+      description: Bad request - Invalid request parameters
       content:
         application/json:
           schema:
@@ -1002,7 +1011,7 @@ components:
             properties:
               error:
                 type: string
-                example: Resource not found
+                example: Invalid request parameters
     ValidationError:
       description: Request validation failed
       content:
@@ -1013,16 +1022,6 @@ components:
               error:
                 type: string
                 example: Invalid parameters provided
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
     UnauthorizedError:
       description: Unauthorized - Invalid or missing API key
       content:
@@ -1035,8 +1034,8 @@ components:
                 example: Invalid API Key
           example:
             message: Invalid API Key
-    BadRequestError:
-      description: Bad request - Invalid request parameters
+    InternalServerError:
+      description: Internal server error
       content:
         application/json:
           schema:
@@ -1044,16 +1043,17 @@ components:
             properties:
               error:
                 type: string
-                example: Invalid request parameters
-  parameters:
-    ApiKeyParam:
-      name: api_key
-      in: query
-      description: Your SmartLead API key for authentication
-      required: true
-      schema:
-        type: string
-      example: REDACTED_STRIPE_KEY
+                example: Internal server error occurred
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

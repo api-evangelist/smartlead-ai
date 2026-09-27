@@ -95,6 +95,15 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
   schemas:
     CampaignStatistics:
       type: object
@@ -133,26 +142,6 @@ components:
           items:
             type: object
   responses:
-    NotFoundError:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Resource not found
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
     UnauthorizedError:
       description: Unauthorized - Invalid or missing API key
       content:
@@ -165,15 +154,26 @@ components:
                 example: Invalid API Key
           example:
             message: Invalid API Key
-  parameters:
-    ApiKeyParam:
-      name: api_key
-      in: query
-      description: Your SmartLead API key for authentication
-      required: true
-      schema:
-        type: string
-      example: REDACTED_STRIPE_KEY
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

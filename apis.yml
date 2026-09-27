@@ -48,6 +48,7 @@ tags:
   - Email Warm-up
   - Automation
   - Sequences
+  - A2A
 tags_raw:
   - Cold Email
   - Outbound
@@ -56,6 +57,7 @@ tags_raw:
   - Email Warmup
   - Automation
   - Sequences
+  - A2A
 created: '2026-05-23'
 modified: '2026-08-13'
 specificationVersion: '0.23'
@@ -429,3 +431,10 @@ x-enrichment:
   status: enriched
   artifacts_added: 20
   pass: local-v1
+x-a2a:
+  verified: true
+  probed: '2026-09-26'
+  url: "https://api.smartlead.ai/.well-known/agent-card.json"
+  grade: "conformant"
+  protocol_version: "0.3"
+  control: 404

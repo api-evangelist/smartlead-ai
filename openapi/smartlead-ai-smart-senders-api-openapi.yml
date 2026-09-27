@@ -199,6 +199,15 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
   responses:
     InternalServerError:
       description: Internal server error
@@ -210,6 +219,16 @@ components:
               error:
                 type: string
                 example: Internal server error occurred
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
     UnauthorizedError:
       description: Unauthorized - Invalid or missing API key
       content:
@@ -222,25 +241,6 @@ components:
                 example: Invalid API Key
           example:
             message: Invalid API Key
-    ValidationError:
-      description: Request validation failed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid parameters provided
-  parameters:
-    ApiKeyParam:
-      name: api_key
-      in: query
-      description: Your SmartLead API key for authentication
-      required: true
-      schema:
-        type: string
-      example: REDACTED_STRIPE_KEY
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
