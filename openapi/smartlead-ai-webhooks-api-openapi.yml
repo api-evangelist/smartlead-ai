@@ -173,16 +173,27 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  parameters:
-    ApiKeyParam:
-      name: api_key
-      in: query
-      description: Your SmartLead API key for authentication
-      required: true
-      schema:
-        type: string
-      example: REDACTED_STRIPE_KEY
   responses:
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
     ValidationError:
       description: Request validation failed
       content:
@@ -205,48 +216,7 @@ components:
                 example: Invalid API Key
           example:
             message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    NotFoundError:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Resource not found
   schemas:
-    WebhookInput:
-      type: object
-      required:
-      - webhook_url
-      - association_type
-      properties:
-        name:
-          type: string
-        webhook_url:
-          type: string
-          format: uri
-        event_type:
-          type: string
-        email_campaign_id:
-          type: integer
-        association_type:
-          type: integer
-          enum:
-          - 1
-          - 2
-          - 3
     WebhookUpdate:
       type: object
       properties:
@@ -272,6 +242,36 @@ components:
         created_at:
           type: string
           format: date-time
+    WebhookInput:
+      type: object
+      required:
+      - webhook_url
+      - association_type
+      properties:
+        name:
+          type: string
+        webhook_url:
+          type: string
+          format: uri
+        event_type:
+          type: string
+        email_campaign_id:
+          type: integer
+        association_type:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

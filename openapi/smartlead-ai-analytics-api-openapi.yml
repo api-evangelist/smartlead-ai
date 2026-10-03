@@ -361,42 +361,6 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  parameters:
-    ApiKeyParam:
-      name: api_key
-      in: query
-      description: Your SmartLead API key for authentication
-      required: true
-      schema:
-        type: string
-      example: REDACTED_STRIPE_KEY
-    TimezoneParam:
-      name: timezone
-      in: query
-      description: Timezone for date calculations (IANA format)
-      required: false
-      schema:
-        type: string
-        default: UTC
-      example: America/New_York
-    StartDateParam:
-      name: start_date
-      in: query
-      description: Start date for analytics (ISO 8601 format)
-      required: true
-      schema:
-        type: string
-        format: date
-      example: '2024-01-01'
-    EndDateParam:
-      name: end_date
-      in: query
-      description: End date for analytics (ISO 8601 format)
-      required: true
-      schema:
-        type: string
-        format: date
-      example: '2024-01-31'
   responses:
     InternalServerError:
       description: Internal server error
@@ -430,6 +394,42 @@ components:
                 example: Invalid API Key
           example:
             message: Invalid API Key
+  parameters:
+    TimezoneParam:
+      name: timezone
+      in: query
+      description: Timezone for date calculations (IANA format)
+      required: false
+      schema:
+        type: string
+        default: UTC
+      example: America/New_York
+    EndDateParam:
+      name: end_date
+      in: query
+      description: End date for analytics (ISO 8601 format)
+      required: true
+      schema:
+        type: string
+        format: date
+      example: '2024-01-31'
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
+    StartDateParam:
+      name: start_date
+      in: query
+      description: Start date for analytics (ISO 8601 format)
+      required: true
+      schema:
+        type: string
+        format: date
+      example: '2024-01-01'
   schemas:
     DailyStats:
       type: object

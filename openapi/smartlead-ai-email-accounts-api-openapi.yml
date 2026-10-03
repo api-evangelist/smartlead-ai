@@ -358,16 +358,17 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  parameters:
-    ApiKeyParam:
-      name: api_key
-      in: query
-      description: Your SmartLead API key for authentication
-      required: true
-      schema:
-        type: string
-      example: REDACTED_STRIPE_KEY
   responses:
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
     BadRequestError:
       description: Bad request - Invalid request parameters
       content:
@@ -378,6 +379,16 @@ components:
               error:
                 type: string
                 example: Invalid request parameters
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
     ValidationError:
       description: Request validation failed
       content:
@@ -400,26 +411,6 @@ components:
                 example: Invalid API Key
           example:
             message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    NotFoundError:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Resource not found
   schemas:
     EmailAccountInput:
       type: object
@@ -459,35 +450,6 @@ components:
           type: integer
         max_email_per_day:
           type: integer
-    EmailAccountOAuthInput:
-      type: object
-      required:
-      - from_name
-      - from_email
-      - token
-      - type
-      properties:
-        from_name:
-          type: string
-        from_email:
-          type: string
-          format: email
-        token:
-          type: object
-          properties:
-            access_token:
-              type: string
-            refresh_token:
-              type: string
-            expiry_date:
-              type: integer
-        type:
-          type: string
-          enum:
-          - gmail
-          - microsoft
-        warmup_enabled:
-          type: boolean
     EmailAccount:
       type: object
       properties:
@@ -535,6 +497,17 @@ components:
           type: number
         days_in_warmup:
           type: integer
+    WarmupSettings:
+      type: object
+      properties:
+        warmup_enabled:
+          type: boolean
+        total_warmup_per_day:
+          type: integer
+        daily_rampup:
+          type: integer
+        reply_rate_percentage:
+          type: integer
     EmailAccountUpdate:
       type: object
       properties:
@@ -548,17 +521,44 @@ components:
           type: string
         bcc:
           type: string
-    WarmupSettings:
+    EmailAccountOAuthInput:
       type: object
+      required:
+      - from_name
+      - from_email
+      - token
+      - type
       properties:
+        from_name:
+          type: string
+        from_email:
+          type: string
+          format: email
+        token:
+          type: object
+          properties:
+            access_token:
+              type: string
+            refresh_token:
+              type: string
+            expiry_date:
+              type: integer
+        type:
+          type: string
+          enum:
+          - gmail
+          - microsoft
         warmup_enabled:
           type: boolean
-        total_warmup_per_day:
-          type: integer
-        daily_rampup:
-          type: integer
-        reply_rate_percentage:
-          type: integer
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
