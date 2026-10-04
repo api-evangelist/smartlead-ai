@@ -68,6 +68,15 @@ components:
                 example: Invalid API Key
           example:
             message: Invalid API Key
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
   schemas:
     User:
       type: object
@@ -113,15 +122,6 @@ components:
           - CANCELED
           - EXPIRED
           - TRIAL
-  parameters:
-    ApiKeyParam:
-      name: api_key
-      in: query
-      description: Your SmartLead API key for authentication
-      required: true
-      schema:
-        type: string
-      example: REDACTED_STRIPE_KEY
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

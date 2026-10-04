@@ -173,75 +173,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    NotFoundError:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Resource not found
-    ValidationError:
-      description: Request validation failed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid parameters provided
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Invalid API Key
-          example:
-            message: Invalid API Key
   schemas:
-    WebhookUpdate:
-      type: object
-      properties:
-        name:
-          type: string
-        webhook_url:
-          type: string
-        event_type:
-          type: string
-    Webhook:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        webhook_url:
-          type: string
-        event_type:
-          type: string
-        status:
-          type: string
-        created_at:
-          type: string
-          format: date-time
     WebhookInput:
       type: object
       required:
@@ -263,6 +195,74 @@ components:
           - 1
           - 2
           - 3
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        webhook_url:
+          type: string
+        event_type:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    WebhookUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        webhook_url:
+          type: string
+        event_type:
+          type: string
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
   parameters:
     ApiKeyParam:
       name: api_key

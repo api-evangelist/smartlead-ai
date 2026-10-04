@@ -358,60 +358,94 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    BadRequestError:
-      description: Bad request - Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid request parameters
-    NotFoundError:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Resource not found
-    ValidationError:
-      description: Request validation failed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid parameters provided
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Invalid API Key
-          example:
-            message: Invalid API Key
   schemas:
+    WarmupSettings:
+      type: object
+      properties:
+        warmup_enabled:
+          type: boolean
+        total_warmup_per_day:
+          type: integer
+        daily_rampup:
+          type: integer
+        reply_rate_percentage:
+          type: integer
+    WarmupStats:
+      type: object
+      properties:
+        total_sent:
+          type: integer
+        total_inbox:
+          type: integer
+        total_spam:
+          type: integer
+        warmup_reputation:
+          type: number
+        days_in_warmup:
+          type: integer
+    EmailAccount:
+      type: object
+      properties:
+        id:
+          type: integer
+        from_name:
+          type: string
+        from_email:
+          type: string
+          format: email
+        smtp_host:
+          type: string
+        smtp_port:
+          type: integer
+        imap_host:
+          type: string
+        imap_port:
+          type: integer
+        warmup_enabled:
+          type: boolean
+        total_warmup_per_day:
+          type: integer
+        daily_rampup:
+          type: integer
+        max_email_per_day:
+          type: integer
+        is_suspended:
+          type: boolean
+        connection_status:
+          type: string
+          enum:
+          - CONNECTED
+          - DISCONNECTED
+          - ERROR
+    EmailAccountOAuthInput:
+      type: object
+      required:
+      - from_name
+      - from_email
+      - token
+      - type
+      properties:
+        from_name:
+          type: string
+        from_email:
+          type: string
+          format: email
+        token:
+          type: object
+          properties:
+            access_token:
+              type: string
+            refresh_token:
+              type: string
+            expiry_date:
+              type: integer
+        type:
+          type: string
+          enum:
+          - gmail
+          - microsoft
+        warmup_enabled:
+          type: boolean
     EmailAccountInput:
       type: object
       required:
@@ -450,64 +484,6 @@ components:
           type: integer
         max_email_per_day:
           type: integer
-    EmailAccount:
-      type: object
-      properties:
-        id:
-          type: integer
-        from_name:
-          type: string
-        from_email:
-          type: string
-          format: email
-        smtp_host:
-          type: string
-        smtp_port:
-          type: integer
-        imap_host:
-          type: string
-        imap_port:
-          type: integer
-        warmup_enabled:
-          type: boolean
-        total_warmup_per_day:
-          type: integer
-        daily_rampup:
-          type: integer
-        max_email_per_day:
-          type: integer
-        is_suspended:
-          type: boolean
-        connection_status:
-          type: string
-          enum:
-          - CONNECTED
-          - DISCONNECTED
-          - ERROR
-    WarmupStats:
-      type: object
-      properties:
-        total_sent:
-          type: integer
-        total_inbox:
-          type: integer
-        total_spam:
-          type: integer
-        warmup_reputation:
-          type: number
-        days_in_warmup:
-          type: integer
-    WarmupSettings:
-      type: object
-      properties:
-        warmup_enabled:
-          type: boolean
-        total_warmup_per_day:
-          type: integer
-        daily_rampup:
-          type: integer
-        reply_rate_percentage:
-          type: integer
     EmailAccountUpdate:
       type: object
       properties:
@@ -521,35 +497,59 @@ components:
           type: string
         bcc:
           type: string
-    EmailAccountOAuthInput:
-      type: object
-      required:
-      - from_name
-      - from_email
-      - token
-      - type
-      properties:
-        from_name:
-          type: string
-        from_email:
-          type: string
-          format: email
-        token:
-          type: object
-          properties:
-            access_token:
-              type: string
-            refresh_token:
-              type: string
-            expiry_date:
-              type: integer
-        type:
-          type: string
-          enum:
-          - gmail
-          - microsoft
-        warmup_enabled:
-          type: boolean
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+    BadRequestError:
+      description: Bad request - Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid request parameters
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
   parameters:
     ApiKeyParam:
       name: api_key

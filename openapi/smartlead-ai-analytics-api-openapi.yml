@@ -361,90 +361,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    ValidationError:
-      description: Request validation failed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid parameters provided
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Invalid API Key
-          example:
-            message: Invalid API Key
-  parameters:
-    TimezoneParam:
-      name: timezone
-      in: query
-      description: Timezone for date calculations (IANA format)
-      required: false
-      schema:
-        type: string
-        default: UTC
-      example: America/New_York
-    EndDateParam:
-      name: end_date
-      in: query
-      description: End date for analytics (ISO 8601 format)
-      required: true
-      schema:
-        type: string
-        format: date
-      example: '2024-01-31'
-    ApiKeyParam:
-      name: api_key
-      in: query
-      description: Your SmartLead API key for authentication
-      required: true
-      schema:
-        type: string
-      example: REDACTED_STRIPE_KEY
-    StartDateParam:
-      name: start_date
-      in: query
-      description: Start date for analytics (ISO 8601 format)
-      required: true
-      schema:
-        type: string
-        format: date
-      example: '2024-01-01'
   schemas:
-    DailyStats:
-      type: object
-      properties:
-        date:
-          type: string
-          format: date
-        sent:
-          type: integer
-        opened:
-          type: integer
-        clicked:
-          type: integer
-        replied:
-          type: integer
     CampaignPerformance:
       type: object
       properties:
@@ -485,6 +402,89 @@ components:
           type: number
         reply_rate:
           type: number
+    DailyStats:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        sent:
+          type: integer
+        opened:
+          type: integer
+        clicked:
+          type: integer
+        replied:
+          type: integer
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+  parameters:
+    EndDateParam:
+      name: end_date
+      in: query
+      description: End date for analytics (ISO 8601 format)
+      required: true
+      schema:
+        type: string
+        format: date
+      example: '2024-01-31'
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
+    StartDateParam:
+      name: start_date
+      in: query
+      description: Start date for analytics (ISO 8601 format)
+      required: true
+      schema:
+        type: string
+        format: date
+      example: '2024-01-01'
+    TimezoneParam:
+      name: timezone
+      in: query
+      description: Timezone for date calculations (IANA format)
+      required: false
+      schema:
+        type: string
+        default: UTC
+      example: America/New_York
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
