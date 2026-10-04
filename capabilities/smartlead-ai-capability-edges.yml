@@ -1,0 +1,36 @@
+slug: smartlead-ai
+provider: Smartlead
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 2
+edges:
+- tag: Webhooks
+  spec_file: smartlead-ai-webhooks-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.85
+  evidence: 'POST /v1/webhook/create createWebhook Create Webhook; schemas: WebhookUpdate, Webhook, WebhookInput'
+  reason: Full CRUD lifecycle over outbound webhook subscriptions exposed by a SaaS platform's public
+    API, which is exactly BC-4270.80 Webhook & Event Subscription Management. The schemas (Webhook, WebhookInput,
+    WebhookUpdate) confirm the subscription object is the managed entity rather than an internal eventing
+    detail.
+- tag: Campaigns
+  spec_file: smartlead-ai-campaigns-api-openapi.yml
+  capability_id: BC-400.40
+  capability_id_l1: BC-400
+  capability_name: Demand Generation Management
+  confidence: 0.72
+  evidence: 'POST /v1/campaigns/create createCampaign; POST /v1/campaigns/{campaign_id}/sequences updateCampaignSequences;
+    vendor: ''cold email infrastructure for outbound sales and lead generation'''
+  reason: Lifecycle of outbound email campaigns with multi-step sequences and schedules attached to sender
+    mailboxes — lead-generation campaign execution, i.e. demand generation.
