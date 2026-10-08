@@ -332,6 +332,8 @@ apis:
   - type: APIReference
     url: https://api.smartlead.ai/api-reference
 common:
+  - type: FinOps
+    url: finops/smartlead-ai-finops.yml
   - type: CapabilityMap
     url: capabilities/smartlead-ai-capability-edges.yml
     name: Smartlead Business Capability Map
