@@ -173,6 +173,49 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
   schemas:
     WebhookInput:
       type: object
@@ -220,49 +263,6 @@ components:
           type: string
         event_type:
           type: string
-  responses:
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Invalid API Key
-          example:
-            message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    ValidationError:
-      description: Request validation failed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid parameters provided
-    NotFoundError:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Resource not found
   parameters:
     ApiKeyParam:
       name: api_key

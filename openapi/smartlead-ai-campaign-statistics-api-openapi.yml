@@ -95,6 +95,48 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
   schemas:
     CampaignAnalytics:
       type: object
@@ -132,48 +174,6 @@ components:
           type: number
         bounce_rate:
           type: number
-  responses:
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Invalid API Key
-          example:
-            message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    NotFoundError:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Resource not found
-  parameters:
-    ApiKeyParam:
-      name: api_key
-      in: query
-      description: Your SmartLead API key for authentication
-      required: true
-      schema:
-        type: string
-      example: REDACTED_STRIPE_KEY
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

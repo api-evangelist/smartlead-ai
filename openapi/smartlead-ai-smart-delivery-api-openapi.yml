@@ -736,16 +736,6 @@ components:
                 example: Invalid API Key
           example:
             message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
     ValidationError:
       description: Request validation failed
       content:
@@ -766,6 +756,16 @@ components:
               error:
                 type: string
                 example: Resource not found
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
   parameters:
     ApiKeyParam:
       name: api_key

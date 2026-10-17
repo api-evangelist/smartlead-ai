@@ -877,43 +877,60 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+    BadRequestError:
+      description: Bad request - Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid request parameters
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
   schemas:
-    Lead:
-      type: object
-      properties:
-        id:
-          type: integer
-        email:
-          type: string
-          format: email
-        first_name:
-          type: string
-        last_name:
-          type: string
-        company_name:
-          type: string
-        phone_number:
-          type: string
-        website:
-          type: string
-        custom_fields:
-          type: object
-        status:
-          type: string
-          enum:
-          - ACTIVE
-          - PAUSED
-          - COMPLETED
-          - UNSUBSCRIBED
-          - BOUNCED
-        campaign_id:
-          type: integer
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
     LeadInput:
       type: object
       required:
@@ -936,21 +953,6 @@ components:
         custom_fields:
           type: object
           additionalProperties: true
-    LeadUpdate:
-      type: object
-      properties:
-        first_name:
-          type: string
-        last_name:
-          type: string
-        company_name:
-          type: string
-        phone_number:
-          type: string
-        website:
-          type: string
-        custom_fields:
-          type: object
     LeadList:
       type: object
       properties:
@@ -992,59 +994,57 @@ components:
           type: string
         color:
           type: string
-  responses:
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Invalid API Key
-          example:
-            message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    ValidationError:
-      description: Request validation failed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid parameters provided
-    BadRequestError:
-      description: Bad request - Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid request parameters
-    NotFoundError:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Resource not found
+    Lead:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        company_name:
+          type: string
+        phone_number:
+          type: string
+        website:
+          type: string
+        custom_fields:
+          type: object
+        status:
+          type: string
+          enum:
+          - ACTIVE
+          - PAUSED
+          - COMPLETED
+          - UNSUBSCRIBED
+          - BOUNCED
+        campaign_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    LeadUpdate:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        company_name:
+          type: string
+        phone_number:
+          type: string
+        website:
+          type: string
+        custom_fields:
+          type: object
   parameters:
     ApiKeyParam:
       name: api_key

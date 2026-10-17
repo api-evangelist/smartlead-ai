@@ -358,31 +358,69 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
+    BadRequestError:
+      description: Bad request - Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid request parameters
+  parameters:
+    ApiKeyParam:
+      name: api_key
+      in: query
+      description: Your SmartLead API key for authentication
+      required: true
+      schema:
+        type: string
+      example: REDACTED_STRIPE_KEY
   schemas:
-    WarmupSettings:
-      type: object
-      properties:
-        warmup_enabled:
-          type: boolean
-        total_warmup_per_day:
-          type: integer
-        daily_rampup:
-          type: integer
-        reply_rate_percentage:
-          type: integer
-    WarmupStats:
-      type: object
-      properties:
-        total_sent:
-          type: integer
-        total_inbox:
-          type: integer
-        total_spam:
-          type: integer
-        warmup_reputation:
-          type: number
-        days_in_warmup:
-          type: integer
     EmailAccount:
       type: object
       properties:
@@ -417,6 +455,17 @@ components:
           - CONNECTED
           - DISCONNECTED
           - ERROR
+    WarmupSettings:
+      type: object
+      properties:
+        warmup_enabled:
+          type: boolean
+        total_warmup_per_day:
+          type: integer
+        daily_rampup:
+          type: integer
+        reply_rate_percentage:
+          type: integer
     EmailAccountOAuthInput:
       type: object
       required:
@@ -446,6 +495,19 @@ components:
           - microsoft
         warmup_enabled:
           type: boolean
+    EmailAccountUpdate:
+      type: object
+      properties:
+        from_name:
+          type: string
+        max_email_per_day:
+          type: integer
+        signature:
+          type: string
+        custom_tracking_url:
+          type: string
+        bcc:
+          type: string
     EmailAccountInput:
       type: object
       required:
@@ -484,81 +546,19 @@ components:
           type: integer
         max_email_per_day:
           type: integer
-    EmailAccountUpdate:
+    WarmupStats:
       type: object
       properties:
-        from_name:
-          type: string
-        max_email_per_day:
+        total_sent:
           type: integer
-        signature:
-          type: string
-        custom_tracking_url:
-          type: string
-        bcc:
-          type: string
-  responses:
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Invalid API Key
-          example:
-            message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    ValidationError:
-      description: Request validation failed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid parameters provided
-    BadRequestError:
-      description: Bad request - Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid request parameters
-    NotFoundError:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Resource not found
-  parameters:
-    ApiKeyParam:
-      name: api_key
-      in: query
-      description: Your SmartLead API key for authentication
-      required: true
-      schema:
-        type: string
-      example: REDACTED_STRIPE_KEY
+        total_inbox:
+          type: integer
+        total_spam:
+          type: integer
+        warmup_reputation:
+          type: number
+        days_in_warmup:
+          type: integer
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

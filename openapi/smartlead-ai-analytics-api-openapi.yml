@@ -361,7 +361,73 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
   schemas:
+    DailyStats:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        sent:
+          type: integer
+        opened:
+          type: integer
+        clicked:
+          type: integer
+        replied:
+          type: integer
+    OverallStats:
+      type: object
+      properties:
+        total_sent:
+          type: integer
+        total_opened:
+          type: integer
+        total_clicked:
+          type: integer
+        total_replied:
+          type: integer
+        total_bounced:
+          type: integer
+        open_rate:
+          type: number
+        click_rate:
+          type: number
+        reply_rate:
+          type: number
     CampaignPerformance:
       type: object
       properties:
@@ -383,82 +449,7 @@ components:
           type: number
         reply_rate:
           type: number
-    OverallStats:
-      type: object
-      properties:
-        total_sent:
-          type: integer
-        total_opened:
-          type: integer
-        total_clicked:
-          type: integer
-        total_replied:
-          type: integer
-        total_bounced:
-          type: integer
-        open_rate:
-          type: number
-        click_rate:
-          type: number
-        reply_rate:
-          type: number
-    DailyStats:
-      type: object
-      properties:
-        date:
-          type: string
-          format: date
-        sent:
-          type: integer
-        opened:
-          type: integer
-        clicked:
-          type: integer
-        replied:
-          type: integer
-  responses:
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Invalid API Key
-          example:
-            message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    ValidationError:
-      description: Request validation failed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid parameters provided
   parameters:
-    EndDateParam:
-      name: end_date
-      in: query
-      description: End date for analytics (ISO 8601 format)
-      required: true
-      schema:
-        type: string
-        format: date
-      example: '2024-01-31'
     ApiKeyParam:
       name: api_key
       in: query
@@ -467,15 +458,6 @@ components:
       schema:
         type: string
       example: REDACTED_STRIPE_KEY
-    StartDateParam:
-      name: start_date
-      in: query
-      description: Start date for analytics (ISO 8601 format)
-      required: true
-      schema:
-        type: string
-        format: date
-      example: '2024-01-01'
     TimezoneParam:
       name: timezone
       in: query
@@ -485,6 +467,24 @@ components:
         type: string
         default: UTC
       example: America/New_York
+    StartDateParam:
+      name: start_date
+      in: query
+      description: Start date for analytics (ISO 8601 format)
+      required: true
+      schema:
+        type: string
+        format: date
+      example: '2024-01-01'
+    EndDateParam:
+      name: end_date
+      in: query
+      description: End date for analytics (ISO 8601 format)
+      required: true
+      schema:
+        type: string
+        format: date
+      example: '2024-01-31'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

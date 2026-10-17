@@ -680,36 +680,6 @@ components:
                 example: Invalid API Key
           example:
             message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    RateLimitError:
-      description: Rate limit exceeded
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Too many requests. Please slow down and retry later.
-    NotFoundError:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Resource not found
     ValidationError:
       description: Request validation failed
       content:
@@ -720,6 +690,36 @@ components:
               error:
                 type: string
                 example: Invalid parameters provided
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
+    RateLimitError:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Too many requests. Please slow down and retry later.
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
     BadRequestError:
       description: Bad request - Invalid request parameters
       content:
@@ -731,6 +731,31 @@ components:
                 type: string
                 example: Invalid request parameters
   schemas:
+    EmailSequenceInput:
+      type: object
+      required:
+      - seq_number
+      - subject
+      - email_body
+      - seq_delay_details
+      properties:
+        seq_number:
+          type: integer
+          description: Sequence order (1 for initial, 2+ for follow-ups)
+        subject:
+          type: string
+          description: Email subject line (supports variables)
+        email_body:
+          type: string
+          description: Email content (HTML or plain text)
+        seq_delay_details:
+          type: object
+          required:
+          - delay_in_days
+          properties:
+            delay_in_days:
+              type: integer
+              description: Days to wait before sending
     EmailAccount:
       type: object
       properties:
@@ -765,33 +790,6 @@ components:
           - CONNECTED
           - DISCONNECTED
           - ERROR
-    CampaignSettings:
-      type: object
-      properties:
-        track_settings:
-          type: array
-          items:
-            type: string
-            enum:
-            - DONT_EMAIL_OPEN
-            - DONT_LINK_CLICK
-        max_leads_per_day:
-          type: integer
-        stop_lead_settings:
-          type: string
-          enum:
-          - REPLY_TO_AN_EMAIL
-          - OPENED_EMAIL
-          - CLICKED_LINK
-          - NEVER
-        enable_ai_esp_matching:
-          type: boolean
-        send_as_plain_text:
-          type: boolean
-        follow_up_percentage:
-          type: integer
-        unsubscribe_text:
-          type: string
     EmailSequence:
       type: object
       properties:
@@ -811,6 +809,41 @@ components:
           properties:
             delay_in_days:
               type: integer
+    CampaignSchedule:
+      type: object
+      required:
+      - timezone
+      - days
+      - startHour
+      - endHour
+      properties:
+        timezone:
+          type: string
+          description: IANA timezone
+          example: America/New_York
+        days:
+          type: array
+          items:
+            type: integer
+          description: Days of week (0=Sunday, 6=Saturday)
+          example:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+        startHour:
+          type: string
+          description: Start sending time (24-hour format)
+          example: 09:00
+        endHour:
+          type: string
+          description: End sending time (24-hour format)
+          example: '17:00'
+        min_time_btw_emails:
+          type: integer
+          description: Minimum minutes between emails
+          example: 24
     Campaign:
       type: object
       properties:
@@ -905,66 +938,33 @@ components:
                 type: string
               tag_color:
                 type: string
-    EmailSequenceInput:
+    CampaignSettings:
       type: object
-      required:
-      - seq_number
-      - subject
-      - email_body
-      - seq_delay_details
       properties:
-        seq_number:
-          type: integer
-          description: Sequence order (1 for initial, 2+ for follow-ups)
-        subject:
-          type: string
-          description: Email subject line (supports variables)
-        email_body:
-          type: string
-          description: Email content (HTML or plain text)
-        seq_delay_details:
-          type: object
-          required:
-          - delay_in_days
-          properties:
-            delay_in_days:
-              type: integer
-              description: Days to wait before sending
-    CampaignSchedule:
-      type: object
-      required:
-      - timezone
-      - days
-      - startHour
-      - endHour
-      properties:
-        timezone:
-          type: string
-          description: IANA timezone
-          example: America/New_York
-        days:
+        track_settings:
           type: array
           items:
-            type: integer
-          description: Days of week (0=Sunday, 6=Saturday)
-          example:
-          - 1
-          - 2
-          - 3
-          - 4
-          - 5
-        startHour:
-          type: string
-          description: Start sending time (24-hour format)
-          example: 09:00
-        endHour:
-          type: string
-          description: End sending time (24-hour format)
-          example: '17:00'
-        min_time_btw_emails:
+            type: string
+            enum:
+            - DONT_EMAIL_OPEN
+            - DONT_LINK_CLICK
+        max_leads_per_day:
           type: integer
-          description: Minimum minutes between emails
-          example: 24
+        stop_lead_settings:
+          type: string
+          enum:
+          - REPLY_TO_AN_EMAIL
+          - OPENED_EMAIL
+          - CLICKED_LINK
+          - NEVER
+        enable_ai_esp_matching:
+          type: boolean
+        send_as_plain_text:
+          type: boolean
+        follow_up_percentage:
+          type: integer
+        unsubscribe_text:
+          type: string
   parameters:
     ApiKeyParam:
       name: api_key

@@ -232,7 +232,49 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid parameters provided
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Internal server error occurred
   schemas:
+    InboxResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            type: object
+        total_count:
+          type: integer
     InboxFilter:
       type: object
       properties:
@@ -260,48 +302,6 @@ components:
               - type: array
                 items:
                   type: integer
-    InboxResponse:
-      type: object
-      properties:
-        messages:
-          type: array
-          items:
-            type: object
-        total_count:
-          type: integer
-  responses:
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Invalid API Key
-          example:
-            message: Invalid API Key
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Internal server error occurred
-    ValidationError:
-      description: Request validation failed
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Invalid parameters provided
   parameters:
     ApiKeyParam:
       name: api_key

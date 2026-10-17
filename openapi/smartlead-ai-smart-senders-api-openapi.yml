@@ -200,6 +200,18 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   responses:
+    UnauthorizedError:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid API Key
+          example:
+            message: Invalid API Key
     InternalServerError:
       description: Internal server error
       content:
@@ -220,18 +232,6 @@ components:
               error:
                 type: string
                 example: Invalid parameters provided
-    UnauthorizedError:
-      description: Unauthorized - Invalid or missing API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Invalid API Key
-          example:
-            message: Invalid API Key
   parameters:
     ApiKeyParam:
       name: api_key
