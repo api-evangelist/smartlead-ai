@@ -2,13 +2,12 @@ generated: '2026-08-13'
 method: searched
 source: https://api.smartlead.ai/mcp
 status: published
-description: >-
-  SmartLead operates a remote MCP server on its documentation/API host. `tools/list` answered
-  anonymously over Streamable HTTP (SSE), so the tool set below is the server's real, live
-  manifest with its real inputSchemas — captured verbatim in smartlead-ai-tools-list.json.
-  It is a DOCUMENTATION server (Mintlify-style): the tools search and read the SmartLead API
-  docs and OpenAPI, they do not call the SmartLead REST API. An agent can use it to learn the
-  API; it cannot use it to create a campaign or import a lead.
+description: 'SmartLead operates a remote MCP server on its documentation/API host. `tools/list` answered
+  anonymously over Streamable HTTP (SSE), so the tool set below is the server''s real, live manifest with
+  its real inputSchemas — captured verbatim in smartlead-ai-tools-list.json. It is a DOCUMENTATION server
+  (Mintlify-style): the tools search and read the SmartLead API docs and OpenAPI, they do not call the
+  SmartLead REST API. An agent can use it to learn the API; it cannot use it to create a campaign or import
+  a lead.'
 deployment:
   mode: remote
   endpoint: https://api.smartlead.ai/mcp
@@ -24,9 +23,8 @@ server:
 tools:
 - name: search_smart_lead_api
   title: Search documentation
-  description: >-
-    Search across the SmartLead API knowledge base for documentation, code examples, API
-    references and guides; returns contextual content with titles and direct doc links.
+  description: Search across the SmartLead API knowledge base for documentation, code examples, API references
+    and guides; returns contextual content with titles and direct doc links.
   input_schema:
     query: string (required)
   annotations:
@@ -34,10 +32,9 @@ tools:
     destructive: false
     idempotent: true
 - name: query_docs_filesystem_smart_lead_api
-  description: >-
-    Run a read-only shell-like query (rg, grep, find, tree, ls, cat, head, tail, jq, …) against a
-    virtualized in-memory filesystem containing only the SmartLead documentation pages and the
-    OpenAPI spec. This is how a page is read — pass its .mdx path to head/cat.
+  description: Run a read-only shell-like query (rg, grep, find, tree, ls, cat, head, tail, jq, …) against
+    a virtualized in-memory filesystem containing only the SmartLead documentation pages and the OpenAPI
+    spec. This is how a page is read — pass its .mdx path to head/cat.
   input_schema:
     command: string (required)
   annotations:
@@ -49,14 +46,12 @@ tools:
     path: string (required)
     feedback: string (required)
 notes:
-- >-
-  The docs filesystem exposed by query_docs_filesystem_smart_lead_api is what led us to the real
-  machine-readable contract: /openapi/api-reference/openapi.yaml in that virtual tree resolves to
-  https://api.smartlead.ai/api-reference/openapi.yaml, an OpenAPI 3.1.1 with 98 operations.
-- >-
-  Third-party MCP servers wrapping the SmartLead REST API exist on npm (smartlead-mcp,
-  smartlead-mcp-by-leadmagic, smartlead-mcp-server and others). None are published by SmartLead
-  and none are recorded here as first-party — see packages/smartlead-ai-packages.yml.
+- 'The docs filesystem exposed by query_docs_filesystem_smart_lead_api is what led us to the real machine-readable
+  contract: /openapi/api-reference/openapi.yaml in that virtual tree resolves to https://api.smartlead.ai/api-reference/openapi.yaml,
+  an OpenAPI 3.1.1 with 98 operations.'
+- Third-party MCP servers wrapping the SmartLead REST API exist on npm (smartlead-mcp, smartlead-mcp-by-leadmagic,
+  smartlead-mcp-server and others). None are published by SmartLead and none are recorded here as first-party
+  — see packages/smartlead-ai-packages.yml.
 x-evidence:
 - url: https://api.smartlead.ai/mcp
   method: POST tools/list
@@ -68,3 +63,28 @@ x-evidence:
   http_status: 404
 - url: https://server.smartlead.ai/mcp
   http_status: 401
+tool_quality:
+  tool_count: 3
+  tokens_total: 1351
+  tokens_per_tool_median: 237
+  heavy_tools: []
+  heavy_tool_count: 0
+  params_total: 4
+  params_undescribed: 0
+  params_described_pct: 100.0
+  tools_with_undescribed_params: 0
+  tools_annotated: 3
+  annotated_pct: 100.0
+  state_changing_unhinted: []
+  tools_missing_schema: 0
+  short_descriptions: 0
+  duplicate_descriptions: 0
+  duplicate_names: 0
+  nonportable_names: []
+  output_schema_count: 0
+  token_estimate: chars/3.6 of each compact tool definition
+  source: mcp/smartlead-ai-tools-list.json
+  measured: '2026-10-20'
+  scored: false
+  note: Facts from the saved tools/list capture (mcp_tool_quality.py); recorded, not scored. Checks learned
+    from Glimind's agent-readiness audit.
